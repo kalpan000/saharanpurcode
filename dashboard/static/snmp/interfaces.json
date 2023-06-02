@@ -1,0 +1,404 @@
+{
+    "LAPTOP-G7GCRBL0": [
+        {
+            "ifAdminStatus": "down",
+            "ifDescr": "Microsoft 6to4 Adapter\u0000",
+            "ifMtu": "0",
+            "ifOperStatus": "notPresent",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "tunnel",
+            "index": 2
+        },
+        {
+            "ifAdminStatus": "down",
+            "ifDescr": "ASIX AX88772B USB2.0 to Fast Ethernet Adapter\u0000",
+            "ifMtu": "0",
+            "ifOperStatus": "notPresent",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 3
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (PPPOE)\u0000",
+            "ifMtu": "1494",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ppp",
+            "index": 4
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (IPv6)\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 5
+        },
+        {
+            "ifAdminStatus": "down",
+            "ifDescr": "Microsoft IP-HTTPS Platform Adapter\u0000",
+            "ifMtu": "0",
+            "ifOperStatus": "notPresent",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "tunnel",
+            "index": 6
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (PPTP)\u0000",
+            "ifMtu": "1464",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "tunnel",
+            "index": 7
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Bluetooth Device (Personal Area Network)\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "80:32:53:20:da:77",
+            "ifSpeed": "3000000",
+            "ifType": "ethernetCsmacd",
+            "index": 8
+        },
+        {
+            "ifAdminStatus": "down",
+            "ifDescr": "Microsoft Kernel Debug Network Adapter\u0000",
+            "ifMtu": "0",
+            "ifOperStatus": "notPresent",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 9
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #3\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "80:32:53:20:da:74",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 10
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (L2TP)\u0000",
+            "ifMtu": "1460",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "tunnel",
+            "index": 11
+        },
+        {
+            "ifAdminStatus": "down",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #2\u0000",
+            "ifMtu": "0",
+            "ifOperStatus": "notPresent",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 12
+        },
+        {
+            "ifAdminStatus": "down",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter\u0000",
+            "ifMtu": "0",
+            "ifOperStatus": "notPresent",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 13
+        },
+        {
+            "ifAdminStatus": "down",
+            "ifDescr": "Microsoft KM-TEST Loopback Adapter\u0000",
+            "ifMtu": "0",
+            "ifOperStatus": "notPresent",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 14
+        },
+        {
+            "ifAdminStatus": "down",
+            "ifDescr": "Microsoft Teredo Tunneling Adapter\u0000",
+            "ifMtu": "0",
+            "ifOperStatus": "notPresent",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "tunnel",
+            "index": 15
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (IKEv2)\u0000",
+            "ifMtu": "1480",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "tunnel",
+            "index": 16
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (SSTP)\u0000",
+            "ifMtu": "4091",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "tunnel",
+            "index": 17
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #4\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "82:32:53:20:da:73",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 18
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "TP-LINK Gigabit Ethernet USB Adapter\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "d0:37:45:bf:46:ed",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 19
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Intel(R) Wireless-AC 9560 160MHz\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "80:32:53:20:da:73",
+            "ifSpeed": "117000000",
+            "ifType": "ieee80211",
+            "index": 20
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (Network Monitor)\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 21
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (IP)\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 22
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Intel(R) Wireless-AC 9560 160MHz-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "80:32:53:20:da:73",
+            "ifSpeed": "117000000",
+            "ifType": "ieee80211",
+            "index": 23
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (IP)-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 24
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (IP)-QoS Packet Scheduler-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 25
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (IPv6)-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 26
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (IPv6)-QoS Packet Scheduler-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 27
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (Network Monitor)-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 28
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "",
+            "ifSpeed": "0",
+            "ifType": "ethernetCsmacd",
+            "index": 29
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Intel(R) Wireless-AC 9560 160MHz-Virtual WiFi Filter Driver-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "80:32:53:20:da:73",
+            "ifSpeed": "117000000",
+            "ifType": "ieee80211",
+            "index": 30
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Intel(R) Wireless-AC 9560 160MHz-Native WiFi Filter Driver-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "80:32:53:20:da:73",
+            "ifSpeed": "117000000",
+            "ifType": "ieee80211",
+            "index": 31
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Intel(R) Wireless-AC 9560 160MHz-QoS Packet Scheduler-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "80:32:53:20:da:73",
+            "ifSpeed": "117000000",
+            "ifType": "ieee80211",
+            "index": 32
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Intel(R) Wireless-AC 9560 160MHz-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "up",
+            "ifPhysAddress": "80:32:53:20:da:73",
+            "ifSpeed": "117000000",
+            "ifType": "ieee80211",
+            "index": 33
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #3-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "80:32:53:20:da:74",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 34
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #3-Native WiFi Filter Driver-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "80:32:53:20:da:74",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 35
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #3-QoS Packet Scheduler-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "80:32:53:20:da:74",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 36
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #3-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "80:32:53:20:da:74",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 37
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #4-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "82:32:53:20:da:73",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 38
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #4-Native WiFi Filter Driver-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "82:32:53:20:da:73",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 39
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #4-QoS Packet Scheduler-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "82:32:53:20:da:73",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 40
+        },
+        {
+            "ifAdminStatus": "up",
+            "ifDescr": "Microsoft Wi-Fi Direct Virtual Adapter #4-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "ifMtu": "1500",
+            "ifOperStatus": "down",
+            "ifPhysAddress": "82:32:53:20:da:73",
+            "ifSpeed": "0",
+            "ifType": "ieee80211",
+            "index": 41
+        }
+    ]
+}

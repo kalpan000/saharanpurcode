@@ -1,0 +1,83 @@
+ {% extends 'dashboard/header_footer.html' %} {% load widget_tweaks %}{% load static %} {% block title %} Change User Status {% endblock %} {% block js %}
+<script>
+    $(".change_type").change(function(event) {
+        var id = $(this).data("id");
+        var type = $(this).val();
+        data = {
+            "id": id,
+            "type": type,
+        }
+        $.post("/changeusertype/", data, function(data, status) {
+            Swal.fire(data["data"]);
+        });
+    });
+</script>
+{% endblock %} {% block css %}
+<style>
+    th {
+        text-align: center;
+    }
+    
+    th,
+    td {
+        font-size: 15px;
+    }
+</style>
+{% endblock %} {% block title_header %}Users{% endblock %} {% block content %}
+<h1>User access</h1>
+<br>
+<!--#SHOW USER NEW FILE-->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Last Login</th>
+            <th>Date Joined</th>
+            <th>Type</th>
+            <th>Current Status</th>
+            <th>Change Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for users in allusers %}
+        <tr>
+            <td>{{users}}</td>
+            <td>{{users.email}}</td>
+            <td>{{users.last_login}}</td>
+            <td>{{users.date_joined}}</td>
+            <td><select data-id="{{users.userprofile.id}}" class="change_type">
+                {% if users.userprofile.staff_type == "STAFF" %}
+                <option selected value="STAFF">STAFF</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="SUPERADMIN">SUPERADMIN</option>
+                <option value="DC">DC</option>
+                {% endif %}
+                {% if users.userprofile.staff_type == "ADMIN" %}
+                <option value="STAFF">STAFF</option>
+                <option selected value="ADMIN">ADMIN</option>
+                <option value="SUPERADMIN" disabled>SUPERADMIN</option>
+                <option value="DC">DC</option>
+                {% endif %}
+                {% if users.userprofile.staff_type == "SUPERADMIN" %}
+                <option value="STAFF">STAFF</option>
+                <option value="ADMIN">ADMIN</option>
+                <option selected value="SUPERADMIN">SUPERADMIN</option>
+                <option value="DC">DC</option>
+                {% endif %}
+                {% if users.userprofile.staff_type == "DC" %}
+                <option value="STAFF">STAFF</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="SUPERADMIN">SUPERADMIN</option>
+                <option selected value="DC">DC</option>
+                {% endif %}
+            </select></td>
+            <td>{% if users.is_active %}<i class='fa fa-check' style='color:green'></i>{% else %}<i class='fa fa-times' style='color:red'></i>{% endif %}</td>
+            <td><a href="{% url 'change_status' users.id %}"><i class='fa fa-refresh'></i></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+{% endblock %}

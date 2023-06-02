@@ -1,0 +1,12 @@
+{
+    "links": [],
+    "nodes": [
+        {
+            "group": "2",
+            "id": "LAPTOP-G7GCRBL0",
+            "image": "default.png",
+            "ip": "127.0.0.1",
+            "protocol": "snmp"
+        }
+    ]
+}

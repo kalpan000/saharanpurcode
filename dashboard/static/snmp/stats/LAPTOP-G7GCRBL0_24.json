@@ -1,0 +1,250 @@
+{
+    "ifDescr": "Intel(R) Wireless-AC 9560 160MHz-QoS Packet Scheduler-0000\u0000",
+    "index": 24,
+    "last_ifHCInOctets": 0,
+    "last_ifHCOutOctets": 0,
+    "last_timestamp": 1668585695,
+    "stats": [
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-05-24 19:03:13"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:23:41"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:30:28"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:31:11"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:33:17"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:35:12"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:40:45"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:41:32"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:45:20"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:46:04"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:47:43"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:53:48"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 06:59:03"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:11:52"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:13:34"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:13:51"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:14:53"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:15:30"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:22:06"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:24:09"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:24:36"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:48:18"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:49:11"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:50:03"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:50:45"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:56:18"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:56:42"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-26 07:58:55"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-28 11:02:23"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-28 11:06:51"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-28 11:07:36"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-09-28 11:08:17"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 18:49:46"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 18:56:48"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 18:58:16"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 18:58:57"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:02:04"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:05:09"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:05:59"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:06:28"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:06:42"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:06:58"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:08:33"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:09:01"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:11:06"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:11:28"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-02 19:11:45"
+        },
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-11-16 13:31:35"
+        }
+    ],
+    "utilization": 0
+}

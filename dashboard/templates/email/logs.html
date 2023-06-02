@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <table class="table" border="1">
+        <thead class="thead-dark">
+            <tr>
+                <th colspan="2" style="text-align:center">{{type}} Logs</th>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <th>Log</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{log.date}}</td>
+                <td>{{log.log}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

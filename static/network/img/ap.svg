@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    id="svg3599"
+    sodipodi:docname="dlink_wireless_router.svg"
+    viewBox="0 0 80.219 67.082"
+    version="1.1"
+    inkscape:version="0.48.0 r9654"
+  >
+  <sodipodi:namedview
+      id="namedview3601"
+      fit-margin-left="0"
+      inkscape:zoom="7.068493"
+      borderopacity="1"
+      inkscape:current-layer="layer3"
+      inkscape:cx="-1.2830098"
+      inkscape:cy="29.002449"
+      inkscape:window-maximized="1"
+      showgrid="false"
+      fit-margin-right="0"
+      bordercolor="#666666"
+      inkscape:window-x="0"
+      guidetolerance="10"
+      objecttolerance="10"
+      inkscape:window-y="24"
+      fit-margin-bottom="0"
+      inkscape:window-width="1280"
+      inkscape:pageopacity="0"
+      inkscape:pageshadow="2"
+      pagecolor="#ffffff"
+      gridtolerance="10"
+      inkscape:window-height="742"
+      fit-margin-top="0"
+  />
+  <g
+      id="layer3"
+      inkscape:label="dlink"
+      transform="translate(-32.906 14.489)"
+      inkscape:groupmode="layer"
+      sodipodi:insensitive="true"
+    >
+    <path
+        id="path4102"
+        style="fill:#cccccf"
+        inkscape:connector-curvature="0"
+        d="m34.095 42.008h77.81m-72.691-15.224h64.223l8.6436 15.215 0.0404 9.5974h-78.212l-0.0133-9.3852z"
+    />
+    <path
+        id="path5603"
+        style="fill:#666666"
+        inkscape:connector-curvature="0"
+        d="m54.62 51.793v-9.8036l1.8007-15.806-17.406 0.40015-5.0018 15.806 0.20007 9.2034z"
+    />
+    <path
+        id="path5603-2"
+        sodipodi:nodetypes="ccccccccc"
+        style="fill:#666666"
+        inkscape:connector-curvature="0"
+        d="m54.625 49.625v-4.0938zm0-4.0938v4.0938h3.8438c1.0816 0.07308 1.9117-1.0304 1.875-2.0625 0.0013-0.90349-0.59-1.9-1.5312-2.0312-1.3985-0.0017-4.1875 0-4.1875 0z"
+    />
+    <path
+        id="path4129"
+        d="m54.625 48.402v-1.6886zm0-1.6886v1.6886h55.202c0.55578 0 0.90631-0.3747 0.90631-0.85077 0-0.48577-0.38616-0.83785-0.9812-0.83788-13.721-0.000665-55.127 0-55.127 0z"
+        sodipodi:nodetypes="cccccccsc"
+        style="fill:#666666"
+        inkscape:connector-curvature="0"
+    />
+    <path
+        id="path5603-3"
+        style="fill:#0197fd"
+        inkscape:connector-curvature="0"
+        d="m49.281 45.531c-0.86419 0.14868-1.524 1.0531-1.5312 1.9375-0.0846 1.0445 0.74853 2.1803 1.8438 2.1562h5.0312v-4.0938c-1.649 0.000921-3.2885 0.000064-4.9375 0-0.13044-0.01131-0.2828-0.02124-0.40625 0z"
+    />
+    <path
+        id="path5603-0-6"
+        d="m86.521 28.719h5.25c0.53558 0 1.0172-0.09267 1.375-0.03125 0.35779 0.06142 0.6035 0.25828 0.75 0.84375l2.0625 8.4062c0.29262 1.1855 0.2882 1.2228-0.75 1.375h-7.5m-1.1668-10.594h-35.667c-0.53558 0-1.0172-0.09267-1.375-0.03125-0.35779 0.06142-0.6035 0.25828-0.75 0.84375l-2.0625 8.4062c-0.29262 1.1855-0.2882 1.2228 0.75 1.375h40.463"
+        style="stroke:#666666;fill:none"
+        inkscape:connector-curvature="0"
+    />
+    <path
+        id="path5603-0"
+        style="fill:#0197fd"
+        inkscape:connector-curvature="0"
+        d="m49.5 28.688c-0.35779 0.06142-0.6035 0.25828-0.75 0.84375l-2.0625 8.4062c-0.29262 1.1855-0.2882 1.2228 0.75 1.375h7.5l1.1875-10.594h-5.25c-0.53558 0-1.0172-0.09267-1.375-0.03125z"
+    />
+    <path
+        id="path7414-5"
+        sodipodi:nodetypes="ccccccccccccc"
+        style="fill:#000000"
+        inkscape:connector-curvature="0"
+        d="m43.419-14.458h-0.07482c-0.57431-0.16773-0.8426 0.40334-1.2159 0.72098v8.5277c-0.15677 2.5859-0.48279 5.1637-0.70519 7.7464-0.03686 8.0321-0.0053 16.067-0.01579 24.101h2.1629l-0.15127-0.000001c0.45001-0.05813 1.1307 0.11443 1.442-0.08248-0.01054-8.0058 0.02107-16.014-0.01579-24.018-0.2224-2.5827-0.54842-5.1605-0.70519-7.7464v-8.5277l-0.72098-0.72098"
+    />
+    <path
+        id="path7414-5-5"
+        sodipodi:nodetypes="ccccccccccccc"
+        style="fill:#000000"
+        inkscape:connector-curvature="0"
+        d="m99.702-14.458h-0.07482c-0.57431-0.16773-0.8426 0.40334-1.2159 0.72098v8.5277c-0.15677 2.5859-0.48279 5.1637-0.70519 7.7464-0.03686 8.0321-0.0053 16.067-0.01579 24.101h2.1629l-0.15127-0.000001c0.45001-0.05813 1.1307 0.11443 1.442-0.08248-0.0105-8.0058 0.0211-16.014-0.0158-24.018-0.2224-2.5827-0.54842-5.1605-0.70519-7.7464v-8.5277l-0.72098-0.72098"
+    />
+    <path
+        id="path3111"
+        style="stroke:#000000;stroke-width:2;fill:none"
+        inkscape:connector-curvature="0"
+        d="m34.095 42.008h77.81m-72.691-15.224h64.223l8.6436 15.215 0.0404 9.5974h-78.212l-0.0133-9.3852z"
+    />
+  </g
+  >
+  <metadata
+    >
+    <rdf:RDF
+      >
+      <cc:Work
+        >
+        <dc:format
+          >image/svg+xml</dc:format
+        >
+        <dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        />
+        <cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        />
+        <dc:publisher
+          >
+          <cc:Agent
+              rdf:about="http://openclipart.org/"
+            >
+            <dc:title
+              >Openclipart</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:publisher
+        >
+        <dc:title
+          >Wireless Router</dc:title
+        >
+        <dc:date
+          >2011-03-24T11:56:06</dc:date
+        >
+        <dc:description
+          >A popular, branded wireless router for computer networks.</dc:description
+        >
+        <dc:source
+          >https://openclipart.org/detail/129067/wireless-router-by-lalitpatanpur</dc:source
+        >
+        <dc:creator
+          >
+          <cc:Agent
+            >
+            <dc:title
+              >Lalitpatanpur</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:creator
+        >
+        <dc:subject
+          >
+          <rdf:Bag
+            >
+            <rdf:li
+              >CAT5</rdf:li
+            >
+            <rdf:li
+              >computer</rdf:li
+            >
+            <rdf:li
+              >router</rdf:li
+            >
+            <rdf:li
+              >switching</rdf:li
+            >
+            <rdf:li
+              >wireless</rdf:li
+            >
+            <rdf:li
+              >wireless router</rdf:li
+            >
+          </rdf:Bag
+          >
+        </dc:subject
+        >
+      </cc:Work
+      >
+      <cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        >
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        />
+      </cc:License
+      >
+    </rdf:RDF
+    >
+  </metadata
+  >
+</svg
+>

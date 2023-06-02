@@ -1,0 +1,158 @@
+ {% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Groups {% endblock %} {% block js %}
+<script src="/static/dashboard/js/duallist.js"></script>
+
+<script>
+    var demo2 = $('.select1').bootstrapDualListbox({
+        nonSelectedListLabel: 'All Permissions',
+        selectedListLabel: 'Selected Permissions',
+        preserveSelectionOnMove: 'moved',
+        moveOnSelect: false,
+    });
+
+
+    // dlb1 = new DualListbox('.select1', {
+    //     addEvent: function(value) { // Should use the event listeners
+    //         console.log(value);
+    //     },
+    //     removeEvent: function(value) { // Should use the event listeners
+    //         console.log(value);
+    //     },
+    //     availableTitle: 'Available Permissions',
+    //     selectedTitle: 'Selected Permissions',
+    //     addButtonText: '>',
+    //     removeButtonText: '<',
+    //     addAllButtonText: '>>',
+    //     removeAllButtonText: '<<',
+    // });
+
+    function getSelectedPerm(value, text, i) {
+        demo2.append(`<option value="${value}" selected>${text.split("_").join(" ")}</option>`);
+        demo2.bootstrapDualListbox('refresh', true);
+    }
+
+    $('.changeGroup').on('change', function() {
+        demo2.html("")
+        $.post("/test/group/", {
+            "user": this.value
+        }, function(data, status) {
+            group_perm = [];
+
+            for (var i in data["a_all"]) {
+                group_perm.push(`dashboard.${data["a_all"][i]["codename"]}`);
+            }
+
+            left_perm = data["all_p"].filter(function(el) {
+                return group_perm.indexOf(el) < 0;
+            });
+
+            for (var i in left_perm) {
+                value = left_perm[i];
+                text = value.split(".")[1].split('_').join(' ');
+
+                // console.log(value, text);
+
+                // for (var j in a_all) {
+                //     codename = a_all[j]["codename"]
+                //     if (`dashboard.${codename}` == value) { // checking if all_per is there in permission
+                //         if (!text.startsWith("change")) { // removing change permission from selected perm
+                //             demo2.append(`<option value="dashboard.${codename}" selected>${codename.split("_").join(" ")}</option>`);
+                //         }
+                //     }
+                // }
+
+                if (!text.startsWith("change")) { // removing change permission from non-selected perm
+                    demo2.append(`<option value="${value}">${text}</option>`);
+                }
+            }
+            for (var i in group_perm) {
+                value = group_perm[i];
+                text = value.split(".")[1].split("_").join(" ");
+                if (!text.startsWith("change")) { // removing change permission from selected perm
+                    demo2.append(`<option value="${value}" selected>${text}</option>`);
+                }
+            }
+
+            demo2.bootstrapDualListbox('refresh', true);
+
+            // for (var i in a_all) {
+            //     getSelectedPerm(`dashboard.${a_all[i]["codename"]}`, a_all[i]["codename"], i)
+            // }
+
+        });
+    });
+
+
+    //dlb1.search.classList.add('searchbar');
+</script>
+{% endblock %} {% block css %}
+<!-- <link rel="stylesheet" href="/static/dashboard/css/groups.css"> -->
+<link rel="stylesheet" href="/static/dashboard/css/duallist.css">
+<style>
+    .bootstrap-duallistbox-container .moveall,
+    .bootstrap-duallistbox-container .removeall {
+        width: 50%;
+        box-sizing: border-box;
+    }
+    
+    .bootstrap-duallistbox-container .move,
+    .bootstrap-duallistbox-container .remove {
+        width: 50%;
+        box-sizing: border-box;
+    }
+    
+    button,
+    select {
+        text-transform: capitalize;
+    }
+    
+    select {
+        font-size: 2.4rem;
+    }
+</style>
+{% endblock %} {% block title_header %}Groups{% endblock %} {% block content %} {% if msg %}
+<script>
+    Swal.fire("{{msg}}");
+</script>
+{% endif %}
+<h1>Group Creation</h1>
+<form class="form-inline" action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <br>
+    <input class="form-control" type="text" name="creategroup" />
+    <button class="btn btn-primary" style="width: 12%;" type="submit">Create Group</button>
+
+</form>
+
+<br>
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6 text-right" style="display: flex;
+      justify-content: end;
+      padding-top: 7px;">
+            <label class="d-flex justify-content-center form-inline" for="">Choose Group:</label>
+        </div>
+        <div class="col-md-6 text-left form-inline">
+            <select class="form-control changeGroup" style="width: 25%;" name="groupname" id="1" required>
+        <option value disabled selected>--SELECT GROUP--</option>
+      {% for grp in all_group %}
+      <option value="{{grp}}">
+        {{grp}}
+      </option>
+
+      {% endfor %}
+    </select>
+        </div>
+    </div>
+
+
+
+    <br><br>
+
+    <select class="select1" id="permissions" multiple name="permission" style="height:195px">
+            
+    </select><br><br>
+    <button class="btn btn-primary" style="width: 20%;font-size: 17px;font-weight: 600;" type="submit" name="subm">Assign Permissions</button>
+</form>
+
+{% endblock %}

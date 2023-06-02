@@ -1,0 +1,16 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Settings {% endblock %} {% block js %} {% endblock %} {% block css %}
+<style>
+    .col-lg-4 {
+        margin-bottom: 20px;
+    }
+    
+    .custom-btn {
+        font-size: xx-large;
+    }
+</style>
+{% endblock %} {% block title_header %}Settings{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="{% url 'edit-profile' %}"><i class="fa fa-edit"></i> | Edit Profile</a></div>
+    </div>
+</div>
+{% endblock %}

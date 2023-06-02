@@ -1,0 +1,31 @@
+{% extends 'dashboard/header_footer.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block js  %}
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="jumbotron text-center">
+  <h1 class="display-3">{{ result }}</h1>
+  <p class="lead">{{ helping_text }}</p>
+  <hr>
+  <p>
+    Having trouble? <a href="{{ button_url }}">{{ button_text }}</a>
+  </p>
+  <p class="lead">
+    <a class="btn btn-primary btn-sm" href="/" role="button">Continue to homepage</a>
+  </p>
+</div>
+
+
+{% endblock %}

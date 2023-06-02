@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=hawk
+Group=www-data
+WorkingDirectory=/home/hawk/AkusITSolutions
+ExecStart=/home/hawk/myvenv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          monitor_assets.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

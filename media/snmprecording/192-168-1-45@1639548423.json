@@ -1,0 +1,714 @@
+{
+    "sysdescr": "Hardware: Intel64 Family 6 Model 45 Stepping 7 AT/AT COMPATIBLE - Software: Windows Version 6.3 (Build 14393 Multiprocessor Free)",
+    "sysobjectid": "1.3.6.1.4.1.311.1.1.3.1.2",
+    "sysuptime": "15395656",
+    "syscontact": "",
+    "sysname": "WIN-IO0S7ELJJDA",
+    "syslocation": "",
+    "interfaces": {
+        "1": {
+            "ifindex": "1",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Software Loopback Interface 1\u0000",
+            "mtu": "1500",
+            "speed": "1073741824",
+            "mac": "",
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Loopback Pseudo-Interface 1",
+            "outErr": 0,
+            "ipv4": [
+                {
+                    "address": "127.0.0.1",
+                    "netmask": "255.0.0.0"
+                }
+            ]
+        },
+        "2": {
+            "ifindex": "2",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #2\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "138"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 2",
+            "outErr": 0
+        },
+        "3": {
+            "ifindex": "3",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Microsoft Kernel Debug Network Adapter\u0000",
+            "mtu": "0",
+            "speed": "0",
+            "mac": "",
+            "adminstatus": "down",
+            "operstatus": "unknown",
+            "description": "Local Area Connection* 1",
+            "outErr": 0
+        },
+        "4": {
+            "ifindex": "4",
+            "inOctect": 50694439,
+            "outOctect": 2504401,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet\u0000",
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "136"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Ethernet",
+            "outErr": 0,
+            "ipv4": [
+                {
+                    "address": "192.168.1.45",
+                    "netmask": "255.255.255.0"
+                }
+            ]
+        },
+        "5": {
+            "ifindex": "5",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Microsoft ISATAP Adapter\u0000",
+            "mtu": "1280",
+            "speed": "100000",
+            "mac": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "224"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "isatap.{8AD69FD0-E3A7-4115-A676-BEEA8DE64960}",
+            "outErr": 0
+        },
+        "6": {
+            "ifindex": "6",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #4\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "139"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 4",
+            "outErr": 0
+        },
+        "7": {
+            "ifindex": "7",
+            "inOctect": 456,
+            "outOctect": 1413,
+            "inErr": 0,
+            "name": "Teredo Tunneling Pseudo-Interface\u0000",
+            "mtu": "1472",
+            "speed": "100000",
+            "mac": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "224"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Local Area Connection* 3",
+            "outErr": 0
+        },
+        "8": {
+            "ifindex": "8",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #3\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "137"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 3",
+            "outErr": 0
+        },
+        "9": {
+            "ifindex": "9",
+            "inOctect": 50694439,
+            "outOctect": 2504401,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "136"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Ethernet-WFP Native MAC Layer LightWeight Filter-0000",
+            "outErr": 0
+        },
+        "10": {
+            "ifindex": "10",
+            "inOctect": 50694439,
+            "outOctect": 2504401,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet-QoS Packet Scheduler-0000\u0000",
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "136"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Ethernet-QoS Packet Scheduler-0000",
+            "outErr": 0
+        },
+        "11": {
+            "ifindex": "11",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #3-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "137"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 3-WFP Native MAC Layer LightWeight Filter-0000",
+            "outErr": 0
+        },
+        "12": {
+            "ifindex": "12",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #2-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "138"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 2-WFP Native MAC Layer LightWeight Filter-0000",
+            "outErr": 0
+        },
+        "13": {
+            "ifindex": "13",
+            "inOctect": 50694439,
+            "outOctect": 2504401,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "136"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Ethernet-WFP 802.3 MAC Layer LightWeight Filter-0000",
+            "outErr": 0
+        },
+        "14": {
+            "ifindex": "14",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #2-QoS Packet Scheduler-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "138"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 2-QoS Packet Scheduler-0000",
+            "outErr": 0
+        },
+        "15": {
+            "ifindex": "15",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #2-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "138"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 2-WFP 802.3 MAC Layer LightWeight Filter-0000",
+            "outErr": 0
+        },
+        "16": {
+            "ifindex": "16",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #3-QoS Packet Scheduler-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "137"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 3-QoS Packet Scheduler-0000",
+            "outErr": 0
+        },
+        "17": {
+            "ifindex": "17",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #3-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "137"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 3-WFP 802.3 MAC Layer LightWeight Filter-0000",
+            "outErr": 0
+        },
+        "18": {
+            "ifindex": "18",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #4-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "139"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 4-WFP Native MAC Layer LightWeight Filter-0000",
+            "outErr": 0
+        },
+        "19": {
+            "ifindex": "19",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #4-QoS Packet Scheduler-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "139"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 4-QoS Packet Scheduler-0000",
+            "outErr": 0
+        },
+        "20": {
+            "ifindex": "20",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #4-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "139"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 4-WFP 802.3 MAC Layer LightWeight Filter-0000",
+            "outErr": 0
+        },
+        "21": {
+            "ifindex": "21",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 21",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "21"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "22": {
+            "ifindex": "22",
+            "inOctect": 2504401,
+            "outOctect": 51766175,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 22",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "22"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "23": {
+            "ifindex": "23",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 23",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "23"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "24": {
+            "ifindex": "24",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 24",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "24"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "25": {
+            "ifindex": "25",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 25",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "25"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "26": {
+            "ifindex": "26",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 26",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "26"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "27": {
+            "ifindex": "27",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 27",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "27"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "28": {
+            "ifindex": "28",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 28",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "28"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "41": {
+            "ifindex": "41",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Console port",
+            "mtu": "0",
+            "speed": "0",
+            "mac": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "1000": {
+            "ifindex": "1000",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Loopback Interface 0",
+            "mtu": "0",
+            "speed": "0",
+            "mac": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "1001": {
+            "ifindex": "1001",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "VLAN ID 0001",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "0"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "",
+            "ipv4": [
+                {
+                    "address": "192.168.1.10",
+                    "netmask": "255.255.255.0"
+                }
+            ]
+        }
+    },
+    "all_ipv4_addresses": [
+        "127.0.0.1",
+        "192.168.1.45"
+    ],
+    "cpuutil": {
+        "3": {
+            "cpuUtilization": "0"
+        },
+        "4": {
+            "cpuUtilization": "0"
+        },
+        "5": {
+            "cpuUtilization": "0"
+        },
+        "6": {
+            "cpuUtilization": "0"
+        }
+    },
+    "hrstorage": {
+        "1": {
+            "hrsystemindex": 1,
+            "hrstoragetype": "1.3.6.1.2.1.25.2.1.4",
+            "hrtoragedescr": "C:\\ Label:  Serial Number 7eb2db5f",
+            "hrtoragealloc": "4096",
+            "hrstoragesize": "72975861",
+            "hrstorageused": "13581833",
+            "hrallocfail": "0"
+        },
+        "2": {
+            "hrsystemindex": 2,
+            "hrstoragetype": "1.3.6.1.2.1.25.2.1.7",
+            "hrtoragedescr": "E:\\",
+            "hrtoragealloc": "0",
+            "hrstoragesize": "0",
+            "hrstorageused": "0",
+            "hrallocfail": "0"
+        },
+        "3": {
+            "hrsystemindex": 3,
+            "hrstoragetype": "1.3.6.1.2.1.25.2.1.3",
+            "hrtoragedescr": "Virtual Memory",
+            "hrtoragealloc": "65536",
+            "hrstoragesize": "308693",
+            "hrstorageused": "32517",
+            "hrallocfail": "0"
+        },
+        "4": {
+            "hrsystemindex": 4,
+            "hrstoragetype": "1.3.6.1.2.1.25.2.1.2",
+            "hrtoragedescr": "Physical Memory",
+            "hrtoragealloc": "65536",
+            "hrstoragesize": "261589",
+            "hrstorageused": "31738",
+            "hrallocfail": "0"
+        }
+    }
+}

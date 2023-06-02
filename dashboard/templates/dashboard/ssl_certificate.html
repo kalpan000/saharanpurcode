@@ -1,0 +1,122 @@
+{% extends 'dashboard/header_footer.html' %}{% load static %} {% block title %} Certificates {% endblock title %} {% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/datatable.css' %}">
+<style>
+
+</style>
+{% endblock %} {% block content %}
+<h1>GENERATE SELF SSL CERTIFICATE</h1>
+
+<form class="needs-validation" novalidate>
+    <div class="row">
+        <section class="col-md-4" style="padding: 20px; left: 50%; transform: translate(-50% , 0);">
+            <input type="hidden" name="csrfmiddlewaretoken" value="GP2oiyFHyDCBvnJ0Ehz5VEo8MJgwvOblMDVEvePOIuIWjnPxhJqV4HirKRVjETun">
+            <fieldset>
+                <legend> Enter Details </legend>
+                <div class="mb-3">
+                    <label for="email" class="form-label" style="text-align: left; width: 100%;">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email">
+                </div>
+                <div class="mb-3">
+                    <label for="commonName" class="form-label" style="text-align: left; width: 100%;">Common Name</label>
+                    <input type="text" class="form-control col-md-2" id="commonName" name="commonName">
+                </div>
+                <div class="mb-3">
+                    <label for="country" class="form-label" style="text-align: left; width: 100%;">Country</label>
+                    <input type="text" class="form-control col-md-2" maxlength="2" id="country" name="country">
+                </div>
+                <div class="mb-3">
+                    <label for="locality" class="form-label" style="text-align: left; width: 100%;">Locality</label>
+                    <input type="text" class="form-control" name="locality" id="locality">
+                </div>
+                <div class="mb-3">
+                    <label for="state" class="form-label" style="text-align: left; width: 100%;">State / Province Name</label>
+                    <input type="text" class="form-control" name="state" id="state">
+                </div>
+                <div class="mb-3">
+                    <label for="organization" class="form-label" style="text-align: left; width: 100%;">Organization Name</label>
+                    <input type="text" class="form-control" name="organization" id="organization">
+                </div>
+                <div class="mb-3">
+                    <label for="organizationUnit" class="form-label" style="text-align: left; width: 100%;">Organization Unit Name</label>
+                    <input type="text" class="form-control" name="organizationUnit" id="organizationUnit">
+                </div>
+                <br><br>
+                <input type="button" onclick="Swal.fire('Demo')" class="btn btn-primary" value="GENERATE">
+            </fieldset>
+        </section>
+    </div>
+    <h1>ADD SSL CERTIFICATE</h1>
+    <div class="row">
+        <section class="col-md-8" style="padding: 20px; left: 50%; transform: translate(-50% , 0);">
+            <fieldset>
+                <div class="row">
+                    <legend> Enter Details </legend>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label" style="text-align: left; width: 100%;">Paste Certificate</label>
+                        <textarea class="form-control" id="certificate" name="certificate"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label" style="text-align: left; width: 100%;">Paste Key</label>
+                        <textarea class="form-control" id="key" name="key"></textarea>
+                    </div>
+                </div>
+                <br><br>
+                <div class="row">
+                    <input type="button" onclick="Swal.fire('Demo')" class="btn btn-primary" value="ADD">
+                </div>
+            </fieldset>
+        </section>
+    </div>
+</form>
+
+<script>
+    function GenerateSSL() {
+        email = $("#email").val()
+        commonName = $("#commonName").val()
+        countryName = $("#country").val()
+        localityName = $("#locality").val()
+        stateOrProvinceName = $("#state").val()
+        organizationName = $("#organization").val()
+        organizationUnitName = $("#organizationUnit").val()
+        if (email == "" || commonName == "" || countryName == "" || localityName == "" || stateOrProvinceName == "" || organizationName == "" || organizationUnitName == "") {
+            Swal.fire("Fill the details");
+            return;
+        }
+        var data = {
+            "email": email,
+            "commonName": commonName,
+            "countryName": countryName,
+            "localityName": localityName,
+            "stateOrProvinceName": stateOrProvinceName,
+            "organizationName": organizationName,
+            "organizationUnitName": organizationUnitName,
+            "type": "generator"
+        }
+
+        $.get('/ssl', data, function(response) {
+                Swal.fire(response["data"]);
+            }
+
+        )
+    }
+
+    function AddCertificate() {
+        var certificate = $("#certificate").val();
+        var key = $("#key").val();
+        if (certificate == "" || key == "") {
+            Swal.fire("Fill the details");
+            return;
+        }
+        var data = {
+            "certificate": certificate,
+            "key": key,
+            "type": "creator"
+        }
+        $.post('/ssl/', data, function(response) {
+                Swal.fire(response["data"]);
+            }
+
+        )
+    }
+</script>
+{% endblock %}

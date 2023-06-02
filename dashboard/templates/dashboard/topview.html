@@ -1,0 +1,166 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %}Top View{% endblock %} {% block js %}
+{% endblock %} {% block css %}
+<link href="{% static 'dashboard/css/top.css' %}" rel="stylesheet">
+<style>
+    .inner-block {
+        background-image: url("{% static 'dashboard/images/data_center.png' %}");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+</style>
+<style>
+        table{
+            position: relative;
+            /*margin-left: 10px;*/
+            /*margin-right: 10px;*/
+            color:white;
+            min-width: 400px;
+            height: 100%;
+            border: none;
+        }
+
+        .table2{
+            min-width: 300px;
+        }
+
+        td , th {
+            padding: 10px;
+            border: none;
+        }
+
+        .tableSection{
+            width: 100%;
+            background-color: rgb(29, 77, 89);;
+            display: flex;
+            overflow-x: auto
+        }
+
+        .tableContainer{
+            /*padding: 30px 20px;*/
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
+            line-height:4;
+        }
+    
+        th{
+            background-color:#1F2739;
+            color:#c2e934;
+            border-style : hidden!important;
+            text-align:center;
+        }
+        td:nth-child(12n+1){
+            background-color:rgb(38, 51, 55);
+            font-weight:bold;
+            border-style : hidden!important;
+        }
+        td:nth-child(12n+2){
+            background-color:rgb(38, 51, 55);
+            font-weight:bold;
+            border-style : hidden!important;
+        }
+
+        .deviceCell {
+            background-color:rgb(38, 51, 55);
+        }
+
+        .MyHover:hover{
+            background-color: #FFF842;
+            color: #403E10;
+            font-weight: bold;
+            box-shadow: #7F7C21 -1px 1px, #7F7C21 -2px 2px, #7F7C21 -3px 3px, #7F7C21 -4px 4px, #7F7C21 -5px 5px, #7F7C21 -6px 6px;
+            transform: translate3d(6px, -6px, 0);
+            transition-delay: 0s;
+            transition-duration: 0.4s;
+            transition-property: all;
+            transition-timing-function: line;
+        }
+        
+    </style>
+{% endblock %} {% block title_header %}Topview{% endblock %}{% block content %}
+
+<section class="tableSection" style="align-items: center;justify-content: center;">
+            <div class="tableContainer">
+            
+
+            </div>
+        </section>
+
+        <script>
+
+            var data = {{data|safe}};
+
+            console.log(data);
+
+            var lastTableEndedWithHot = false;
+            var firstRun = true;
+            for(var key in data["data"]){
+                
+                
+                var output = "<table class='table2' border='1'>";  
+                
+                if(firstRun){
+                    output = "<table border='1'>";  
+                    output += "<tr><th> Cold Aisle </th>";    
+                }
+
+                output += "<th>Row " + key.toUpperCase() +"</th>";
+                output += (lastTableEndedWithHot ? "<th> Cold Aisle </th></tr>" : "<th> Hot Aisle </th></tr>");
+                    
+
+                for(var i = 0; i < data["maxLen"]; i++){
+                    console.log(data["data"][key][i]);
+                    output += "<tr>";
+                    var insert = (i >= data["data"][key].length) ? " <br> " : data["data"][key][i];
+
+                    if(firstRun) 
+                        output += "<td style='background-color:rgb(116, 204, 226);'><br></td>";
+
+                    output += "<td class='deviceCell MyHover' >"+ insert +"</td>";
+                    output += (lastTableEndedWithHot ? "<td style='background-color:rgb(116, 204, 226);'><br></td>" : "<td style='background-color:rgb(235, 193, 132);'><br></td>");
+                    
+                    output += "</tr>";
+
+                }
+
+                lastTableEndedWithHot = !lastTableEndedWithHot;
+                firstRun = false;
+                output += "</table>";
+                $(".tableContainer").append(output);
+            }
+
+        
+            // for(var key in data["data"]){
+
+            //     var cold = "<table border='1'><thead><tr><th>Cold Aisle</th></tr></thead>";
+            //     var hot = "<table border='1'><thead><tr><th>Hot Aisle</th></tr></thead>";
+            //     var output = "<table border='1'><thead>";    
+
+            //     output += "<tr><th>Row "+ key.toUpperCase() +"</th></tr></thead><tbody>";
+            //     cold += "</thead><tbody>";
+            //     hot += "</thead><tbody>";
+
+            //     for(var i = 0; i < data["maxLen"]; i++){
+            //         var insert;
+            //         insert = (i >= data["data"][key].length) ? " <br> " : data["data"][key][i];
+            //         output += "<tr> <td class='MyHover'> "+ insert +" </td> </tr>";
+            //         cold += "<tr><td style='background-color:rgb(116, 204, 226);'>&nbsp;</td></tr>";
+            //         hot += "<tr><td style='background-color:rgb(235, 193, 132);'>&nbsp;</td></tr>";
+
+            //         if(!isHot){
+
+            //         }
+
+
+            //     }
+            //     cold += "</tbody></table>";
+            //     cold += "</tbody></table>";
+            //     output += "</tbody></table>";
+            //     cold += output + hot;
+                
+            //     $(".tableContainer").append(cold);
+            // }
+
+        </script>
+{% endblock %}

@@ -1,0 +1,652 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %}{% load utils %} {% block title %} Data Center {% endblock title %} {% block js %} {% endblock js %} 
+{% block title_header %}Datacenter{% endblock %}
+{% block content %}
+
+<style>
+    .inner-block {
+        background-image: url("{% static 'dashboard/images/data_center.png' %}");
+   background-repeat: no-repeat;
+   background-size: 100% 100%;
+   background-attachment: fixed;
+}
+    .button {
+  padding: -6px 25px;
+  font-size: 15px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  /* background-color: #F2F2F2; */
+  
+  /* background: linear-gradient(319deg, #4bb4e6 0%, #256eff 37%, #46237a 100%); */
+  background-image: url("{% static 'dashboard/images/1532986833.png' %}");
+  background-repeat: no-repeat;
+   background-size: 100% 100%;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 25px #999;
+  margin-top: 40px;
+  padding-left: 140px;
+}
+
+.button:hover {background-color: #F2F2F2}
+
+.button:active {
+  /* background-color: #3e8e41; */
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+    
+    .tab-content {
+        background: none;
+        padding: 0;
+    }
+    
+    table {
+        width: 100px;
+        border-collapse: collapse;
+    }
+    
+    table,
+    th,
+    td {
+        border: 1px solid black;
+    }
+    
+    th,
+    td {
+        padding: 10px;
+    }
+    
+    body {
+        font-family: Arial;
+    }
+    /* Style the tab */
+    
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+    /* Style the buttons inside the tab */
+    
+    .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+    }
+    /* Change background color of buttons on hover */
+    
+    .tab button:hover {
+        background-color: #ddd;
+    }
+    /* Create an active/current tablink class */
+    
+    .tab button.active {
+        background-color: #ccc;
+    }
+    /* Style the tab content */
+    
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+    
+    * {
+        box-sizing: border-box;
+    }
+    .btn{
+        display:inline;
+    }
+    a{
+        text-decoration:none;
+    }
+    a:hover{
+        text-decoration:none;
+    }
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    /* Float four columns side by side */
+    
+    .column {
+        float: left;
+        width: 20%;
+        padding: 0 10px;
+    }
+    /* Remove extra left and right margins, due to padding */
+    
+    .row {
+        margin: 0 -5px;
+    }
+    /* Clear floats after the columns */
+    
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+    /* Responsive columns */
+    
+    @media screen and (max-width: 600px) {
+        .column {
+            width: 50%;
+            display: block;
+            margin-bottom: 20px;
+        }
+    }
+    /* Style the counter cards */
+    
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 16px;
+        width: 85%;
+        text-align: center;
+        background-color: #f1f1f1;
+    }
+    
+    h1 {
+        text-align: center;
+        font-size: 40px;
+        margin-top: 60px;
+        color: #BEF781;
+    }
+    
+    h1 p {
+        text-align: center;
+        margin: 0px;
+        font-size: 18px;
+        text-decoration: underline;
+        color: white;
+    }
+    
+    h1 {
+        padding: 40px 0 20px;
+        font: 40px/60px Gabriela, Georgia, serif;
+        text-align: center;
+        text-shadow: 3px 3px rgba(0, 0, 0, 0.1);
+        color: #fff;
+    }
+    
+    a {
+        color: #1889e6;
+    }
+    
+    a:hover {
+        text-decoration: none;
+    }
+    
+    .bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .page {
+        position: relative;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px 40px;
+    }
+    
+</style>
+
+<body>
+    <style>
+        #menu span {
+            position: absolute;
+        }
+        
+        .card-counter {
+            box-shadow: 2px 2px 10px #DADADA;
+            margin: 5px;
+            padding: 20px 10px;
+            background-color: #fff;
+            height: 100px;
+            border-radius: 5px;
+            transition: .3s linear all;
+        }
+        
+        .card-counter:hover {
+            box-shadow: 4px 4px 20px #DADADA;
+            transition: .3s linear all;
+        }
+        
+        .card-counter.primary {
+            background-color: #007bff;
+            color: #FFF;
+        }
+        
+        .card-counter.danger {
+            background-color: #ef5350;
+            color: #FFF;
+        }
+        
+        .card-counter.success {
+            background-color: #66bb6a;
+            color: #FFF;
+        }
+        
+        .card-counter.info {
+            background-color: #26c6da;
+            color: #FFF;
+        }
+        
+        .card-counter i {
+            font-size: 5em;
+            opacity: 0.2;
+        }
+        
+        .card-counter .count-numbers {
+            position: absolute;
+            right: 35px;
+            top: 20px;
+            font-size: 32px;
+            display: block;
+        }
+        
+        .card-counter .count-name {
+            position: absolute;
+            right: 35px;
+            top: 65px;
+            font-style: italic;
+            text-transform: capitalize;
+            opacity: 0.5;
+            display: block;
+            font-size: 18px;
+        }
+
+        .btn-racks{
+            width:250px;
+            height:400px;
+        }
+        .btn-racks:visited{
+            background:red;
+        }
+    </style>
+
+    <div class="cols-grids panel-widget">
+        <div class="container">
+            <h2>{{datacenter.DataCenterName|capfirst}} - Data Center Hall | <a href="{% url 'top-view' datacenter.id %}">Topview</a> <a title="Environmental Monitoring System" href="{% url 'temp-view' %}">EMS</a></h2>
+            <div class="row">
+                <div class="column">
+                    <div class="card" style="background-color: #0cbaba;color: white;padding:10px;border-radius:10px; ">
+                        <p style="font-weight: bolder;">Datacenter Load</p>
+                        <h3 style="margin: 10px;"> {{datacenter.Capacity_in_MW}} kwh </h3>
+                        <!-- <p>Print Load : 234482</p>
+                        <p>Actual Load : 200083</p> -->
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card" style="background-color: #2b5620;color: white;padding:10px;border-radius:10px;">
+                        <p style="font-weight: bolder;">Total Rows</p>
+                        <h3 style="margin: 10px;"> {{rowsTotal}} </h3>
+                        <!-- <p>Print Load : 654678</p>
+                        <p>Actual Load : 190002</p> -->
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="card" style="background-color: #4c2e96;color: white;padding:10px;border-radius:10px;">
+                        <p style="font-weight: bolder;">Total Racks</p>
+                        <h3 style="margin: 10px;"> {{racksTotal}} </h3>
+                        <!-- <p>Empty slots: 20</p>
+                        <p>Occupied : {{device_count}}</p> -->
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="card" style="background-color: #9c75b9;color: white;padding:10px;border-radius:10px;">
+
+                        <p style="font-weight: bolder;">Total Devices</p>
+                        <h3 style="margin: 10px;"> {{total}} </h3>
+                        <!-- <p>Occupied : {{device_count}}</p> -->
+
+                    </div>
+                </div>
+              
+              
+                <div class="column">
+                    <div class="card"style="background-color: #ff0000;color: white;padding:10px;border-radius:10px; ">
+                        <p style="font-weight: bolder;">Notifcations</p>
+                        <h3 style="margin: 10px;"> 0 </h3>
+                        <!-- <p>Empty slots: 20</p>
+                        <p>Occupied : {{device_count}}</p> -->
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+
+                        {% for row in datacenterrows %}
+                        <li role="presentation"><a href="#{{row.id}}" aria-controls="{{row.id}}" role="tab" data-toggle="tab" onclick="myfun({{row.RackRow}})">Row {{row.RackRow}}</a></li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <!--Printing all rows in this datacenter-->
+                        {% for row in datacenterrows %}
+
+
+                        <div role="tabpanel" class="tab-pane" id="{{row.id}}">
+                            <!--Printing all racks in all the rows-->
+                            {% for racks in datacenterracks %} 
+                            
+                            <!--Checking if the racks are related to a row-->
+                            {% if racks.date_center_row.RackRow == row.RackRow %}
+                            <div class="col-md-3"> 
+                                <!-- <div class="card" style="background:bisque; margin-top: 60px;"> -->
+                                    <button class="button btn-racks" style="box-shadow: 0 20px {{racks.RowColor}};">
+                                        
+                                        <!-- <table style="line-height:0;width:100%">
+                                            <tr style="width:100%">
+                                                <td rowspan="2" style="background-color:darkgreen"></td>
+                                                <td>Number of Rows</td>
+                                                <td style="font-weight:bolder; widtd:30%;line-height: 20px;">Rack Name</td>
+                                                <td>Center Name</td>
+                                                <td rowspan="2" style="background-color:darkgreen"></td>
+                                            </tr>
+                                            Printing cells of a Rack
+                                            <tr style="width:50%">
+                                                {% comment %} <td style="background-color:darkgreen"></td> {% endcomment %}
+                                                <td style="width:30%;line-height: 20px;">{{racks.Rack_Type_Information}}</td>
+                                                <td style="font-weight:bolder; width:30%;line-height: 20px;"><a href="{% url 'rack_page' racks.id %}">{{racks.Rack_Label_Tag}}</a></td>
+                                                <td style="width:30%;line-height: 20px;">{{racks.datacenter.DataCenterName}} </td>
+                                                {% comment %} {{racks.RowColor}}  {% endcomment %}
+                                                {% comment %} <td style="background-color:darkgreen"></td> {% endcomment %}
+                                            </tr>
+                                        </table>
+                                    </div> --> 
+                                    
+                                    {% comment %} <p style="font-weight: bolder; text-align: center;" class="col-md-12">Number of Rows: {{racks.Rack_Type_Information}}</p> {% endcomment %}
+                                    <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12"><a href="{% url 'rack_page' racks.id %}">{{racks.Rack_Label_Tag}}</a></p>
+                                    {% comment %} <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">Rack Description :<br>{{racks.Special_Notes}}</p> {% endcomment %}
+                                    {% comment %} <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">Rack Power Load :<br></p> {% endcomment %}
+                                    <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">{{racks.date_center_row.data_center}}</p>
+                                    {% comment %} <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">Total Devices :<br></p> {% endcomment %}
+                                    <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">{{racks.Rack_Type}} Type</p>
+                                    {% comment %} <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">LPDU :<br></p> {% endcomment %}
+                                    {% comment %} <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">Notifications :<br></p> {% endcomment %}
+                                    {% comment %} <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">{{racks.Rack_Type_Information}}(T) = {{racks.device_height_array}}(O)/(F)</p> {% endcomment %}
+                                    <p style="margin-left: -136px;font-weight: bolder; text-align: center;" class="col-12">{{racks.Rack_Type_Information}}(T) = {{racks.device_height_array|countRacks}}(O)/{% with total=racks.device_height_array|countRacks %}{{racks.Rack_Type_Information|subtract:total}}{% endwith %}(F)</p>
+
+                                    {% if user.is_superuser %}
+                                    <p style="margin-left: -136px;"><a href="{% url 'rack_page' racks.id %}" class="btn btn-primary"><i class="fa fa-eye"></i></a> <a href="{% url 'edit_rack' racks.id %}" class="btn btn-success"><i class="fa fa-edit"></i></a> <a href="#!" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-danger"><i class="fa fa-trash"></i></a></p>
+                                    {% endif %}
+                                    {% comment %} <p style="font-weight: bolder; margin-left: -98px; padding-right: 23px;">Number of Device : {% for data in device %}{% if data.data_center_rack.Rack_Label_Tag == racks.Rack_Label_Tag %}X{% endif %}{% endfor %}</p>
+                                    <p style="font-weight: bolder; margin-left: -98px; padding-right: 23px;">Empty Cell : {{racks.datacenter.DataCenterName}}</p> {% endcomment %}
+                                </button>
+                            </div>
+                            {% endif %} {% endfor %}
+
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+
+            <!-- <a class="btn btn-primary" href="">Next</a> {% comment %} <a class="btn btn-primary" href="{% url 'data_center2' %}">Next</a> {% endcomment %} -->
+
+            <div class="chute chute-center text-center">
+
+                <!--<div class="row mb40">
+					<div class="col-md-6">
+						<div class="demo-grid">
+							<code>.col-md-6</code>						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="demo-grid">
+							<code>.col-md-6</code>						</div>
+					</div>
+				</div>
+				<div class="row mb40">
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+				</div>--->
+                <!---728x90--->
+                <!---<div class="row mb40">
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+				</div>--->
+                <!---<div class="row mb40">
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+				</div>--->
+
+                <!---<div class="row mb40">
+					<div class="col-md-8 mb5">
+						<div class="demo-grid">
+							<code>.col-md-8</code>						</div>
+					</div>
+					<div class="col-md-4 mb5">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+				</div>--->
+                <!---<div class="row mb40">
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-6 mb5">
+						<div class="demo-grid">
+							<code>.col-md-6</code>						</div>
+					</div>
+				</div>--->
+
+                <!---728x90--->
+                <!---<div class="row mb40">
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+				</div>--->
+            </div>
+
+
+
+
+
+
+
+            <div class="chute chute-center text-center">
+
+                <!--<div class="row mb40">
+					<div class="col-md-6">
+						<div class="demo-grid">
+							<code>.col-md-6</code>						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="demo-grid">
+							<code>.col-md-6</code>						</div>
+					</div>
+				</div>
+				<div class="row mb40">
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+				</div>--->
+                <!---728x90--->
+                <!---<div class="row mb40">
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+				</div>--->
+                <!---<div class="row mb40">
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+				</div>--->
+
+                <!---<div class="row mb40">
+					<div class="col-md-8 mb5">
+						<div class="demo-grid">
+							<code>.col-md-8</code>						</div>
+					</div>
+					<div class="col-md-4 mb5">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+				</div>--->
+                <!---<div class="row mb40">
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-3 mb5">
+						<div class="demo-grid">
+							<code>.col-md-3</code>						</div>
+					</div>
+					<div class="col-md-6 mb5">
+						<div class="demo-grid">
+							<code>.col-md-6</code>						</div>
+					</div>
+				</div>--->
+
+                <!---728x90--->
+                <!---<div class="row mb40">
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="demo-grid">
+							<code>.col-md-2</code>						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="demo-grid">
+							<code>.col-md-4</code>						</div>
+					</div>
+				</div>--->
+            </div>
+        </div>
+    </div>
+    {% endblock %}

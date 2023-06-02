@@ -1,0 +1,107 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Admin Settings {% endblock %} {% block js %}
+<script type="text/javascript" src="/static/dashboard/js/moment.js"></script>
+<script type="text/javascript" src="/static/dashboard/js/daterange.js"></script>
+<script>
+    $(function() {
+
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+
+    const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+    // a and b are javascript Date objects
+    function dateDiffInDays(a, b) {
+        // Discard the time and time-zone information.
+        const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+        const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+        return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
+
+    // test it
+    const a = new Date("2017-01-01"),
+        b = new Date("2017-07-25"),
+        difference = dateDiffInDays(a, b);
+
+    $(".generate").click(function() {
+        var days;
+        days = $("#reportrange span").text().split(" - ")
+        d1 = new Date(days[0])
+        d2 = new Date(days[1])
+        diff = dateDiffInDays(d1, d2)
+        if (diff == 0)
+            diff = 1
+        window.open(`/pdf/?days=${diff}`);
+    })
+</script>
+{% endblock %} {% block css %}
+<link rel="stylesheet" type="text/css" href="/static/dashboard/css/daterangepicker.css" />
+<style>
+    .col-lg-4 {
+        margin-bottom: 20px;
+    }
+    
+    .custom-btn {
+        font-size: xx-large;
+    }
+</style>
+{% endblock %} {% block title_header %}Settings{% endblock %} {% block content %}
+<!-- Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Select Range</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span></span> <i class="fa fa-caret-down"></i>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary generate">Generate Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+<div class="row">
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="{% url 'AdminGroup' %}"><i class="fa fa-group"></i> | Groups</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="{% url 'AdminIO' %}"><i class="fa fa-download"></i> | Bulk I/O</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="{% url 'show_user' %}"><i class="fa fa-users"></i> | Show Users</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="/reports"><i class="fa fa-file-text"></i> | Reports</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="/ssl/"><i class="fa fa-expeditedssl"></i> | SSL Certificates</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="/backupandrestore"><i class="fa fa-expeditedssl"></i> | Backup & Restore</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="/provisioning"><i class="fa fa-expeditedssl"></i> | Provisioning</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="/nfs/"><i class="fa fa-expeditedssl"></i> | Network Storage</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" data-toggle="modal" data-target="#reportModal"><i class="fa fa-file"></i> | Audit Report</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="/terminal/"><i class="fa fa-terminal"></i> | Terminal</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="/settings/admin/services/"><i class="fa fa-lock"></i> | Administrator</a></div>
+</div>
+{% endblock %}

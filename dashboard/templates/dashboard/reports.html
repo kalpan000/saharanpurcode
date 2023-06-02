@@ -1,0 +1,477 @@
+ {% extends 'dashboard/header_footer.html' %}{% load static %} {% block title %}Reports{% endblock title %} {% block title_header %}Reports{% endblock %} {% block content %}
+<style>
+    td,
+    tr,
+    th,
+    table button,
+    table input {
+        padding: 10px;
+    }
+    
+    th {
+        text-align: center;
+    }
+    
+    .modalContainer {
+        width: 100%;
+    }
+    
+    .modal-dialog1 {
+        width: 90%;
+        margin: 30px auto;
+    }
+    
+    .fieldName {
+        font-size: 20px;
+    }
+    
+    h3 {
+        text-align: left;
+    }
+    
+    thead {
+        background-color: #212529;
+        color: #fff;
+        border-color: #32383e;
+    }
+</style>
+
+<!-- /script-for sticky-nav -->
+<!-- Modal -->
+<div class="modal fade" id="exportModal" role="dialog">
+    <div class="modal-dialog modal-dialog1">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default SaveExport" data-type="csv">Export As CSV</button>
+                <button type="button" class="btn btn-default SaveExport" data-type="json">Export As JSON</button>
+                <!-- <button type="button" class="btn btn-default SaveExport" data-type="pdf">Export As PDF</button> -->
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--inner block start here-->
+
+<div class="cols-grids panel-widget">
+    <h2>Reports</h2>
+
+
+
+
+
+
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <h3>USERS</h3>
+            <table class="table">
+                <thead>
+                    <th>MODAL NAME</th>
+                    <th>ACTION</th>
+                </thead>
+                <tbody>
+                    {% for data in models.Users %} {% for key, value in data.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td> <button class="exportBtn btn btn-primary" data-name="{{value}}"> Export </button></td>
+                    </tr>
+                    {% endfor %} {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4">
+            <h3>DEVICES</h3>
+            <table class="table">
+                <thead>
+                    <th>MODAL NAME</th>
+                    <th>ACTION</th>
+                </thead>
+                <tbody>
+                    {% for data in models.Devices %} {% for key, value in data.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td> <button class="exportBtn btn btn-primary" data-name="{{value}}"> Export </button></td>
+                    </tr>
+                    {% endfor %} {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4">
+            <h3>MANAGEMENT</h3>
+            <table class="table">
+                <thead>
+                    <th>MODAL NAME</th>
+                    <th>ACTION</th>
+                </thead>
+                <tbody>
+                    {% for data in models.Managemment %} {% for key, value in data.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td> <button class="exportBtn btn btn-primary" data-name="{{value}}"> Export </button></td>
+                    </tr>
+                    {% endfor %} {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4">
+            <h3>DATA</h3>
+            <table class="table">
+                <thead>
+                    <th>MODAL NAME</th>
+                    <th>ACTION</th>
+                </thead>
+                <tbody>
+                    {% for data in models.Data %} {% for key, value in data.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td> <button class="exportBtn btn btn-primary" data-name="{{value}}"> Export </button></td>
+                    </tr>
+                    {% endfor %} {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4">
+            <h3>DATACENTER</h3>
+            <table class="table">
+                <thead>
+                    <th>MODAL NAME</th>
+                    <th>ACTION</th>
+                </thead>
+                <tbody>
+                    {% for data in models.Datacenter %} {% for key, value in data.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td> <button class="exportBtn btn btn-primary" data-name="{{value}}"> Export </button></td>
+                    </tr>
+                    {% endfor %} {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4">
+            <h3>NETWORK</h3>
+            <table class="table">
+                <thead>
+                    <th>MODAL NAME</th>
+                    <th>ACTION</th>
+                </thead>
+                <tbody>
+                    {% for data in models.Network %} {% for key, value in data.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td> <button class="exportBtn btn btn-primary" data-name="{{value}}"> Export </button></td>
+                    </tr>
+                    {% endfor %} {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <!--<table border="1" class="col-lg-12">
+            BHAI do min me call krta hu phir se
+            <thead>
+                <tr>
+                    <th> Model Name </th>
+                    <th> Export As </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td class="modelData"></td>
+                    <td> <button class="exportBtn" data-name="{{model}}"> Export </button></td>
+                </tr>
+
+
+            </tbody>
+
+        </table>-->
+
+    <!--<button><a href=""> Generate Raw data Report</a></button>
+        <button><a href=""> Generate Rack detail Report</a></button>-->
+</div>
+
+
+
+
+
+<!--inner block end here-->
+<script src="{% static '/dashboard/js/toPDF.js' %}"></script>
+<script>
+    function download(content, fileName, contentType) {
+        var a = document.createElement("a");
+        var file = new Blob([content], {
+            type: contentType
+        });
+        a.href = URL.createObjectURL(file);
+        a.download = fileName;
+        a.click();
+    }
+
+
+
+
+    function ConvertToCSV(objArray) {
+        var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+        var str = '';
+
+        for (var i = 0; i < array.length; i++) {
+            var line = '';
+            for (var index in array[i]) {
+                if (line != '') line += ','
+
+                var temp = array[i][index];
+
+                if (temp == undefined || temp === undefined || temp == null || temp === null) {
+                    temp = "null";
+                }
+
+                line += (temp.length == 0 ? "null" : temp);
+            }
+
+            str += line + '\r\n';
+        }
+
+        return str;
+    }
+    $(".exportBtn").on("click", function() {
+        var name = $(this).data("name");
+        $("#exportModal").modal();
+        var html = "<div class='container modalContainer'><div class='row'><div class='col-md-4'><h3>Fields Name</h3><hr>";
+        var tableData = "<div class='table-responsive'><table class='table'><thead><tr>";
+
+        $.get("/reports3DATA/?name=" + name, function(data, status) {
+            console.log(data.length);
+
+            if (data && data["fields"].length > 0) {
+                html += "<select id='getFields' multiple size='" + data["fields"].length + "' style='width:80%'>";
+                for (var i in data["fields"]) {
+                    html += "<option class='fieldName'>" + data["fields"][i] + "</option>";
+                    tableData += "<th>" + data["fields"][i] + "</th>";
+                }
+                tableData += "</thead><tbody>"
+                $.each(data["data"], function(index, value) {
+                    // tableData += "<tr><th>" + index + "</th></tr><tr>";
+                    tableData += "<tr>";
+                    for (var i in value) {
+                        tableData += "<td>" + value[i] + "</td>";
+                    }
+                });
+                tableData += "</tr></tbody></table></div>";
+                html += "</select></div><div class='col-md-8'><h3>Data</h3><hr>" + tableData + "</div></div></div>";
+            }
+            $('#exportModal').find('.modal-body').html(html);
+            console.log("Giving name " + name);
+            $('#exportModal').find('.SaveExport').data("name", name);
+            if (data["error"]) {
+                Swal.fire(data["message"]);
+                return;
+            }
+
+        });
+
+
+    });
+
+    function mycsv(data, fields) {
+        var output = "";
+
+        for (var i in fields) {
+            output += fields[i] + ",";
+        }
+
+        output += "\r\n";
+
+        for (var i in data) {
+            var line = "";
+            for (var j in data[i]) {
+                var temp = data[i][j];
+                if (temp == undefined || temp === undefined || temp == null || temp === null)
+                    temp = "null";
+                if (temp.length == 0) temp = "null";
+                line += temp + ",";
+            }
+            output += line + "\r\n";
+        }
+
+        return output;
+    }
+    $(".SaveExport").on("click", function() {
+        var type = $(this).data("type");
+        var name = $(this).data("name");
+        console.log("NAME-->", name);
+        var select = document.getElementById('getFields');
+        var selected = [...select.selectedOptions]
+            .map(option => option.value);
+        // console.log(selected);
+        // var name = $(this).data("name");
+
+        // var from = $($(this).closest("tr")[0]).find(".from").val();
+        // var to = $($(this).closest("tr")[0]).find(".to").val();
+        // if (from < 0 || to < 0) {
+        //     Swal.fire("range must be a positive number");
+        //     return;
+        // }
+
+        // if (to - from < 100) {
+        //     Swal.fire("minimum range should be 100");
+        //     return;
+        // }
+
+        // if (from >= to) {
+        //     Swal.fire("from value must be smaller than to value");
+        //     return;
+        // }
+
+        // if (to - from > 10000) {
+        //     Swal.fire("you can ony export 10,000 records at a time");
+        //     return;
+        // }
+
+        // here data is array of array 
+        $.get("/reports2DATA/?name=" + name + "&fields=" + selected + "&start=0&end=0", function(data, status) {
+            // console.log(data);
+
+            if (data["error"]) {
+                Swal.fire(data["errorMessage"]);
+                return;
+            }
+
+            data = data["data"];
+            console.log(data);
+            if (type == "json") {
+                var arr = {
+                    "records": []
+                }
+                for (var i in data) {
+                    var obj = {};
+                    for (var j in data[i]) {
+                        obj[selected[j]] = data[i][j];
+                    }
+                    arr["records"].push(obj);
+                }
+                download(JSON.stringify(arr), name + ".json", "text/pain");
+
+            } else if (type == "csv") {
+                download(mycsv(data, selected), name + ".csv", "text/plain");
+
+            }
+            // else if (type == "pdf") {
+            // var html = "<div id='exportToPdf'><table id='newTable' style='display:block'><thead>";
+            // var arrayOfRows = mycsv(data, selected).split("\r\n");
+            // for (var i in arrayOfRows) {
+            //     console.log(arrayOfRows[i].split(","));
+            //     html += "<tr>";
+            //     var datas = arrayOfRows[i].split(",");
+            //     for (var j in datas) {
+            //         //console.log(data[j]);
+            //         // if (data[j] != undefined || data[j] !== undefined || data[j] != null || data[j] !== null)
+            //         html += "<td>" + datas[j] + "</td>";
+            //     }
+            //     html += "</tr>"
+            // }
+            // html += "";
+            // -----
+            // for (var i in data) {
+            //     var obj = selected[i];
+            //     html += "<tr>";
+            //     for (var j in data[i]) {
+            //         html += "<td>" + data[i][j] + "</td>";
+            //     }
+            //     html += "</tr>";
+            // }
+            // html += "</thead></table></div>";
+            //---
+            // for (var i in data) {
+            //     var obj = selected[i];
+            //     for (var j in data[i]) {
+            //         obj["New"] = data[i][j];
+            //     }
+            //     console.log(obj);
+            // }
+            // console.log(html);
+            // $('#exportModal').find('.modal-body').append(html);
+            // }
+        });
+
+
+    });
+
+
+    function sendAjax() {
+
+
+    }
+
+    sendAjax();
+</script>
+<script>
+    function demoFromHTML() {
+        var pdf = new jsPDF('p', 'pt', 'letter');
+        // source can be HTML-formatted string, or a reference
+        // to an actual DOM element from which the text will be scraped.
+        source = $('#exportToPdf')[0];
+
+        // we support special element handlers. Register them with jQuery-style 
+        // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+        // There is no support for any other type of selectors 
+        // (class, of compound) at this time.
+        specialElementHandlers = {
+            // element with id of "bypass" - jQuery style selector
+            '#bypassme': function(element, renderer) {
+                // true = "handled elsewhere, bypass text extraction"
+                return true
+            }
+        };
+        margins = {
+            top: 80,
+            bottom: 60,
+            left: 40,
+            width: 522
+        };
+        // all coords and widths are in jsPDF instance's declared units
+        // 'inches' in this case
+        pdf.fromHTML(
+            source, // HTML string or DOM elem ref.
+            margins.left, // x coord
+            margins.top, { // y coord
+                'width': margins.width, // max width of content on PDF
+                'elementHandlers': specialElementHandlers
+            },
+
+            function(dispose) {
+                // dispose: object with X, Y of the last line add to the PDF 
+                //          this allow the insertion of new lines after html
+                pdf.save('Test.pdf');
+            }, margins);
+    }
+</script>
+
+
+{% endblock %}

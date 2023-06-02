@@ -1,0 +1,2565 @@
+{% load static %} {% load utils %}
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background:#337ab7;color:white;">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#auto_disc">Auto Discovery</a>
+            </h4>
+        </div>
+        <div id="auto_disc" class="panel-collapse collapse">
+            <div class="panel-body">
+                <center>
+                    <div class="col-md-6 col-md-offset-3 boxStyle" style="border:1px solid black;">
+                        <form id="scheduleDevice">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="formschedule">
+                            <div class="form-group row">
+                            </div>
+                            <div class="form-group row">
+                                <label for="host" class="control-label col-sm-4">IP Address</label>
+                                <div class="col-sm-5">
+                                    <input name="ippart1" type="text" id="ippart1" class="form-control" required placeholder="192.168.1.120/24" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="button" id="ipscan" class="btn btn-primary">Scan Now</button>
+                                </div>
+                            </div>
+                            <div id="loader1" style="display:none"></div>
+                            <hr>
+                            <div class="form-group row">
+                                <label for="schedule" class="control-label col-sm-4">Type</label>
+                                <div class="col-sm-6">
+                                    <select name="scheduleType" id="scheduleType" class="form-control">
+                                        <!--<option value="O">Once</option>-->
+                                        <option value="I">Minutes</option>
+                                        <option value="H">Hourly</option>
+                                        <option value="D">Daily</option>
+                                        <option value="W">Weekly</option>
+                                        <option value="M">Monthly</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="showForMin" style="display:none;">
+                                <label for="schedule" class="control-label col-sm-4">Minutes</label>
+                                <div class="col-sm-6">
+                                    <input type="number" name="scheduleMin" id="scheduleMin" class="form-control" min="0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <button type="submit" id="schedulebtn" class="btn btn-primary">Schedule</button>
+                                </div>
+                            </div>
+                        </form>
+                        <fieldset style="text-align: left;border: 1px solid silver;margin: 17px 44px;padding: .35em .625em .75em;">
+                            <legend style="width: 4%;border-bottom: 0px"><img src="{% static 'dashboard/images/tip.png' %}" height="50px">
+                            </legend>
+                            <b>
+                                <p>Frequency should be reasonable according to size of range</p>
+                                <p>Eg: Bigger range requires more time to get response from devices. For
+                                    better performance keep longer duration gap( Long range generate
+                                    load over device performance).</p>
+                            </b>
+                        </fieldset>
+                    </div>
+                </center>
+
+                <div class="row" style="height:150px;"></div>
+
+                <div class="col-md-6 col-md-offset-3 boxStyle customBorder">
+                    <table class="table" id="testTableID">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;">Device</th>
+                                <th style="text-align:center;">Status</th>
+                                <th style="text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for device in tempIPDevice %}
+                            <tr>
+                                <td>{{device.host}}</td>
+                                <td>{{device.status}}</td>
+                                {% if device.action %}
+                                <td><a><i data-host='{{device.host}}' class='fa fa-plus addiptodc'></i></a></td>
+                                {% else %}
+                                <td><a disabled><i class='fa fa-plus' style='color:grey;'></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No Device Available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+
+                        </tfoot>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="background:#337ab7;color:white;">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#add_hoc">Ad HOC</a>
+                </h4>
+            </div>
+            <div id="add_hoc" class="panel-collapse collapse">
+                <div class="panel-body">
+                    </table>
+                </div>
+                <div class="col-md-6 col-md-offset-3 boxStyle" id="IPdiv">
+                    <div id="loader"></div>
+                    <table id="IPdevices" class="table" style="display:none"></table>
+                </div>
+                <div class="row" style="height:auto;"></div>
+                {% comment %} END HAOC {% endcomment %}
+                <br>
+                <center>
+                    <div class="col-md-6 col-md-offset-3 boxStyle" style="border:1px solid black;">
+                        <form id="addhocdevice">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="formIP">
+                            <div class="form-group row">
+                            </div>
+                            <div class="form-group row">
+                                <label for="device" class="control-label col-sm-4">Name of
+                                    Device</label>
+                                <div class="col-sm-8">
+                                    <datalist id="devicenamelist">
+                                        <option>CISCO</option>
+                                        <option>UBUNTU</option>
+                                    </datalist>
+                                    <input type="text" class="form-control" name="devicename" list="devicenamelist" required />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="host" class="control-label col-sm-4">Host</label>
+                                <div class="col-sm-2">
+                                    <input name="ippart1" type="number" id="ippart1" min="0" max="255" class="form-control" required />
+                                </div>
+                                <div class="col-sm-2">
+                                    <input name="ippart2" type="number" id="ippart2" min="0" max="255" class="form-control" required />
+                                </div>
+                                <div class="col-sm-2">
+                                    <input name="ippart3" type="number" id="ippart3" min="0" max="255" class="form-control" required />
+                                </div>
+                                <div class="col-sm-2">
+                                    <input name="ippart4" type="number" id="ippart4" min="0" max="255" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="cString" class="control-label col-sm-4">Type</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="type" id="selsnmp">
+                                        <option value="snmp1">SNMP v1</option>
+                                        <option value="snmp2">SNMP v2</option>
+                                        <option value="snmp3">SNMP v3</option>
+                                        <option value="restconf">Restcong</option>
+                                        <option value="netconf">Netconf</option>
+                                        <option value="ssh">SSH</option>
+                                        <option value="api">API</option>
+                                        <option value="agent">Agent</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="snmpcstr">
+                                <label for="cString" class="control-label col-sm-4">Community String</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="cString" id="cString" />
+                                </div>
+                            </div>
+                            <div id="snmpv3" style="display:none;">
+                                <div class="form-group row">
+                                    <label for="snmpv3user" class="control-label col-sm-4">v3 User</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="snmpv3user" id="snmpv3user" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="snmpv3auth" class="control-label col-sm-4">v3 Auth Key</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="snmpv3auth" id="snmpv3auth" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="snmpv3pass" class="control-label col-sm-4">v3 Pass Key</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="snmpv3pass" id="snmpv3pass" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="control-label col-sm-4">Username</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="username" id="username" required />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="password" class="control-label col-sm-4">Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" name="password" id="password" required />
+                                </div>
+                            </div>
+                            <!-- Database Settings -->
+                            <div class="panel-group" id="accordion7401210" role="tablist" aria-multiselectable="false">
+                                <div class="panel">
+                                    <div class="panel-heading" role="tab" id="heading8122873">
+                                        <h5 class="panel-title">
+                                            <a role="button" data-toggle="collapse" class="accordion-plus-toggle collapsed" data-parent="#accordion7401210" href="#collapse8122873" aria-expanded="false" aria-controls="collapse8122873">Add Database Details</a>
+                                        </h5>
+                                    </div>
+                                    <div id="collapse8122873" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading8122873">
+                                        <div class="panel-body">
+                                            <!-- Database Form -->
+                                            <div class="form-group row">
+                                                <label for="dbusername" class="control-label col-sm-4">Database Username</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" name="dbusername" id="dbusername" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="dbpassword" class="control-label col-sm-4">Database Password</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" name="dbpassword" id="dbpassword" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="dbname" class="control-label col-sm-4">Database Name</label>
+                                                <div class="col-sm-8">
+                                                    <input type="dbname" class="form-control" name="dbname" id="dbname" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="dbport" class="control-label col-sm-4">Port</label>
+                                                <div class="col-sm-8">
+                                                    <input type="dbport" class="form-control" name="dbport" id="dbport" />
+                                                </div>
+                                            </div>
+                                            <!-- Database Form -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Database Settings -->
+                            <div class="form-group row">
+                                <div class="offset-sm-2 col-sm-4 pull-right">
+                                    <button type="submit" class="btn btn-primary">Hawk Scan</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </center>
+                <div class="row" style="height:auto;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+<center>
+    <div class="col-md-12 boxStyle" style="border:1px solid black;overflow-x:auto;">
+        <table class="table" id="capDeviceID">
+            <thead>
+                <tr>
+                    <th colspan="12">Available Devices</th>
+                </tr>
+                <tr>
+                    <th>Device</th>
+                    <th>Host</th>
+                    <th>SNMP</th>
+                    <th>NETAPI</th>
+                    <th>RESTAPI</th>
+                    <th>SSH</th>
+                    <th>Alive</th>
+                    <th>Device Added</th>
+                    <th>Last Updated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for devices in availDevice %}
+
+                <tr>
+                    <td>{{devices.name}}</td>
+                    <td>{{devices.ip}}</td>
+                    <td>{% if devices.is_snmp %}<a href="/dashboard/host/{{devices.ip}}/{{devices.commString}}"><i
+                                class="fa fa-check" style="color:blue"></i></a> {% if devices.commString == "" %}(v3){% else %}(v2){% endif %}{% else %}<i class="fa fa-close" style="color:red"></i> {% endif %}</td>
+                    <td>{% if devices.is_netconf %}<a href="/device/capability/test/{{devices.id}}/net/"><i
+                                class="fa fa-check" style="color:blue"></i></a>{% else %}<i class="fa fa-close" style="color:red"></i>{% endif %}</td>
+                    <td>{% if devices.is_restconf %}<a href="/device/capability/test/{{devices.id}}/rest/"><i
+                                class="fa fa-check" style="color:blue"></i></a>{% else %}<i class="fa fa-close" style="color:red"></i>{% endif %}</td>
+                    <td>{% if devices.user != "null" or devices.user == null %}<a href="/ssh/host/{{devices.ip}}"><i class="fa fa-check" style="color:blue"></i>{% else %}<i class="fa fa-close" style="color:red"></i></a>{% endif %}</td>
+                    <td><i class="fa fa-circle" style="color:green"></i></td>
+                    <td>{{devices.created|date:'d/m/Y f A'}}</td>
+                    <td>{{devices.updated|date:'d/m/Y f A'}}</td>
+                    <td>
+                        <a {% if not devices.is_there %} enabled {% else %} disabled {%endif%} class="openform" data-host="{{devices.ip}}" data-name="{{devices.name}}" data-port=80>
+                            <i class="fa fa-plus" {% if not devices.is_there %} style='cursor: pointer; color:blue' {% else %} style='color: gray;' {% endif %}>
+                            </i>
+                        </a>
+                        <a class="testing">
+                            <i data-id="{{devices.id}}" data-ip="{{devices.ip}}" data-name="{{devices.name}}" data-user="{{devices.user}}" data-pwd="{{devices.pwd}}" data-str="{{devices.commString}}" class="fa fa-edit editDeviceCap"></i></a>
+                        <a>
+                            <i data-id="{{devices.id}}" class="fa fa-trash deleteDeviceCap"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot></tfoot>
+        </table>
+    </div>
+</center>
+{% comment %} {% endif %} {% endcomment %}
+<!-- eND BLOCK-->
+<div class="row" style="height:auto;"></div>
+<br>
+<!--Retrive Device-->
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background:#337ab7;color:white;">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#rdevices">Retrieve Exsisting Devices</a>
+            </h4>
+        </div>
+        <div id="rdevices" class="panel-collapse collapse">
+            <div class="panel-body">
+                <select class="form-control " id="retreivedevice" name="retreivedevice">
+                    <option selected disabled>--Select--</option>
+                    {% for devices in IPdeviceDict %}
+                    <option value="{{devices.id}}">{{devices.name}}</option>
+                    {% endfor %}
+                </select><br>
+                <div style="text-align: left;">
+                    <div class='table-responsive' style='text-align:left;'>
+                        <table id="retrieveDeviceTable" class='table mx-auto w-auto'>
+                            <thead>
+                                <tr>
+                                    <th>Device</th>
+                                    <th>Host</th>
+                                    <th>SNMP</th>
+                                    <th>NETAPI</th>
+                                    <th>RESTAPI</th>
+                                    <th>Alive</th>
+                                    <th>Device Added</th>
+                                    <th>Device Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody id="retreivedevices"></tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END retrieveDevice-->
+<br>
+<h1 style="margin-top:20px">Commissioning & Provisioning</h1>
+<br>
+<!-- START ADDING DATACENTER FORMS-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background:#337ab7;color:white;">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Add DataCenter</a>
+                    </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <!---->
+
+
+                        <div class="row">
+
+
+                            <div class="col-md-12">
+                                <div class="border">
+                                    <form class="form" id="addDC">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="form_type" value="formOne">
+                                        <div class="form-group">
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Data Center Tag*</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input required class="form-control" type="text" id="data_center_tag" name="data_center_tag" value="" />
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Data Center Name</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="data_center_name" name="data_center_name" value="" />
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Sqr Mtr*</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="number" required="required" class="form-control" min="1" id="sqr_mtr" name="sqr_mtr" />
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Delivery Address*</label>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input class="form-control" value="India" type="text" id="address_country" name="address_country" readonly />
+                                                </div>
+
+                                                <div class="col-md-2">
+
+                                                    <datalist id="states">
+                                                        {% for i in states %}
+                                                        <option>{{ i.state_name }}</option>
+                                                        {% endfor %}
+                                                    </datalist>
+                                                    <input required list="states" class="form-control" placeholder="State" type="text" id="address_state" name="address_state" />
+                                                </div>
+
+                                                <div class="col-md-2">
+
+                                                    <input required class="form-control" type="text" placeholder="Address" id="address_text" name="address_text" />
+
+                                                </div>
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Contact*</label>
+                                                </div>
+
+                                                <div class="col-md-3 text-center">
+
+                                                    <div class="form-group">
+                                                        <input class="form-check-input" type="radio" id="contact-external" name="contact" value="external" checked />
+                                                        <label class="form-check-label" for="contact-external">External</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3 form-group text-center">
+
+                                                    <input class="form-check-input" type="radio" id="contact-internal" name="contact" value="internal" />
+                                                    <label class="form-check-label" for="contact-internal">Internal</label>
+
+                                                </div>
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Personal Details</label>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input class="form-control" type="text" id="full_name" name="full_name" placeholder="Full Name" required="required" />
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <input class="form-control" type="email" id="email_contact" name="email_contact" placeholder="Email ID" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Invalid email address" required="required" />
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <input class="form-control" id="email_contact" name="phone_contact" placeholder="Phone" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="10" required="required" />
+                                                </div>
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Capacity in MW*</label>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="number" class="form-control" id="capacity" name="capacity" />
+                                                </div>
+
+                                            </div>
+
+                                            <br><br><br>
+
+
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input class="form-control btn btn-primary" type="submit" name="submit" value="Submit" />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input class="form-control btn btn-primary" type="reset" name="reset" value="Reset" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!---->
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background:#337ab7;color:white;">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Add DataCenter Row</a>
+                    </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        <div class="row">
+
+
+                            <div class="col-md-12">
+                                <div class="border">
+                                    <form class="form" id="addROW">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="form_type" value="formTwo">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label for="rack_row">Data Center</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" class="form-control " id="data_center" name="data_center">
+
+                                                        {% for data in datacenter %}
+                                                        <option value="{{data.id}}">{{data.DataCenterName}}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label for="rack_row">Rack Row</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" class="form-control " id="rack_row" name="rack_row">
+
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Row Label / Tag</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="row_tag" name="row_tag" required="required" />
+                                                </div>
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Row Color</label>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input type="color" required="required" class="form-control " id="row_color_form2" name="row_color_form2" style="height: 40px;">
+                                                </div>
+
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Row Type*</label>
+                                                </div>
+
+                                                <div class="col-md-2 text-center">
+
+                                                    <div class="form-group">
+                                                        <input class="form-check-input rack_type3" type="radio" id="row_smart" name="row_type_smart" value="smart" checked />
+                                                        <label class="form-check-label" for="row_type_smart">Customised</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2 text-center">
+
+                                                    <div class="form-group">
+                                                        <input class="form-check-input rack_type3" type="radio" id="row-standard" name="row_type_smart" value="standard" />
+                                                        <label class="form-check-label" for="row_type_smart">Standard</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <br>
+                                            <hr> <br>
+
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input class="form-control btn btn-primary" type="submit" name="submit" value="Submit" />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input class="form-control btn btn-primary" type="reset" name="reset" value="Reset" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!---->
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background:#337ab7;color:white;">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Add Data Center
+                            Rack(cabinet)</a>
+                    </h4>
+                </div>
+                <div id="collapse3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="border">
+                                    <form class="form" id="addRACK">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="form_type" value="formThree">
+                                        <div class="form-group">
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label for="rack_row">Data Center</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" class="form-control " id="datacenter" name="datacenter">
+                                                        <option disabled selected>--Select Datacenter-- </option>
+                                                        {% for data in datacenter %}
+                                                        <option value="{{data.id}}">
+                                                            {{data.DataCenterName}}
+                                                        </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label for="rack_row">Rack Row</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" class="form-control " id="rack_rows" name="rack_row">
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Rack Label / Tag</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="rack_tag" name="rack_tag" required="required" />
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Row Color</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="color" required="required" class="form-control" id="row_color_form3" name="row_color_form3" style="height: 40px;">
+                                                </div>
+                                            </div>
+
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Rack Type*</label>
+                                                </div>
+
+                                                <div class="col-md-2 text-center">
+                                                    <div class="form-group">
+                                                        <input class="form-check-input rack_type3" type="radio" id="network" name="rack_type3" value="network" />
+                                                        <label class="form-check-label" for="network">Network</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2 text-center">
+                                                    <div class="form-group">
+                                                        <input class="form-check-input rack_type3" type="radio" id="standard" name="rack_type3" value="standard" checked />
+                                                        <label class="form-check-label" for="standard">Standard</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 form-group  text-center">
+                                                    <input class="form-check-input rack_type3" type="radio" id="customised" name="rack_type3" value="customised" />
+                                                    <label class="form-check-label" for="customised">Customised</label>
+                                                </div>
+                                            </div>
+
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label for="rack_row">Rack Type Information</label>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" disabled=True class="form-control" id="customised_rt_information" name="customised_rt_information">
+
+
+                                                        <option value="50">50u</option>
+                                                        <option value="49">49u</option>
+                                                        <option value="48">48u</option>
+                                                        <option value="47">47u</option>
+                                                        <option value="46">46u</option>
+                                                        <option value="45">45u</option>
+                                                        <option value="44">44u</option>
+                                                        <option value="43">43u</option>
+                                                        <option value="42" selected>42u</option>
+                                                        <option value="41">41u</option>
+                                                        <option value="40">40u</option>
+                                                        <option value="39">39u</option>
+                                                        <option value="38">38u</option>
+                                                        <option value="37">37u</option>
+                                                        <option value="36">36u</option>
+                                                        <option value="35">35u</option>
+                                                        <option value="34">34u</option>
+                                                        <option value="33">33u</option>
+                                                        <option value="32">32u</option>
+                                                        <option value="31">31u</option>
+                                                        <option value="30">30u</option>
+                                                        <option value="29">29u</option>
+                                                        <option value="28">28u</option>
+                                                        <option value="27">27u</option>
+                                                        <option value="26">26u</option>
+                                                        <option value="25">25u</option>
+                                                        <option value="24">24u</option>
+                                                        <option value="23">23u</option>
+                                                        <option value="22">22u</option>
+                                                        <option value="21">21u</option>
+                                                        <option value="20">20u</option>
+                                                        <option value="19">19u</option>
+                                                        <option value="18">18u</option>
+                                                        <option value="17">17u</option>
+                                                        <option value="16">16u</option>
+                                                        <option value="15">15u</option>
+                                                        <option value="14">14u</option>
+                                                        <option value="13">13u</option>
+                                                        <option value="12">12u</option>
+                                                        <option value="11">11u</option>
+                                                        <option value="10">10u</option>
+                                                        <option value="9">9u</option>
+                                                        <option value="8">8u</option>
+                                                        <option value="7">7u</option>
+                                                        <option value="6">6u</option>
+                                                        <option value="5">5u</option>
+                                                        <option value="4">4u</option>
+                                                        <option value="3">3u</option>
+                                                        <option value="2">2u</option>
+                                                        <option value="1">1u</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Special Notes</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="special_notes" name="special_notes" />
+                                                </div>
+                                            </div>
+
+                                            <br>
+                                            <hr> <br>
+
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input class="form-control btn btn-primary" type="submit" name="submit" value="Submit" />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input class="form-control btn btn-primary" type="reset" name="reset" value="Reset" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!---->
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background:#337ab7;color:white;">
+                    <h4 class="panel-title">
+                        <a id="scrollStillHere" data-toggle="collapse" data-parent="#accordion" href="#collapse4">Add Device (Equipment)</a>
+                    </h4>
+                </div>
+                <div id="collapse4" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <!---->
+
+
+                        <div class="row">
+                            <div class="col-md-2">
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="border">
+                                    <form class="form" id="fourthform">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="form_type" value="formFour">
+                                        <div class="form-group">
+                                            <br>
+                                            <div class="row">
+                                                <fieldset style="text-align: left;border: 1px solid silver;margin: 17px 44px;padding: .35em .625em .75em;">
+                                                    <legend style="width: 4%;border-bottom: 0px"><img src="/static/dashboard/images/tip.png" height="50px">
+                                                    </legend>
+                                                    <b>
+                                                        <p style='margin-top:-30px;text-align:center'>If you wish to add Patch-Panel or PDU, you can fill-up the details below. Otherwise, please select device from top of the page <q>Available Devices</q> and proceed with auto-filled details.</p>
+                                                    </b>
+                                                </fieldset>
+                                            </div>
+                                            <br>
+                                            <br>
+
+                                            <div class="row" id="showIP" style="display:none;">
+                                                <div class="col-md-4 text-center">
+                                                    <label>IP Address</label>
+                                                </div>
+                                                <div class="col-md-6" id="comingIP">
+
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label for="quickTemplate">Quick Template</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <datalist id="template">
+                                                        {% for template in devicetemplate %}
+                                                        <option value="{{template.templatename}}">
+                                                            {{template.templatename}}</option>
+                                                        {% endfor %}
+                                                    </datalist>
+                                                    <input class="form-control" list="template" name="quickTemplate" id="quickTemplate" placeholder="Create New or Select existing one">
+                                                </div>
+                                            </div>
+
+
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Data Center</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" class="form-control " id="device_datacenter" name="datacenter">
+                                                        <option disabled selected>--Select Datacenter-- </option>
+                                                        {% for data in datacenter %}
+                                                        <option value="{{data.id}}">
+                                                            {{data.DataCenterName}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                </div>
+                                            </div>
+
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Rack Row</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" class="form-control " id="device_rack_rows" name="rack_row">
+                                                        <option disabled selected>--Select Row-- </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                </div>
+                                            </div>
+
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Cabinet</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" class="form-control " id="device_cabinet" name="cabinet">
+                                                        <option disabled selected>--Select Rack Cabinet--</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Unit Location</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" id="unit_location" name="unit_location">
+                                                        <option disabled selected value="-1">--Select Unit Location--
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2" id="uniterr">
+
+                                                </div>
+                                            </div>
+
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Device Height</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" id="device_height" name="device_heigth">
+                                                        <option disabled selected value="-1">--Select Device Height--
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Device Asset Tag</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="device_asset_tag" name="device_asset_tag" required="required" />
+                                                </div>
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Device Description</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="device_description" name="device_description" />
+                                                </div>
+
+                                            </div>
+
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label for="rack_row">Type of Device</label>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select class="form-control " id="device_type" name="device_type">
+                                                        <option value="" selected disabled>--Select--</option>
+                                                        <option value="Patch Panel">Patch Panel</option>
+                                                        <option value="PDU">PDU</option>
+                                                    </select>
+                                                    <!--<p style="color:red;">Error!!</p>-->
+                                                </div>
+
+                                                {% comment %}
+                                                <div class="col-md-2">
+
+                                                </div> {% endcomment %}
+                                            </div>
+
+                                            <br>
+
+
+                                            <!-- network -->
+                                            <div id="networks">
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Device Category</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="radio" name="network_category" value="router" checked />
+                                                                <label class="form-check-label" for="standard">Router</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="radio" name="network_category" value="switch" />
+                                                            <label class="form-check-label" for="customised">Switch</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Class</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control" id="network_device_type_cat" name="network_device_type_cat">
+
+                                                            <option value="AX" selected>AX</option>
+                                                            <option value="AR">AR</option>
+                                                            <option value="XE">XE</option>
+                                                            <option value="XR">XR</option>
+                                                            <option value="NX">NX</option>
+                                                            <option value="Core">Core</option>
+                                                            <option value="Edge">Edge</option>
+                                                            <option value="Distribution">Distribution
+                                                            </option>
+                                                            <option value="Aggregation">Aggregation
+                                                            </option>
+                                                            <option value="ToR">ToR</option>
+                                                            <option value="Catalyst">Catalyst</option>
+                                                            <option value="Spine">Spine</option>
+                                                            <option value="Leaf">Leaf</option>
+                                                            <option value="PoE">PoE</option>
+                                                            <option value="Smart">Smart</option>
+                                                            <option value="KVM">KVM</option>
+                                                            <option value="Wireless">Wireless</option>
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of
+                                                            ports(LAN)</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="network_device_type_ports" name="network_device_type_ports">
+
+                                                            {% for value in 1|range:49 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Connection Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="checkbox" name="network_lan_category_fibre" value="fibre" checked />
+                                                                <label class="form-check-label" for="standard">Fibre</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="checkbox" name="network_lan_category_ethernet" value="ethernet" />
+                                                            <label class="form-check-label" for="customised">Ethernet</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Uplink Ports(WAN)</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="network_device_type_uplink" name="network_device_type_uplink">
+                                                            {% for value in 1|range:9 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                                <!--  -->
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Connection Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="checkbox" name="network_category_fibre" value="fibre" checked />
+                                                                <label class="form-check-label" for="standard">Fibre</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="checkbox" name="network_category_ethernet" value="ethernet" />
+                                                            <label class="form-check-label" for="customised">Ethernet</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- network -->
+                                            <!-- security -->
+                                            <div id="security">
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Device Category</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="security_device_type_category" name="security_device_type_category">
+
+                                                            <option value="Firewall" selected>Firewall
+                                                            </option>
+                                                            <option value="UTM">UTM</option>
+                                                            <option value="DDos">DDos</option>
+                                                            <option value="Proxy">Proxy</option>
+                                                            <option value="DLP">DLP</option>
+                                                            <option value="IPS">IPS</option>
+                                                            <option value="CCTV">CCTV</option>
+                                                            <option value="Other">Other</option>
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of
+                                                            ports(LAN)</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="security_device_type_ports" name="security_device_type_ports">
+
+                                                            {% for value in 1|range:49 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Uplink Ports(WAN)</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="security_device_type_uplink" name="security_device_type_uplink">
+
+                                                            {% for value in 1|range:9 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                                <!--  -->
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Connection Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-2 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="checkbox" name="security_category_fibre" value="router" checked />
+                                                                <label class="form-check-label" for="standard">Fibre</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="checkbox" name="security_category_ethernet" value="switch" />
+                                                            <label class="form-check-label" for="customised">Ethernet</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                            </div>
+                                            <!-- security -->
+                                            <!-- patch panel -->
+                                            <div id="patchpanel">
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Category</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="radio" name="patch_category" value="normal" id="patch_category_normal" checked />
+                                                                <label class="form-check-label" for="standard">Normal</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="radio" name="patch_category" value="smart" id="patch_category_smart" />
+                                                            <label class="form-check-label" for="customised">Smart</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Patch Port</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input class="form-control" id="patch_panel_port" name="patch_panel_port" value="1" type="number">
+                                                    </div>
+
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Position</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="radio" name="patch_category_pos" value="front" checked />
+                                                                <label class="form-check-label" for="standard">Front</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="radio" name="patch_category_pos" value="rear" />
+                                                            <label class="form-check-label" for="customised">Rear</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- patch panel -->
+                                            <!-- server -->
+                                            <div id="server">
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Server Type</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="server_type" name="server_type">
+
+                                                            <option value="application">Application
+                                                            </option>
+                                                            <option value="mailx">MailX</option>
+                                                            <option value="dns">DNS</option>
+                                                            <option value="services">Services</option>
+                                                            <option value="support">Support</option>
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of ports</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="server_device_type" name="server_device_type">
+
+                                                            {% for value in 1|range:49 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Connection Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="checkbox" name="server_category_fibre" value="fibre" checked />
+                                                                <label class="form-check-label" for="standard">Fibre</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="checkbox" name="server_category_ethernet" value="ethernet" />
+                                                            <label class="form-check-label" for="customised">Ethernet</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- server -->
+                                            <!-- chasis blade -->
+
+                                            <div id="chasisblade">
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of blades</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="chasis_type_blades" name="chasis_type_blades">
+
+                                                            <option value="half">Half</option>
+                                                            <option value="full">Full</option>
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of blades</label>
+
+                                                    </div>
+                                                    <div class="col-md-6" id="half_blades">
+                                                        <select name="number_of_blades" class="form-control ">
+                                                            {% for value in 1|range:41 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Total Blade Slots</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="chasis_device_type_tblades" name="chasis_device_type_tblades">
+
+                                                            {% for value in 1|range:41 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Connection Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-2 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="checkbox" name="chasis_category_fibre" value="router" checked />
+                                                                <label class="form-check-label" for="standard">Fibre</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="checkbox" name="chasis_category_ethernet" value="switch" />
+                                                            <label class="form-check-label" for="customised">Ethernet</label>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- chasis blade -->
+                                            <!-- load balanceer -->
+                                            <div id="loadbalancer">
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of
+                                                            ports(LAN)</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="load_device_type_ports" name="load_device_type_ports">
+
+                                                            {% for value in 1|range:49 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Connection Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="checkbox" name="load_lan_category_fibre" value="fibre" checked />
+                                                                <label class="form-check-label" for="standard">Fibre</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="checkbox" name="load_lan_category_ethernet" value="ethernet" />
+                                                            <label class="form-check-label" for="customised">Ethernet</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2"></div>
+                                                </div>
+
+
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Uplink Ports(WAN)</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="load_device_type_uplink" name="load_device_type_uplink">
+
+                                                            {% for value in 1|range:9 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Connection Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="checkbox" name="load_category_fibre" value="fibre" checked />
+                                                                <label class="form-check-label" for="standard">Fibre</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="checkbox" name="load_category_ethernet" value="ethernet" />
+                                                            <label class="form-check-label" for="customised">Ethernet</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2"></div>
+                                                </div>
+                                            </div>
+                                            <!-- load balanceer -->
+                                            <!-- storage -->
+                                            <div id="storage">
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of
+                                                            controllers</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="storage_device_type_control" name="storage_device_type_control">
+
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of disks</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="storage_device_type_disks" name="storage_device_type_disks">
+
+                                                            {% for value in 1|range:251 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Capacity</label>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <select class="form-control " id="storage_capicity_range" name="storage_capicity_range">
+
+                                                            {% for value in 1|range:1025 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <select class="form-control " id="storage_capicity_input" name="storage_capicity_input">
+
+                                                            <option value="MB">MB</option>
+                                                            <option value="GB">GB</option>
+                                                            <option value="TB">TB</option>
+                                                            <option value="PB">PB</option>
+                                                            <option value="EB">EB</option>
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Connection Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-2 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="checkbox" name="storage_category_fibre" value="router" checked />
+                                                                <label class="form-check-label" for="standard">Fibre</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="checkbox" name="storage_category_ethernet" value="switch" />
+                                                            <label class="form-check-label" for="customised">Ethernet</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- storage -->
+                                            <!-- TapeLib -->
+                                            <div id="tapelib">
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of
+                                                            magazines</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="tape_device_type_magazine" name="tape_device_type_magazine">
+
+                                                            {% for value in 1|range:11 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of IO
+                                                            station</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="tape_device_typ_io" name="tape_device_typ_io">
+
+                                                            {% for value in 1|range:101 %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                                </br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Tape Type</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="tape_type" name="tape_type">
+
+
+                                                            <option value="LT01">LT01</option>
+                                                            <option value="LT02">LT02</option>
+                                                            <option value="LT04">LT04</option>
+                                                            <option value="LT05">LT05</option>
+                                                            <option value="LT06">LT06</option>
+                                                            <option value="LT07">LT07</option>
+                                                            <option value="LT08">LT08</option>
+                                                            <option value="LT09">LT09</option>
+
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Library Tape Capicity</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input class="form-control" id="tape_device_type_tape_capicity" name="tape_device_type_tape_capicity" value="1" type="number" min="1" max="999">
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                </div>
+
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Library Storage Capacity</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="tape_device_type_storage_capicity" name="tape_device_type_storage_capicity">
+
+                                                            <option value="1TB">1TB</option>
+                                                            <option value="5EB">5EB</option>
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+
+                                                </div>
+                                                <BR>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Rack Space Occupied</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="tape_device_type_space" name="tape_device_type_space">
+                                                            {% for value in 1|range:41 %}
+                                                                <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- TapeLib -->
+
+                                            <!-- PDU -->
+                                            <div id="pdu">
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Category</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="radio" name="pdu_category" value="normal" id="pdu_category_normal" checked />
+                                                                <label class="form-check-label" for="standard">Normal</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="radio" name="pdu_category" value="smart" id="pdu_category_smart" />
+                                                            <label class="form-check-label" for="customised">Smart</label>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Port</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input class="form-control" id="pdu_port" name="pdu_port" value="1" type="number">
+                                                        <!--<p style="color:red;">Error!!</p>-->
+                                                    </div>
+
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Type</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select name="pdu_category_type" class="form-control " id="pdu_category_type">
+                                                            <option value="lpdu">LPDU</option>
+                                                            <option value="rpdu">RPDU</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Position (HPDU)</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="radio" name="pdu_category_pos" value="front" checked />
+                                                                <label class="form-check-label" for="standard">Front</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="radio" name="pdu_category_pos" value="rear" />
+                                                            <label class="form-check-label" for="customised">Rear</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- PDU -->
+                                            <!-- UPS -->
+                                            <!-- PDU -->
+                                            <div id="ups">
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Max Load</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-3 text-center">
+
+                                                            <div class="form-group">
+                                                                <input class="form-check-input rack_type3" type="radio" name="ups_category_load" value="router" checked />
+                                                                <label class="form-check-label" for="standard">KW</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 form-group  text-center">
+
+                                                            <input class="form-check-input rack_type3" type="radio" name="ups_category_load" value="switch" />
+                                                            <label class="form-check-label" for="customised">MW</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label for="rack_row">Number of power ports</label>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="ups_device_type" name="ups_device_type">
+                                                            {% for value in 1|range:49 %}
+                                                                <option value="{{value}}">{{value}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <!-- UPS -->
+                                            <!-- VM -->
+
+                                            <div id="vms">
+
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <label id="changed">Servers</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control " id="ups_device_type" name="ups_device_type">
+                                                                <option value="">127.0.0.1</option>
+                                                                <option value="">127.0.0.2</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <!-- VM -->
+
+
+                                            <br>
+
+                                            <div class="row" id="removeIP" style="display:none;">
+                                                <div class="col-md-4 text-center">
+                                                    <label>IP Address</label>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <input class="form-control" type="number" value="0" min=0 max=255 id="ip_address41" name="ip_address41" required />
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <input class="form-control" type="number" value="0" min=0 max=256 id="ip_address42" name="ip_address42" required />
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <input class="form-control" type="number" value="0" min=0 max=256 id="ip_address43" name="ip_address43" required />
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <input class="form-control" type="number" value="0" min=0 max=256 id="ip_address44" name="ip_address44" required />
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label for="DeviceMake">Make*</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select required="required" class="form-control " id="DeviceMake" name="DeviceMake">
+                                                        <option value="A" selected>Akus</option>
+                                                        <option value="B">Akus1</option>
+                                                        <option value="C">Akus2</option>
+                                                        <option value="D">Akus3</option>
+                                                        <option value="E">Akus4</option>
+                                                        <option value="F">others</option>
+                                                    </select>
+                                                    <!--<p style="color:red;">Error!!</p>-->
+                                                </div>
+
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Model</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="DeviceModel" name="DeviceModel" />
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Installation Date</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="date" id="InstallDate" name="InstallDate" style="padding:0px 12px;" required />
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Expiry Date</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="date" id="ExpireDate" name="ExpireDate" style="padding:0px 12px;" required />
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                            </div>
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Owner</label>
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    <div class="form-group">
+                                                        <input class="form-check-input" type="radio" id="" name="DeviceOwner" value="department" />
+                                                        <label class="form-check-label" for="chkNo">Department</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-1 form-group text-center">
+                                                    <input class="form-check-input" type="radio" id="" name="DeviceOwner" value="project" />
+                                                    <label class="form-check-label" for="chkNo">Project</label>
+                                                </div>
+                                                <div class="col-md-1 form-group text-center">
+                                                    <input class="form-check-input" type="radio" id="" name="DeviceOwner" value="client" />
+                                                    <label class="form-check-label" for="chkNo">Client</label>
+                                                </div>
+                                                <div class="col-md-1 form-group text-center">
+                                                    <input class="form-check-input" type="radio" name="DeviceOwner" id="chkYes" />
+                                                    <label class="form-check-label" for="chkYes">Others</label>
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <!--<input class="form-control" type="text" id="txtBox" name="DeviceOwnerothers" />-->
+
+
+                                                    <!--datta list-->
+                                                    <input class="form-control" list="ownername" name="DeviceOwnerothers" id="txtBox">
+
+                                                    <datalist id="ownername">
+                                                    </datalist>
+                                                    <!--datta list-->
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                            </div>
+
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Power Supply</label>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="number" class="form-control" id="deviceposrt" name="deviceposrt" min="1" value="1" />
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Wattage (kwh)</label>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="number" class="form-control" id="DeviceWatt" name="DeviceWatt" onchange="setTwoNumberDecimal" min="0" step="0.010" value="0.000" />
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Special Notes</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="special_notes4" name="special_notes4" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <hr>
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <input class="form-control btn btn-primary" style="background-color: #337ab7;" type="submit" name="submit" id="myTemp" value="Add Device Template" disabled />
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-control btn btn-primary" style="background-color: #337ab7;" type="submit" name="submit" id="myDev" value="Add Device" disabled />
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="button" class="form-control btn btn-primary" value="Preview" id="previewDevice" />
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="reset" class="form-control btn btn-primary" value="Reset" />
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!---->
+                        {% comment %} {% endcomment %}
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--END DC-->
+</div>
+<!-- END ADDING DATACENTER FORMS-->
+
+
+<script>
+    $(document).ready(function() {
+        printAtoZ();
+    });
+
+    function printAtoZ() {
+        var append = "<option selected value='A'> A </option>";
+        for (var i = 66; i <= 90; i++) {
+            value = String.fromCharCode(i);
+            append += "<option value='" + value + "'> " + value + " </option>";
+        }
+        $("#rack_row").append(append);
+    }
+
+    $("#device_type").change(function() {
+        var device = $("#device_type").val()
+        $("#removeIP").css('display', 'none');
+
+        LotsOfIfElse(device);
+
+        if (device.toLowerCase() == "vm") {
+            $("#device_rack_rows").prop('disabled', true);
+            $("#device_cabinet").prop('disabled', true);
+            $("#unit_location").prop('disabled', true);
+            $("#device_height").prop('disabled', true);
+
+            $("#deviceposrt").prop('disabled', true);
+            $("#DeviceWatt").prop('disabled', true);
+        }
+
+        if (device == "Patch Panel") {
+            $("#unit_location").removeAttr('disabled');
+            $("#device_height").removeAttr('disabled');
+            $("#deviceposrt").prop('disabled', true);
+            $("#DeviceWatt").prop('disabled', true);
+        }
+    });
+
+    $("#selsnmp").change(function() {
+        var type = $("#selsnmp").val()
+        $("#snmpv3").css('display', 'none');  
+        if (type.toLowerCase() == "snmp3") {
+            $("#snmpv3").css('display', 'block');
+            $("#snmpcstr").css('display', 'none');   
+        }
+        else{
+            $("#snmpcstr").css('display', 'block'); 
+           $("#snmpv3").css('display', 'none');
+        }
+    });
+
+    function takeScreeShot() {
+        document.querySelector('#ssbtn').addEventListener('click', function() {
+            html2canvas(document.querySelector('#myModal1 .modal-body'), {
+                onrendered: function(canvas) {
+                    // document.body.appendChild(canvas);
+                    return Canvas2Image.saveAsJPEG(canvas);
+                }
+            });
+        });
+    }
+
+    $("body").on("click", ".deleteDeviceCap", function() {
+        var id = $(this).data("id");
+
+        Swal.fire({
+            title: 'Are you sure want to delete device?',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: "/device/capability/delete/",
+                    data: {
+                        "id": id,
+                    },
+                    success: function(data) {
+
+                        if (!data["err"])
+                            setMainTableAjaxRequest("capDeviceID", "/device/cap/device/");
+                        Swal.fire(data["data"]);
+                    },
+                    error: function(data) {
+                        Swal.fire(data["data"]);
+                    }
+                });
+            }
+        })
+    });
+    $("body").on("click", ".editDeviceCap", function() {
+        var csrftoken = Cookies.get("csrftoken");
+        var id = $(this).data("id");
+        var name = $(this).data("name");
+        var ip = $(this).data("ip");
+        var cstr = $(this).data("str");
+        var user = $(this).data("user");
+        var pwd = $(this).data("pwd");
+        console.log(id, name);
+        var html = "<form id='editDeviceCapId' method='POST' action='/device/capability/edit/'><input type='hidden' name='csrfmiddlewaretoken' value='" + csrftoken + "'><input type='hidden' name='id' value='" + id + "'><div class='form-group row'><label for='device' class='control-label col-sm-4'>Name of Device</label><div class='col-sm-8'><input type='text' class='form-control' name='devicename' value='" + name + "' required /></div></div><div class='form-group row'><label for='host' class='control-label col-sm-4'>Host</label><div class='col-sm-8'><input name='ippart1' readonly type='text' id='ippart1' class='form-control' value='" + ip + "' required /></div></div><div class='form-group row'><label for='cString' class='control-label col-sm-4'>Type</label><div class='col-sm-8'><select class='form-control' name='type'><option value='snmp1'>SNMP v1</option><option value='snmp2'>SNMP v2</option><option value='snmp3'>SNMP v3</option><option value='restconf'>Restcong</option><option value='netconf'>Netconf</option><option value='ssh'>SSH</option><option value='api'>API</option><option value='agent'>Agent</option></select></div></div><div class='form-group row'><label for='cString' class='control-label col-sm-4'>Community String</label><div class='col-sm-8'><input type='text' class='form-control' name='cString' id='cString' value='" + cstr + "' /></div></div><div class='form-group row'><label for='username' class='control-label col-sm-4'>Username</label><div class='col-sm-8'><input type='text' class='form-control' name='username' id='username' value='" + user + "' required /></div></div><div class='form-group row'><label for='password' class='control-label col-sm-4'>Password</label><div class='col-sm-8'><input type='password' class='form-control' name='password' id='password' value='" + pwd + "' required /></div></div><div class='form-group row'><div class='offset-sm-2 col-sm-10 pull-right'><input type='submit' class='btn btn-primary' value='Update' /></div></div></form>";
+
+        $("#editDevCap .modal-body").html(html);
+        $("#editDevCap").modal();
+        console.log(html);
+    });
+
+    $("body").on("submit", "#editDeviceCapId", function(e) {
+        e.preventDefault();
+        var formData = objectifyForm($("#editDeviceCapId").serializeArray());
+        $.ajax({
+            type: 'POST',
+            url: "/device/capability/edit/",
+            data: formData,
+            beforeSend: function() {
+                $('.pageloader').show();
+            },
+            complete: function() {
+                $('.pageloader').hide();
+            },
+            success: function(data) {
+
+                if (!data["err"])
+                    setMainTableAjaxRequest("capDeviceID", "/device/cap/device/");
+                Swal.fire(data["data"]);
+            },
+            error: function(data) {
+                Swal.fire(data["data"]);
+            }
+        });
+        return false;
+    });
+
+
+    $("#ipscan").click(function(e) {
+        var token = '{{csrf_token}}';
+        var ippart1 = $("#ippart1").val().trim();
+        if (ippart1 == "") {
+            Swal.fire("Enter IP Address")
+            return false
+        }
+        $("#loader1").html("Scanning Started...");
+        $("#loader1").show();
+
+        $.ajax({
+            headers: {
+                "X-CSRFToken": token
+            },
+            type: 'POST',
+            url: "{% url 'IPScan' %}",
+            data: {
+                'ippart1': ippart1,
+            },
+            complete: function() {
+                $('#loader1').hide();
+            },
+            // data: {"port1":port1,"port2":port2,"port3":port3,"port4":port4},
+            success: function(response) {
+                res = response["IPdevices"];
+                Swal.fire(res)
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    });
+
+
+    var err = "";
+
+    var addDC = $('#addDC');
+    addDC.submit(function() {
+        var formData = objectifyForm(addDC.serializeArray());
+        //console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: "/asset/forms/add/datacenter/",
+            data: formData,
+            success: function(data) {
+                Swal.fire(data["data"]);
+                if (!data["err"]) {
+                    addDC.trigger("reset");
+                    dc_change();
+                }
+            },
+            error: function(data) {
+                console.log("err");
+            }
+        });
+        return false;
+    });
+
+    var addRow = $('#addROW');
+    addRow.submit(function() {
+        var formData = objectifyForm(addRow.serializeArray());
+        //console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: "/asset/forms/add/row/",
+            data: formData,
+            success: function(data) {
+                Swal.fire(data["data"]);
+                if (!data["err"])
+                    addRow.trigger("reset");
+            },
+            error: function(data) {
+                console.log("err");
+            }
+        });
+        return false;
+    });
+
+    var addRack = $('#addRACK');
+    addRack.submit(function() {
+        var formData = objectifyForm(addRack.serializeArray());
+        //console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: "/asset/forms/add/rack/",
+            data: formData,
+            success: function(data) {
+                Swal.fire(data["data"]);
+                if (!data["err"])
+                    addRack.trigger("reset");
+            },
+            error: function(data) {
+                console.log("err");
+            }
+        });
+        return false;
+    });
+
+    var addDevice = $('#fourthform');
+    addDevice.submit(function() {
+        var formData = objectifyForm(addDevice.serializeArray());
+        //console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: "/asset/forms/add/device/",
+            data: formData,
+            success: function(data) {
+                Swal.fire(data["data"]);
+                if (!data["err"])
+                    addDevice.trigger("reset");
+            },
+            error: function(data) {
+                console.log("err");
+            }
+        });
+        return false;
+    });
+
+    var scheduleDevice = $('#scheduleDevice');
+    scheduleDevice.submit(function() {
+        var formData = objectifyForm(scheduleDevice.serializeArray());
+        //console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: "/asset/forms/add/schedule/",
+            data: formData,
+            success: function(data) {
+
+                Swal.fire(data["data"]);
+                if (!data["err"])
+                    scheduleDevice.trigger("reset");
+            },
+            error: function(data) {
+                console.log("err");
+            }
+        });
+        return false;
+    });
+    var addhocdevice = $('#addhocdevice');
+    addhocdevice.submit(function() {
+        var formData = objectifyForm(addhocdevice.serializeArray());
+        var html = "";
+        console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: "/asset/forms/add/addcap/",
+            data: formData,
+            success: function(data) {
+                if (data["err"])
+                    err = "alert-danger";
+                else
+                    err = "alert-success";
+                if (data["device"]) {
+                    var datas = data["device"][0];
+                    html += "<tr><td>" + datas["name"] + "</td><td>" + datas["ip"] + "</td>";
+                    if (datas["is_snmp"]) {
+                        html += "<td><a href='/device/capability/test/" + datas["id"] + "/snmp/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+                    } else {
+                        html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+                    }
+                    if (datas["is_netconf"]) {
+                        html += "<td><a href='/device/capability/test/" + datas["id"] + "/net/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+                    } else {
+                        html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+                    }
+                    if (datas["is_restconf"]) {
+                        html += "<td><a href='/device/capability/test/" + datas["id"] + "/rest/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+                    } else {
+                        html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+                    }
+                    html += "<td><i class='fa fa-circle' style='color:green'></td><td>" + datas["created"] + "</td>\
+                        <td>" + datas["updated"] + "</td><td>";
+
+                    if (datas["is_netconf"] || datas["is_snmp"] || datas["is_restconf"]) {
+                        html += "<a class='openform' data-host=" + datas["ip"] + " data-name=" + datas["name"] + " data-port=80'><i class='fa fa-plus' style='color:blue; cursor:pointer;'></i></a>";
+                    } else {
+                        html += "<a disabled class='openform' data-host=" + datas["ip"] + " data-name=" + datas["name"] + " data-port=80'><i class='fa fa-plus' style='color:grey'></i></a>";
+                    }
+
+                    html += "<a><i data-id='" + datas["id"] + "' data-ip='" + datas["ip"] + "' data-name='" + datas["name"] + "' data-user='" + datas["user"] + "' data-pwd='" + datas["pwd"] + "' data-str='" + datas["commString"] + "' class='fa fa-edit editDeviceCap'></i></a> <a><i data-id='" + datas["id"] + "' class='fa fa-trash deleteDeviceCap'></i></a></td></tr>";
+                }
+                Swal.fire(data["data"]);
+                if (!data["err"])
+                    addhocdevice.trigger("reset");
+                $("#capDeviceID tbody").prepend(html);
+            },
+            error: function(data) {
+                console.log("err");
+            }
+        });
+        return false;
+    });
+    $("body").on("click", ".addiptodc", function() {
+        var host = $(this).data('host');
+        var me = $(this);
+        $.ajax({
+            type: 'GET',
+            url: "/asset/forms/host/",
+            data: {
+                "host": host,
+            },
+            success: function(data) {
+                if (!data["error"]) {
+                    Swal.fire(data["data"]);
+                    me.removeClass('addiptodc');
+                    me.parent().css('color', 'gray');
+                    setMainTableAjaxRequest("capDeviceID", "/device/cap/device/");
+                } else {
+                    Swal.fire(data["data"]);
+                }
+            },
+            error: function(data) {
+                Swal.fire(data["data"]);
+            }
+        });
+    });
+    $("body").on("click", ".openform", function() {
+        console.log("Clicked on ", $(this))
+        console.log("ATTR IS ", $(this).attr("disabled"))
+        if ($(this).attr("disabled") != undefined) {
+            return;
+        }
+
+        var port = $(this).data("port");
+        var name = $(this).data("name");
+        var host = $(this).data("host");
+        setVariablesOnLoad(port, name, host);
+        var sel = $("#device_type");
+        $("#patchpanel").hide();
+        $("#pdu").hide();
+        sel[0].options.length = 0;
+        sel.append($("<option></option>").attr({
+            "disabled": "disabled",
+            "selected": "selected"
+        }).text("--Select--"));
+        sel.append($("<option></option>").attr({
+            "value": "Network"
+        }).text("Network"));
+        sel.append($("<option></option>").attr({
+            "value": "Server"
+        }).text("Server"));
+        sel.append($("<option></option>").attr({
+            "value": "Blade Chassis"
+        }).text("Blade Chassis"));
+        sel.append($("<option></option>").attr({
+            "value": "Storage"
+        }).text("Storage"));
+        sel.append($("<option></option>").attr({
+            "value": "Security"
+        }).text("Security"));
+        sel.append($("<option></option>").attr({
+            "value": "Load Balancer"
+        }).text("Load Balancer"));
+        sel.append($("<option></option>").attr({
+            "value": "Tape Library"
+        }).text("Tape Library"));
+        sel.append($("<option></option>").attr({
+            "value": "UPS"
+        }).text("UPS"));
+        sel.append($("<option></option>").attr({
+            "value": "vm"
+        }).text("VM"));
+        sel.append($("<option></option>").attr({
+            "value": "other"
+        }).text("Other"));
+        $("#collapse4").addClass("in");
+        $("#unit_location").removeAttr('disabled');
+        $("#device_height").removeAttr('disabled');
+
+        // $("#scrollStillHere").click();
+        $("#scrollStillHere").get(0).scrollIntoView();
+
+        //$("#collapse-device").attr("aria-expanded","true");
+    })
+</script>

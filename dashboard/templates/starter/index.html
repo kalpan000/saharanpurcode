@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="colorlib.com">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hawk | Akus</title>
+
+    <link rel="stylesheet" href="/static/starter/css/fonts.css">
+
+    <link rel="stylesheet" href="/static/starter/css/style.css">
+</head>
+
+<body>
+    <div class="main">
+        <div class="container">
+            <h2>Starter Page</h2>
+            <form method="POST" id="signup-form" class="signup-form">
+                <h3>
+                    <span class="icon"><i class="ti-user"></i></span>
+                    <span class="title_text">Personal</span>
+                </h3>
+                <fieldset>
+                    <legend>
+                        <span class="step-heading">Superuser Personal Information: </span>
+                        <span class="step-number">Step 1 / 4</span>
+                    </legend>
+                    <div class="form-group">
+                        <label for="first_name" class="form-label required">First name</label>
+                        <input type="text" value="Hawk" name="first_name" id="first_name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name" class="form-label required">Last name</label>
+                        <input type="text" value="Hawk" name="last_name" id="last_name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="user_name" class="form-label required">User name</label>
+                        <input type="text" value="hawk" name="user_name" id="user_name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label required">Password</label>
+                        <input type="password" name="password" id="password" />
+                    </div>
+                </fieldset>
+                <h3>
+                    <span class="icon"><i class="ti-email"></i></span>
+                    <span class="title_text">Contact</span>
+                </h3>
+                <fieldset>
+                    <legend>
+                        <span class="step-heading">Contact Informaltiosn: </span>
+                        <span class="step-number">Step 2 / 4</span>
+                    </legend>
+                    <div class="form-group">
+                        <label for="email" class="form-label required">Email</label>
+                        <input type="email" name="email" id="email" />
+                    </div>
+                    <div class="form-select">
+                        <label for="country" class="form-label">Country</label>
+                        <div class="select-list">
+                            <select name="country" id="country">
+                                <option value="india">India</option>
+                                <option value="uae">UAE</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <h3>
+                    <span class="icon"><i class="ti-star"></i></span>
+                    <span class="title_text">Offical</span>
+                </h3>
+                <fieldset>
+                    <legend>
+                        <span class="step-heading">Activate Code</span>
+                        <span class="step-number">Step 3 / 4</span>
+                    </legend>
+                    <div class="form-group">
+                        <label for="first_name" class="form-label required">IP Address</label>
+                        <input type="text" name="ipaddress" id="ipaddress" />
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name" class="form-label required">Subnet</label>
+                        <input type="text" name="subnet" id="subnet" />
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name" class="form-label required">Gateway</label>
+                        <input type="text" name="gateway" id="gateway" />
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name" class="form-label required">DNS 1</label>
+                        <input type="text" name="dns1" id="dns1" />
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name" class="form-label required">DNS 2</label>
+                        <input type="text" name="dns2" id="dns2" />
+                    </div>
+                </fieldset>
+                <h3>
+                    <span class="icon"><i class="ti-wand"></i></span>
+                    <span class="title_text">License</span>
+                </h3>
+                <fieldset>
+                    <legend>
+                        <span class="step-heading">Activate Code</span>
+                        <span class="step-number">Step 4 / 4</span>
+                    </legend>
+                    <div class="form-group">
+                        <label for="license_key" class="form-label required">License Code</label>
+                        <input type="text" name="license_key" id="licenseKeyText" />
+                    </div>
+                    <div class="form-group">
+                        <input type="button" name="licenseKey" id="licenseKey" value="Validate">
+                        <span id="licenseError"> </span>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+    </div>
+
+    <script src="/static/starter/js/jquery.js"></script>
+    <script src="/static/starter/js/validate.js"></script>
+    <script src="/static/starter/js/additional.js"></script>
+    <script src="/static/starter/js/jquery-steps.js"></script>
+    <script src="/static/starter/js/main.js"></script>
+
+    <script>
+        $.get("license/check/", function(data, success) {
+
+            if (!data["expired"]) {
+                $("#licenseKey").prop("disabled", true);
+                $("#licenseKeyText").prop("disabled", true);
+                $("#licenseError").text(data["message"]);
+            }
+
+        })
+        $("#licenseKey").on("click", function() {
+            console.log("Clicked ");
+            var val = $("#licenseKeyText").val();
+            $.get("license/decrypt/?key=" + val, function(data, status) {
+                if (data["error"] == false) {
+                    $("#licenseKey").prop("disabled", true);
+                    $("#licenseKeyText").prop("disabled", true);
+                }
+                $("#licenseError").text(data["message"]);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

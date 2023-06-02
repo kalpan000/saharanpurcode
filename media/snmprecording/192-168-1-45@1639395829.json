@@ -1,0 +1,436 @@
+{
+    "sysdescr": "Hardware: Intel64 Family 6 Model 45 Stepping 7 AT/AT COMPATIBLE - Software: Windows Version 6.3 (Build 14393 Multiprocessor Free)",
+    "sysobjectid": "1.3.6.1.4.1.311.1.1.3.1.2",
+    "sysuptime": "136220",
+    "syscontact": "",
+    "sysname": "WIN-IO0S7ELJJDA",
+    "syslocation": "",
+    "interfaces": {
+        "1": {
+            "ifindex": "1",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Software Loopback Interface 1\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1073741824",
+            "mac": "",
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Loopback Pseudo-Interface 1",
+            "ipv4": [
+                {
+                    "address": "127.0.0.1",
+                    "netmask": "255.0.0.0"
+                }
+            ]
+        },
+        "2": {
+            "ifindex": "2",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #2\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "138"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 2"
+        },
+        "3": {
+            "ifindex": "3",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Microsoft Kernel Debug Network Adapter\u0000",
+            "outErr": 0,
+            "mtu": "0",
+            "speed": "0",
+            "mac": "",
+            "adminstatus": "down",
+            "operstatus": "unknown",
+            "description": "Local Area Connection* 1"
+        },
+        "4": {
+            "ifindex": "4",
+            "inOctect": 12813029,
+            "outOctect": 750724,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "136"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Ethernet",
+            "ipv4": [
+                {
+                    "address": "192.168.1.45",
+                    "netmask": "255.255.255.0"
+                }
+            ]
+        },
+        "5": {
+            "ifindex": "5",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Microsoft ISATAP Adapter\u0000",
+            "outErr": 0,
+            "mtu": "1280",
+            "speed": "100000",
+            "mac": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "224"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "isatap.{8AD69FD0-E3A7-4115-A676-BEEA8DE64960}"
+        },
+        "6": {
+            "ifindex": "6",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #4\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "139"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 4"
+        },
+        "7": {
+            "ifindex": "7",
+            "inOctect": 456,
+            "outOctect": 1413,
+            "inErr": 0,
+            "name": "Teredo Tunneling Pseudo-Interface\u0000",
+            "outErr": 0,
+            "mtu": "1472",
+            "speed": "100000",
+            "mac": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "224"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Local Area Connection* 3"
+        },
+        "8": {
+            "ifindex": "8",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #3\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "137"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 3"
+        },
+        "9": {
+            "ifindex": "9",
+            "inOctect": 12813029,
+            "outOctect": 750724,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "136"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Ethernet-WFP Native MAC Layer LightWeight Filter-0000"
+        },
+        "10": {
+            "ifindex": "10",
+            "inOctect": 12813029,
+            "outOctect": 750724,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet-QoS Packet Scheduler-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "136"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Ethernet-QoS Packet Scheduler-0000"
+        },
+        "11": {
+            "ifindex": "11",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #3-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "137"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 3-WFP Native MAC Layer LightWeight Filter-0000"
+        },
+        "12": {
+            "ifindex": "12",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #2-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "138"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 2-WFP Native MAC Layer LightWeight Filter-0000"
+        },
+        "13": {
+            "ifindex": "13",
+            "inOctect": 12813029,
+            "outOctect": 750724,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "136"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "Ethernet-WFP 802.3 MAC Layer LightWeight Filter-0000"
+        },
+        "14": {
+            "ifindex": "14",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #2-QoS Packet Scheduler-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "138"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 2-QoS Packet Scheduler-0000"
+        },
+        "15": {
+            "ifindex": "15",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #2-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "138"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 2-WFP 802.3 MAC Layer LightWeight Filter-0000"
+        },
+        "16": {
+            "ifindex": "16",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #3-QoS Packet Scheduler-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "137"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 3-QoS Packet Scheduler-0000"
+        },
+        "17": {
+            "ifindex": "17",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #3-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "137"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 3-WFP 802.3 MAC Layer LightWeight Filter-0000"
+        },
+        "18": {
+            "ifindex": "18",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #4-WFP Native MAC Layer LightWeight Filter-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "139"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 4-WFP Native MAC Layer LightWeight Filter-0000"
+        },
+        "19": {
+            "ifindex": "19",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #4-QoS Packet Scheduler-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "139"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 4-QoS Packet Scheduler-0000"
+        },
+        "20": {
+            "ifindex": "20",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Broadcom NetXtreme Gigabit Ethernet #4-WFP 802.3 MAC Layer LightWeight Filter-0000\u0000",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "172",
+                "22",
+                "45",
+                "137",
+                "43",
+                "139"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "Ethernet 4-WFP 802.3 MAC Layer LightWeight Filter-0000"
+        }
+    },
+    "all_ipv4_addresses": [
+        "127.0.0.1",
+        "192.168.1.45"
+    ]
+}

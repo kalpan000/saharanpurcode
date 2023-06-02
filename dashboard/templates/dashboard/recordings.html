@@ -1,0 +1,78 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} IP Camera Recordings {% endblock %} {% block css %}
+<style>
+    td {
+        text-align: left;
+    }
+</style>
+{% endblock %} {% block content %}
+<table border="1" class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>STATUS</th>
+            <th>ACTION</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for key, value in data.items %} {% if key == 'ongoing' %} {% for val in value %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{val.value}}</td>
+            <td>Recording </td>
+            <td><a data-id="{{val.id}}" data-file="{{val.value}}" class="stopVideo btn btn-danger">STOP</a></td>
+            {% endfor %} {% else %} {% for val in value %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{val.value}}</td>
+                <td>Completed </td>
+                <td>
+                    <a href="/media/cctvrecording/{{val.value}}.avi" class="btn btn-primary" download>Download</a>
+                    <a data-file="{{val.value}}" class="deleteVideo btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %} {% endif %} {% endfor %}
+    </tbody>
+</table>
+{% block js %}
+<script>
+    // $(document).ready(function() {
+    //     console.log("im running");
+    //     $.get("/streamrecordings/ajax/", function(data, status) {
+    //         console.log(data);
+    //         var ongoing = data["data"]["ongoing"];
+    //         var finished = data["data"]["finished"]
+    //         for (var index in ongoing) {
+    //             console.log(ongoing[index]["value"])
+    //         }
+    //         for (var index in finished) {
+    //             console.log(finished[index]["value"])
+    //         }
+    //     });
+    // });
+    $("body").on("click", ".deleteVideo", function(e) {
+        var file = $(this).data("file");
+        e.preventDefault();
+        var sendthis = {
+            "file": file,
+        }
+        $.post("/deleterecordings/", sendthis, function(data, status) {
+            console.log(data);
+            Swal.fire(data["message"])
+        });
+    });
+    $("body").on("click", ".stopVideo", function(e) {
+        var id = $(this).data("id");
+        var file = $(this).data("file");
+        e.preventDefault();
+        var sendthis = {
+            "id": id,
+            "file": file,
+        }
+        $.post("/stoprecording/", sendthis, function(data, status) {
+            console.log(data);
+            Swal.fire(data["message"])
+        });
+    });
+</script>
+{% endblock js %} {% endblock %}

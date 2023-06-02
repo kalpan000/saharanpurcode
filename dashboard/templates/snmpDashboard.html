@@ -1,0 +1,167 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} SNMP Dashboard {% endblock %}{% block title_header %} SNMP Dashboard {% endblock %}> {% block css %}
+<style>
+    .row {
+        margin-top: 40px;
+        padding: 0 10px;
+    }
+    
+    .clickable {
+        cursor: pointer;
+    }
+    
+    .panel-heading span {
+        margin-top: -20px;
+        font-size: 15px;
+        margin-left: 15px;
+    }
+    
+    form {
+        text-align: left;
+    }
+    
+    form .error {
+        display: none;
+    }
+</style>
+{% endblock %} {% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="AddOID" tabindex="-1" role="dialog" aria-labelledby="AddOIDLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddOIDLabel">Add MIB OIDs</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form id="saveoidfrm">
+                    <div class="form-group">
+                        <label>Enter OID</label>
+                        <input type="text" name="oid" class="form-control" id="" placeholder="Enter OID" required>
+                        <input type="hidden" name="host" value="{{ip}}">
+                        <input type="hidden" name="cstr" value="{{snmp}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" class="form-control" id="" placeholder="Enter Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select name="type" class="form-control" id="">
+                            <option value="single">Single</option>
+                            <option value="multi">Table</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>OID Datatype</label>
+                        <select name="datatype" class="form-control" id="">
+                            <option value="str">Text</option>
+                            <option value="num">Number</option>
+                            <option value="timetick">Time Tick</option>
+                        </select>
+                    </div>
+                    <div class="form-group error">
+                        <label>Another label</label>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add OID</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddOID">Add OID</button>
+</div>
+<div class="row" id="snmpdata">
+</div>
+
+{% endblock %} {% block js %}
+<script>
+    $("#saveoidfrm").submit(function() {
+        var formData = objectifyForm($(this).serializeArray());
+        $.get(`/snmp/dashboard/details/`, formData, function(res, status) {
+            status = res["status"]
+            if (!status){
+                $(".error").html(res["data"])
+                $(".error").show()
+                window.setInterval(function() {
+                    $(".error").hide()
+                }, 3000)
+                return false;
+            }
+            title = Object.keys(res["data"])[0];
+            value = Object.values(res["data"])[0]
+            data = `<div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">${title}</h3>
+                    <span class="pull-right clickable"><i class="fa fa-angle-down"></i></span>
+                    <span class="pull-right closediv"><i class="fa fa-close"></i></span>
+                    <span data-oid="${formData["oid"]}" data-ip="${formData["host"]}" data-cstr="${formData["cstr"]}" data-type="${formData["type"]}" data-dt="${formData["datatype"]}" class="pull-right refresh"><i class="fa fa-refresh"></i></span>
+                    <span class="pull-right edit"><i class="fa fa-pencil"></i></span>
+                </div>
+                <div class="panel-body">${value}</div>
+            </div>
+        </div>`;
+            $("#snmpdata").append(data);
+        })
+        $(".error").html("Data Saved")
+        $(".error").show()
+        window.setInterval(function() {
+            $(".error").hide()
+        }, 3000)
+        $(this).trigger("reset");
+        return false;
+    })
+
+    $(document).on('click', '.panel-heading span.clickable', function(e) {
+        var $this = $(this);
+        if (!$this.hasClass('panel-collapsed')) {
+            $this.parents('.panel').find('.panel-body').slideUp();
+            $this.addClass('panel-collapsed');
+            $this.find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+
+        } else {
+            $this.parents('.panel').find('.panel-body').slideDown();
+            $this.removeClass('panel-collapsed');
+            $this.find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+    })
+
+    $(document).on('click', '.panel-heading span.closediv', function(e) {
+        $(this).parent().parent().parent().remove()
+    })
+
+    $(document).on('click', '.panel-heading span.refresh', function(e) {
+        me = $(this)
+        ip = me.data("ip");
+        cstr = me.data("cstr");
+        oid = me.data("oid");
+        type = me.data("type");
+        dt = me.data("dt");
+        data = {
+            "oid": oid,
+            "cstr" : cstr,
+            "host": ip,
+            "title" : "Refresh Value",
+            "type" : type,
+            "datatype": dt,
+        }
+        $.get(`/snmp/dashboard/details/`,data , function(res, status) {
+            status = res["status"]
+            if (!status){
+                me.parent().next().html(res["data"])
+                return false;
+            }
+            value = Object.values(res["data"])[0]
+            me.parent().next().html(value)
+    })
+    })
+</script>
+{% endblock %}

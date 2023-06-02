@@ -1,0 +1,89 @@
+{% extends 'dashboard/header_footer.html' %}
+{% load static %}
+
+{% block title %}
+Export
+{% endblock %}
+
+{% block js  %}
+<script>
+function download(content, fileName, contentType) {
+        var a = document.createElement("a");
+        var file = new Blob([content], {
+            type: contentType
+        });
+        a.href = URL.createObjectURL(file);
+        a.download = fileName;
+        a.click();
+    }
+  $("#myform").submit(function (event) {
+    var formData = {
+      name: $("#modelname").val(),
+      format: $("#format").val(),
+    };
+    if ($("#format").val() == "JSON"){
+    $.ajax({
+      type: "POST",
+      url: "/export/",
+      data: formData,
+      dataType: "json",
+      encode: true,
+      beforeSend: function(){
+        $('.pageloader').show();
+        },
+      complete: function(){
+        $('.pageloader').hide();
+        },
+        success: function(data){
+            download(data, $("#modelname").val() + ".json", "text/plain")
+        },
+    });
+    }
+    else{
+    $.ajax({
+      type: "POST",
+      url: "/export/",
+      data: formData,
+      dataType: "json",
+      encode: true,
+      beforeSend: function(){
+        $('.pageloader').show();
+        },
+      complete: function(){
+        $('.pageloader').hide();
+        },
+        success: function(data){
+            download(data, $("#modelname").val() + ".csv", "text/plain")
+        },
+    });
+    }
+    event.preventDefault();
+  });
+</script>
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+{% block title_header %}Export{% endblock %}
+{% block content %}
+{{response}}
+    <form method="post" enctype="multipart/form-data" id="myform">
+        {% csrf_token %}
+        <select name="modelName" id="modelname" class="form-control my-3">
+            <option selected>Choose model...</option>
+            {% for models in AllModels %}
+            <option value="{{models}}">{{models|capfirst}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <select name="file-format" id="format" class="form-control my-3">
+            <option selected>Choose format...</option>
+            <option>CSV</option>
+            <option>JSON</option>
+        </select>
+        <br>
+        <button class="btn btn-primary submit" type="submit">Export</button>
+    </form>
+
+  {% endblock %}

@@ -1,0 +1,643 @@
+{% extends 'dashboard/header_footer.html' %}{% load static %} {% block title %} Appliance {% endblock title %} {% block css %}
+<style>
+    .card-counter {
+        box-shadow: 2px 2px 10px #DADADA;
+        margin: -13px;
+        padding: 20px 10px;
+        background-color: #fff;
+        height: 70px;
+        border-radius: 5px;
+        transition: .3s linear all;
+    }
+    
+    .card-counter:hover {
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+    }
+    
+    .card-counter.primary {
+        background-color: #007bff;
+        color: #FFF;
+    }
+    
+    .card-counter.danger {
+        background-color: #ef5350;
+        color: #FFF;
+    }
+    
+    .card-counter.success {
+        background-color: #66bb6a;
+        color: #FFF;
+    }
+    
+    .card-counter.info {
+        background-color: #26c6da;
+        color: #FFF;
+    }
+    
+    .card-counter i {
+        font-size: 5em;
+        opacity: 0.2;
+    }
+    
+    .card-counter .count-numbers {
+        position: relative;
+        text-align: center;
+        right: 2px;
+        top: -25px;
+        font-size: 32px;
+        display: block;
+    }
+    
+    .card-counter .count-name {
+        position: relative;
+        top: -25px;
+        text-transform: capitalize;
+        opacity: 0.5;
+        display: block;
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    fieldset.scheduler-border {
+        /* border: 1px groove #ddd !important; */
+        padding: 0 1.4em 1.4em 1.4em !important;
+        /* margin: 0 0 1.5em 0 !important; */
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+    }
+    
+    legend.scheduler-border {
+        font-size: 1em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width: auto;
+        padding: 0 10px;
+        border-bottom: none;
+    }
+    
+    .col-md-offset-1 {
+        margin-left: 2.333%;
+    }
+    
+    .container {
+        width: 100%;
+    }
+    
+    .headerCol {
+        width: 14.667%;
+    }
+    
+    .card {
+        background: #fff;
+        color: black;
+        box-shadow: 0 0 1px #232323;
+        text-align: left;
+    }
+    .card-title{
+
+    }
+
+    .chartbtn, .zoombtn, #netupload, #netdownload{
+        position: relative;
+        background: none;
+        border: none;
+        font-size: 11px;
+        right: 0;
+        padding-right:10px;
+        padding-left:10px;
+    }
+
+    .chartBtnSelection {
+        color: green;
+        font-weight: bolder;
+    }
+
+    /* Temp Slider */
+input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  border-radius:10px;
+  box-shadow:0px 0px 5px 5px gainsboro;
+  background: #4776e6; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #8e54e9,
+    #4776e6
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #8e54e9,
+    #4776e6
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  height: 7.5px;
+}input[type="range"]:focus {
+  outline: none;
+}input[type="range"]::-moz-range-track {
+  -moz-appearance: none;
+  background: rgba(59, 173, 227, 1);
+  background: -moz-linear-gradient(
+    45deg,
+    rgba(59, 173, 227, 1) 0%,
+    rgba(87, 111, 230, 1) 25%,
+    rgba(152, 68, 183, 1) 51%,
+    rgba(255, 53, 127, 1) 100%
+  );
+  background: -webkit-gradient(
+    left bottom,
+    right top,
+    color-stop(0%, rgba(59, 173, 227, 1)),
+    color-stop(25%, rgba(87, 111, 230, 1)),
+    color-stop(51%, rgba(152, 68, 183, 1)),
+    color-stop(100%, rgba(255, 53, 127, 1))
+  );
+  background: -webkit-linear-gradient(
+    45deg,
+    rgba(59, 173, 227, 1) 0%,
+    rgba(87, 111, 230, 1) 25%,
+    rgba(152, 68, 183, 1) 51%,
+    rgba(255, 53, 127, 1) 100%
+  );
+  background: -o-linear-gradient(
+    45deg,
+    rgba(59, 173, 227, 1) 0%,
+    rgba(87, 111, 230, 1) 25%,
+    rgba(152, 68, 183, 1) 51%,
+    rgba(255, 53, 127, 1) 100%
+  );
+  background: -ms-linear-gradient(
+    45deg,
+    rgba(59, 173, 227, 1) 0%,
+    rgba(87, 111, 230, 1) 25%,
+    rgba(152, 68, 183, 1) 51%,
+    rgba(255, 53, 127, 1) 100%
+  );
+  background: linear-gradient(
+    45deg,
+    rgba(59, 173, 227, 1) 0%,
+    rgba(87, 111, 230, 1) 25%,
+    rgba(152, 68, 183, 1) 51%,
+    rgba(255, 53, 127, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3bade3 ', endColorstr='#ff357f ', GradientType=1 );
+  height: 2px;
+}input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 2px solid;
+  border-radius: 50%;
+  height: 10px;
+  width: 10px;
+  max-width: 80px;
+  position: relative;
+  bottom: 11px;
+  background-color: white;
+  cursor: -webkit-grab;-webkit-transition: border 1000ms ease;
+  transition: border 1000ms ease;
+}input[type="range"]::-moz-range-thumb {
+  -moz-appearance: none;
+  border: 2px solid;
+  border-radius: 50%;
+  height: 10px;
+  width: 10px;
+  max-width: 80px;
+  position: relative;
+  bottom: 11px;
+  background-color: #1d1c25;
+  cursor: -moz-grab;
+  -moz-transition: border 1000ms ease;
+  transition: border 1000ms ease;
+}
+
+    /* Temp Slider */
+</style>
+{% endblock %} {% block js %} {% endblock js %} {% block title_header %} Hawk M{% endblock %} {% block content %}
+
+<div id="container">
+    <div class="row">
+
+  <div class="card col-lg-2" style="height:830px;">
+            <div class="card-body">
+            <p class="card-text" style="padding-top: 10px;">
+                    <span id="val"><b>CPU:</b> 0<sup>o</sup></span>
+                    <input id="slide" type="range" min="0" max="100" value="0" />
+                </p>
+
+                <!--<b>Uptime</b>--> 
+                <div id="graph0uptime"></div>
+                <div id="setip"></div>
+                
+                <hr>
+                <h5 class="card-title"><b>ALERTS</b></h5>
+                <p class="card-text" id="graph0">
+                                        <div id="graph0event"></div>
+                                   <a style="width:100%" href='/threshold' class="btn btn-primary">Threshold Settings</a>
+                </p>
+            </div>
+        </div>
+
+        
+        <div class="card col-lg-2 col-sm-6 col-md-6">
+            <div class="card-body">
+                <h5 class="card-title">STORAGE</h5>
+                <p class="card-text">
+                    <canvas id="storageGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">CPU %</h5>
+                <p class="card-text">
+                    <canvas id="cpuUtilGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">IOWAT</h5>
+                <p class="card-text">
+                    <canvas id="iowaitGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">RAM</h5>
+                <p class="card-text">
+                    <canvas id="ramGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">SWAP MEMORY</h5>
+                <p class="card-text">
+                    <canvas id="swapGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+      
+
+        <div class="card col-lg-5">
+
+            <div class="card-body" data-type="network">
+                <h5 class="card-title">NETWORK 
+                    <button class="chartbtn chartBtnSelection">Live</button> 
+                    <button class="chartbtn">1D</button>
+                    <button class="chartbtn">1W</button>
+                    <button class="chartbtn">1M</button>
+                    <button class="chartbtn">6M</button>
+                    <button class="chartbtn">12M</button>
+                    <button id="btn" class="zoombtn zoomchart"> 
+                        <i class="fa fa-expand"></i>
+                    </button> 
+                    <i class="fa fa-arrow-down"></i>
+                    <span id='netupload'>0.00 kb</span> 
+                    <i class="fa fa-arrow-up"></i>
+                    <span id='netdownload'>0.00 kb</span>
+                    <br>
+                    <div class='averageSHOW' style='display:none; font-size:12px;'></div>
+                </h5>
+                <p class="card-text">
+                    <canvas id="networkGRAPH" style="height:330px;background-color:#fff"> </canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-5">
+            <div class="card-body" data-type="cpu">
+                <h5 class="card-title">CPU Core 
+                    <button class="chartbtn chartBtnSelection">Live</button> 
+                    <button class="chartbtn">1D</button>
+                    <button class="chartbtn">1W</button>
+                    <button class="chartbtn">1M</button>
+                    <button class="chartbtn">6M</button>
+                    <button class="chartbtn">12M</button>
+                    <button class="zoombtn zoomchart">
+                        <i class="fa fa-expand"></i>
+                    </button> 
+                    <br>
+                    <div class='averageSHOW' style='display:none; font-size:12px;'></div>
+                </h5>
+                <p class="card-text">
+                    <canvas id="cpuGRAPH" style="height:330px;background-color:#fff"> </canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-10">
+            <div class="card-body" data-type="packet">
+                <h5 class="card-title">PACKET </h5>
+                <p class="card-text">
+                    <canvas id="packetGRAPH" style="height:96px"> </canvas>
+                </p>
+            </div>
+        </div>
+  
+    </div>
+</div>
+
+<script src="/static/dashboard/js/plotly.js"></script>
+<script src="/static/graphs/chartjs.js"></script>
+<script type="text/javascript" src="/static/dashboard/js/echarts.min.js"></script>
+<script type="text/javascript" src="/static/dashboard/js/echarts-liquidfill.min.js"></script>
+<script src="/static/graphs/bargraph.js"></script>
+
+<script>
+function toggleFullscreen(elem) {
+  var elem = document.getElementById(elem);
+  if (!document.fullscreenElement && !document.mozFullScreenElement &&
+  !document.webkitFullscreenElement && !document.msFullscreenElement) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+}
+
+$(document).on('click','.zoomchart',function(event){
+    //  $(this) = your current element that clicked.
+    // additional code
+    toggleFullscreen($(this).parent().parent().children('.card-text').children().attr('id'));
+    //toggleFullscreen($(this));
+});
+  
+</script>
+<script>
+    //ADD TRAILING 0 TO SINGLE DIGIT IN UPTIME
+    function AddZero(n) {
+        return (n < 10 ? '0' : '') + n;
+    }
+    // FUNCTION FOR SYSTEM UPTIME
+    function uptime(second) {
+        second = second;
+        d = new Date();
+        d.setMonth(0);
+        d.setDate(0);
+        d.setHours(0);
+        d.setMinutes(0);
+        d.setSeconds(second, 0);
+        setInterval(function() {
+            var output = "";
+            if (d.getMonth() != 11) {
+                output += d.getMonth() + "M ";
+            }
+            if (d.getDate() != 31) {
+                output += d.getDate() + "D ";
+            }
+            output += AddZero(d.getHours()) + ":";
+            output += AddZero(d.getMinutes()) + ":";
+            output += AddZero(d.getSeconds());
+            $("#graph0uptime").html("<b>Uptime: " + output + "</b>");
+            d.setTime(d.getTime() + 1000);
+
+        }, 1000);
+    }
+    function setIP(ip){
+        $("#setip").html("IP: "+ip);
+    }
+
+
+
+    function AllEvents(temp, cpuPercentage, usedRam, availRam, totalRam, usedStorage, availStorage, totalStorage, iowat, availSMemory, usedSMemory, process, runningps, upload, download) {
+        var output = "";
+        output += "<b>CPU %</b> : "+ cpuPercentage + "%<br>";
+        output += "<br><b>Ram</b><br>";
+        output += "Available: " + availRam + " GB<br>";
+        output += "Used: " + usedRam + " GB<br>";
+        output += "Total: " + totalRam + " GB<br>";
+        output += "<br><b>Storage</b><br>";
+        output += "Available: " + availStorage + " GB<br>";
+        output += "Used: " + usedStorage + " GB<br>";
+        output += "Total: " + totalStorage + " GB<br>";
+        output += "<br><b>Swap Memory</b><br>";
+        output += "Availabale: " + availSMemory + " GB<br>";
+        output += "Used: " + usedSMemory + " GB<br>";
+        output += "<br><b>IOWait</b>: " + Math.floor(iowat,2) + " %";
+        //output += "Running: " + process + "<br>";
+        output += "<hr><b>Top 5 Running PS [Total: "+process+" ]</b><table class='table'><thead><th>Name</th><th>VMS</th></thead><tbody>"
+        $("#val").html("<b>CPU:</b> "+temp+"<sup>o</sup>");
+        $("#slide").val(temp);    
+        for (var i in runningps){
+            output += "<tr><td>"+ runningps[i]["name"] + "</td><td>" + (runningps[i]["vms"]).toFixed(2) + "</tr>"
+        }
+        output += "</tbody></table>";
+        $("#graph0event").html(output);
+        $("#netupload").html((upload).toFixed(2) + " kb");
+        $("#netdownload").html((download).toFixed(2) + " kb");
+    }
+</script>
+<script>
+
+    var TEST_ARRAY = []
+    var FIRST_RUN = 1;
+    var CHART_HOLDER = {
+        "network" : {"chart" : null , "update" : true , "destroyed" : true , "chartfunction" : line2 , "updatefunction" : addData },
+        "temperature" : {"chart" : null , "update" : false , "destroyed" : false , "chartfunction" : "" , "updatefunction" : "" },
+        "iowait" : {"chart" : null , "update" : true , "destroyed" : true , "chartfunction" : gauge , "updatefunction" :  updateGauge },
+        "cpu" : {"chart" : null , "update" : true , "destroyed" : true , "chartfunction" : line2 , "updatefunction" : addData },
+        "cpuUtil" : {"chart" : null , "update" : true , "destroyed" : true , "chartfunction" : gauge , "updatefunction" : updateGauge },
+        "ram" : {"chart" : null , "update" : true , "destroyed" : true , "chartfunction" : pie , "updatefunction" :  updatePie},
+        "swap" : {"chart" : null , "update" : true , "destroyed" : true , "chartfunction" : pie , "updatefunction" : updatePie },
+        "storage" : {"chart" : null , "update" : true , "destroyed" : true , "chartfunction" : donut , "updatefunction" : updatePie },
+        "packet" : {"chart" : null , "update" : true , "destroyed" : true , "chartfunction" : line2 , "updatefunction" : addData },
+    }
+    const CHARTJS_CONFIG = {
+
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    display: false
+                },
+                suggestedMin: 0,
+                suggestedMax: 100
+
+            },
+            x: {
+                grid: {
+                    display: false,
+                },
+            }
+        },
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+        }
+    }
+
+    $(".chartbtn").on("click" , function(){
+        var duration = $(this).text();
+        var type = $(this).parents(".card-body").data("type")
+        console.log("Type & Duration" , type , duration);
+        if(!type || !duration){
+            console.log("Type / Duration is False");
+            return;
+        }
+        if (duration == "Live"){
+            CHART_HOLDER[type]["update"] = true;
+            CHART_HOLDER[type]["chart"].destroy();
+            CHART_HOLDER[type]["destroyed"] = true;
+            FIRST_RUN = 1;
+            $(this).siblings(".averageSHOW").css("display" , "none");
+            return;
+        }
+        else CHART_HOLDER[type]["update"] = false;
+
+        
+        $(this).siblings(".averageSHOW").css("display" , "block");
+        if (duration == "1D")
+            $(this).siblings(".averageSHOW").html("<b>Unit: Hours</b>");
+        else if (duration == "1W")
+            $(this).siblings(".averageSHOW").html("<b>Unit: Days</b>");
+        else if (duration == "1M")
+            $(this).siblings(".averageSHOW").html("<b>Unit: Weeks</b>");
+        else if (duration == "6M")
+            $(this).siblings(".averageSHOW").html("<b>Unit: Weeks</b>");
+        else if (duration == "12M")
+            $(this).siblings(".averageSHOW").html("<b>Unit: Months</b>");
+        else
+            $(this).siblings(".averageSHOW").html("");
+
+        getData(duration , type)
+    });
+
+    for (var i = 0; i < 100 ; i++){
+        TEST_ARRAY.push(i);
+    }
+
+    function getData(duration , type){
+        $.ajax({
+            "type" : "GET",
+            "url" : "/charts/usedram/" + duration + "/" + type,
+            success : function(response){
+                tempArr = [];
+                for(var i = 0; i < response["data"][0].length; i++){
+                    tempArr.push(i + "");
+                }
+                if (response["mode"] == "multi"){
+                    tempArr = response["dateGroups"];
+                }
+                loadNewData(CHART_HOLDER[type]["chart"] , tempArr , {"labels" : tempArr, "y" : response["data"]})
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+
+    function BaisicStatistics() {
+        $.ajax({
+            type: 'GET',
+            url: "/appliance/"+FIRST_RUN ,
+            success: function(response) {
+                FIRST_RUN = 0
+                //console.log(response)
+                mode = response["mode"];
+
+                if(mode == "single"){
+                    //console.log("CPU................", response["sideData"]);
+                    for (var i in CHART_HOLDER){
+                        if (i == "network" || i == "cpu" || i =="packet")
+                        response["data"][i]["data"] = [].concat(...response["data"][i]["data"])
+                        if(CHART_HOLDER[i]["update"]){
+
+                            CHART_HOLDER[i]["updatefunction"](
+                                CHART_HOLDER[i]["chart"],
+                                response["data"][i]["xaxis"],
+                                response["data"][i]["data"]
+                            );
+
+                        }
+                    }
+
+                }
+                else { 
+
+                    for (var i in CHART_HOLDER){
+                        if(CHART_HOLDER[i]["destroyed"]){
+                            //console.log("Running for " + i , response["data"][i])
+                            var obj = {
+                                    "y" : response["data"][i]["data"],
+                                    "labels" : response["data"][i]["labels"],
+                                    "barlabel" : response["data"][i]["labels"],
+                                    "min" : 0
+                            }
+
+                            //if (i == "network" || i == "cpu" || i == "packet"){
+                                //obj["labels"] = TEST_ARRAY.slice()
+                            //}
+                            if (i == "network"){
+                                obj["bgcolor"] = ["#2636db", "#FFC300"];
+                                obj["bordercolor"] = ["#2636db", "#FFC300"];
+                                obj["labels"] = ["0"];
+                            }
+                            if (i == "packet"){
+                                obj["bordercolor"] = ["#2636db", "#FFC300"];
+                                obj["labels"] = ["0"];
+                            }
+                            if (i == "storage"){
+                                obj["bgcolor"] = ["#e21212", "#129900"];
+                            }
+                            if (i == "iowait"){
+                                obj["bgcolor"] = ["#129900", "#4d4d4d"];
+                            }
+                            if (i == "cpuUtil"){
+                                obj["bgcolor"] = ["#129900", "#4d4d4d"];
+                            }
+                            if (i == "cpu"){
+                                obj["labels"] = ["0"];
+                            }
+                            if (i == "ram"){
+                                obj["bgcolor"] = ["#e21212", "#129900"];
+                            }
+                            if (i == "swap"){
+                                obj["bgcolor"] = ["#e21212", "#129900"];
+                            }
+                            var chartdata = CHART_HOLDER[i]["chartfunction"](obj);
+                            CHART_HOLDER[i]["destroyed"] = false;
+                            CHART_HOLDER[i]["chart"] = new Chart( $("#" + i + "GRAPH"), chartdata )                          
+                            
+                        }
+                    }
+                }
+                AllEvents(response["sideData"]["temp"],response["sideData"]["cpuPercentage"], response["sideData"]["usedRam"], response["sideData"]["availRam"], response["sideData"]["totalRam"], response["sideData"]["usedStorage"], response["sideData"]["freeStorage"], response["sideData"]["totalStorage"],response["sideData"]["iowat"],response["sideData"]["availSMemory"],response["sideData"]["usedSMemory"],response["sideData"]["runningProcess"],response["sideData"]["listOfRunningProcess"], response["sideData"]["upload"],response["sideData"]["download"]);
+            },
+            error: function(xhr, status, error) {
+                console.log(status, error);
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    };
+
+        BaisicStatistics()
+        //Statistics();
+    setInterval(function() {
+        //Statistics();
+        BaisicStatistics();
+    }, 1000);
+</script>
+<script>
+    uptime({{uptime}});
+    setIP("{{ipaddr|safe}}");
+</script>
+
+{% endblock %}

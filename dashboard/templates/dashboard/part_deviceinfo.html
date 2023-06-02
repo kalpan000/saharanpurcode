@@ -1,0 +1,288 @@
+{% load static %}
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background:#337ab7;color:white;">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#decommissioninga">Decommissioning</a>
+            </h4>
+        </div>
+        <div id="decommissioninga" class="panel-collapse collapse">
+            <div class="panel-body">
+                <select class="form-control" id="assetdevices" name="device_type">
+                    <option value="" selected>--Select--</option>
+                    <option value="Network">Network</option>
+                    <option value="Server">Server</option>
+                    <option value="Blade Chassis">Blade Chassis</option>
+                    <option value="Storage">Storage</option>
+                    <option value="Security">Security</option>
+                    <option value="Load Balancer">Load Balancer</option>
+                    <option value="Tape Library">Tape Library</option>
+                    <option value="Patch Panel">Patch Panel</option>
+                    <option value="PDU">PDU</option>
+                    <option value="UPS">UPS</option>
+                    <option value="vm">VM</option>
+                    <option value="other">Other</option>
+                </select><br>
+
+                <div id="showassetdevices" style="text-align: left;">
+
+
+                    <div class='table-responsive'>
+                        <table id='decommissioningTable' class='table mx-auto w-auto'>
+                            <thead>
+                                <tr>
+                                    <th>Device</th>
+                                    <th>Type of device</th>
+                                    <th>Rack</th>
+                                    <th>Row</th>
+                                    <th>Datacenter</th>
+                                    <th>Decommission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Decommissioning-->
+<!--PUE-->
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background:#337ab7;color:white;">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#pue">PUE</a>
+            </h4>
+        </div>
+        <div id="pue" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div>
+                    <h2>{{pue}}</h2>
+                </div>
+                <div>{% if pue <= 1.2 and pue >= 0 %}
+                        <h3>PUE International Standard Grade A Certified by HAWK M</h3>
+                        Congratulation you are a proud Green Power Usage Effectiveness Hawk Certified :
+                        "Rank 1 Certificate"
+                        {% elif pue <= 1.5 and pue >= 1.2 %}
+                            <h3>PUE International Standard Grade B Certified by HAWK M</h3>
+                            One more step to reach top : "Rank 2 Certificate"
+                            {% elif pue <= 2.5 and pue >= 1.5 %}
+                                <h3>PUE International Standard Grade C Certified by HAWK M</h3>
+                                One more step to reach top : "No Certificate"
+                                {% elif pue <= 3 and pue >= 2.5 %}
+                                    <h3>PUE International Standard Grade D Certified by HAWK M</h3>
+                                    One more step to reach top : "No Certificate"
+                                    {% else %}
+                                    <h3>PUE International Standard Grade E Certified by HAWK M</h3>
+                                    One more step to reach top : "No Certificate"
+                                    {% endif %}</div>
+                <div class="panel-body" style="display: block ruby;">
+                    <!--<div id="pueGraph" style="height:300px;width:80vw"></div>-->
+                    <img src="/static/dashboard/images/pue.png" height="400px" width="600px">
+                </div>
+
+                {% if pue >= 2.5  %}
+                    <div><a class="btn btn-primary" disabled>Download Certificate</a></div><br>
+                {% else %}
+                    <div><a class="btn btn-primary">Download Certificate</a></div><br>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--End PUE-->
+
+
+<script>
+
+
+// function printRetrieveDevice(tableID, data) {
+//         $("#" + tableID + " tbody").empty();
+//         var html = "";
+//         for (var i = 0; i < data.length; i++) {
+//             html += "<tr>";
+
+//             html += "<td> " + data[i].id + " </td>"; // device
+//             html += "<td>  </td>"; // host
+//             html += "<td>  </td>"; // snmp
+//             html += "<td>  </td>"; // netapi
+//             html += "<td>  </td>"; // restapi
+//             html += "<td>  </td>"; // alive
+//             html += "<td>  </td>"; // device added
+
+//             html += "</tr>";
+//         }
+
+//         $("#" + tableID + " tbody").append(html);
+
+
+//     }
+$("#assetdevices").change(function () {
+
+            var device = $("#assetdevices").val();
+            var html = "";
+                console.log(device);
+            if (device == "Network") {
+                console.log("In Network")
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "Network" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else if (device == "Server") {
+                console.log("In Server")
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "Server" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else if (device == "Blade Chassis") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "Blade Chassis" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else if (device == "Storage") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "Storage" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else if (device == "Security") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "Security" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else if (device == "Load Balancer") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "Load Balancer" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else if (device == "Tape Library") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "Tape Library" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else if (device == "Patch Panel") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "Patch Panel" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else if (device == "PDU") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "PDU" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+            else if (device == "UPS") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "UPS" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+            else if (device == "vm") {
+                {% for device in lmsArchieveDevice %}
+                {% if device.type_of_device == "vm" %}
+                html += "<tr><td><a href='/asset/datacenter/information/hall/device/{{device.id}}'>{{device}}</a></td><td>{{device.type_of_device}}</td><td>{{device.data_center_rack}}</td><td>{{device.date_center_row}}</td><td>{{device.datacenter}}</td><td><a onclick='handleDel({{device.id}},{{device.device_height}},{{device.Unit_Location}},{{device.data_center_rack.id}})'><i class='fa fa-trash'></i></a></td></tr>";
+                {% endif %}
+                {% endfor %}
+            }
+
+            else {
+
+            }
+            $("#decommissioningTable tbody").html(html);
+        });
+
+    $("#retreivedevice").change(function () {
+            var token = '{{csrf_token}}';
+            var id = $(this).val();
+            var html = "";
+            //$("#retreivedevices").html(html);
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                type: 'POST',
+                url: "{% url 'retrieveDevice' %}",
+                data: {
+                    'id': id,
+                },
+                success: function (response) {
+                    html += "<tr><td>" + response["device"] + "</td><td>" + response["host"] + "</td>";
+                    if (response["is_snmp"]) {
+                        html += "<td><a href='/device/capability/test/" + id + "/snmp/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+                    }
+                    else {
+                        html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+                    }
+                    if (response["is_netconf"]) {
+                        html += "<td><a href='/device/capability/test/" + id + "/net/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+                    }
+                    else {
+                        html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+                    }
+                    if (response["is_restconf"]) {
+                        html += "<td><a href='/device/capability/test/" + id + "/rest/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+                    }
+                    else {
+                        html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+                    }
+                    html += "<td><i class='fa fa-circle' style='color:green'></td><td>" + response["created"] + "</td><td>" + response["updated"] + "</td></tr>";
+                    $("#retreivedevices").html(html);
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    Swal.fire(err.Message);
+                }
+            });
+        });
+
+            // var trace1 = {
+
+            //     x: [2000, 2005, 2010, 2015],
+            //     y: [1.5, 5.6, 3.2, 2.9],
+
+            //     type: 'scatter',
+            //     marker: {
+            //         color: 'rgb(219, 64, 82)',
+            //         size: 12
+            //     }
+
+            // };
+            // var data = [trace1];
+
+            // var layout = {
+            //     margin: {l: 25,r: 0,b: 20,t: 0,pad: 0}
+            // };
+
+            // Plotly.newPlot('pueGraph', data, layout, { displayModeBar: false });
+
+</script>

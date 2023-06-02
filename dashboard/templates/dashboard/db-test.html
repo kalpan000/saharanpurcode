@@ -1,0 +1,399 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %}{% block title %} Database Summary {% endblock title %} {% block css %}
+<style>
+    h4 {
+        font-size: 15px;
+        font-weight: bold;
+    }
+    
+    .stats {
+        border: 1px;
+        border-style: solid;
+    }
+    
+    h3 {
+        text-align: left;
+    }
+    
+    th,
+    td {
+        text-align: left;
+        border-spacing: 10px 50px;
+    }
+    
+    .mainContent {
+        display: none;
+    }
+</style>
+{% endblock %} {% block title_header %}Database{% endblock %} {% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <form id="myform" method="POST">
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Select Device</label>
+                <select class="form-control" data-temp="exampleFormControlSelect1" id="selecteddb">
+                     <option selected disabled> --SELECT DEVICE-- </option>
+                    {% for device in devices %}
+
+                        <option data-host="{% if device.ip == "10.1.45.42" %}127.0.0.1{% else %}{{device.ip}}{% endif %}" data-pwd="{{device.dbpwd}}" data-name="{{device.dbuser}}" data-port="{{device.dbport}}"> {{device}} </option>
+
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- 
+            <div class="hm form-inline">
+
+                <h4> Enter Database Details </h4>
+
+                <input type="text" class="form-control" placeholder="IP Address" name="host">
+                <input type="text" class="form-control" placeholder="Username" name="username">
+                <input type="text" class="form-control" placeholder="Password" name="password">
+                <input type="text" class="form-control" placeholder="Port" value="5432" name="port">
+                <input type="submit" class="form-control btn-primary">
+
+            </div> -->
+
+        </form>
+    </div>
+</div>
+<div class="container mainContent" style="display: none;">
+    <div class="row stats">
+        <div class="col-md-3 col-sm-6">
+            <h4>Total Tables</h4>
+            <p style="text-align: center;" id="tablecount"></p>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <h4>Total Databases</h4>
+            <p style="text-align: center;" id="databasecount"></p>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <h4>Active Connections</h4>
+            <p style="text-align: center;" id="activeconnections"></p>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <h4>Total Storage</h4>
+            <p style="text-align: center;" id="totalstorage"></p>
+        </div>
+        <!-- <div class="col-md-2 col-sm-6">
+            <h4>Sessions Killed</h4>
+            <p style="text-align: center;" id="sessionkilled"></p>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <h4>Sessions Abandoned</h4>
+            <p style="text-align: center;" id="sessionabandoned"></p>
+        </div> -->
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-12 col-sm-12">
+            <h3>Database Stats</h3>
+            <table class="table" data-temp="dbqueries" id="databaseTable">
+                <thead>
+                    <tr>
+                        <th>Database</th>
+                        <th>Size</th>
+                        <th>Active Connections</th>
+                        <th>Records Inserted</th>
+                        <th>Records Updated</th>
+                        <th>Records Deleted</th>
+                        <th>Records Fetched</th>
+                        <th>Fetched History</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 col-12 col-sm-12">
+                <h3>Query</h3>
+                <table class="table" data-temp="dbqueries" id="queryTable">
+                    <thead>
+                        <tr>
+                            <th>Database</th>
+                            <th>PID</th>
+                            <th>State</th>
+                            <th>Query</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-12 col-sm-12">
+                <h3>Blocked and blocking Activity</h3>
+                <table class="table" data-temp="dbqueries" id="db_lock">
+                    <thead>
+                        <tr>
+                            <th>DataID</th>
+                            <th>Datname</th>
+                            <th>pid</th>
+                            <th>user id</th>
+                            <th>username</th>
+                            <th>App-name</th>
+                            <th>client-Address</th>
+                            <th>Client Port</th>
+                            <th>Backend-state</th>
+                            <th>Query state</th>
+                            <th>state change</th>
+                            <th>Wait E Type</th>
+                            <th>Wait-Event</th>
+                            <th>state</th>
+                            <th>Backend-type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-12 col-sm-12">
+            <h3>Table Stats</h3>
+            <table class="table" data-temp="dbqueries" id="tableTable">
+                <thead>
+                    <tr>
+                        <th>Database</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+    {% endblock %} {% block js %}
+    <script src="https://omnipotent.net/jquery.sparkline/2.1.2/jquery.sparkline.js"></script>
+
+
+    <script>
+        var startUpdate = false;
+        var HOST;
+        var PASSWORD;
+        var USER;
+        var PORT;
+
+        function updateBanner(data) {
+            $("#tablecount").text(data["tableCount"]);
+            $("#databasecount").text(data["databaseCount"]);
+            $("#activeconnections").text(data["active_connections"]);
+            $("#totalstorage").text(data["storage"] + "MB");
+            // $("#sessionkilled").text(data["session_killed"]);
+            // $("#sessionabandoned").text(data["session_abandoned"]);
+        }
+
+        var char = {};
+
+        function updateDatabaseStat(data) {
+
+            $("#databaseTable tbody").empty();
+
+            counter = 0;
+            for (key in data["databases"]) {
+
+
+                var database = data["databases"][key];
+                inserted = database.records.inserted;
+                fetched = database.records.fetched;
+
+
+                if (("first" + counter) in char === false) {
+                    char["first" + counter] = [];
+                    char["first" + counter].push(fetched)
+                } else {
+                    char["first" + counter].push(fetched)
+                }
+                var append = `
+                <tr>
+                    <td> ${database.name} </td>
+                    <td> ${database.size} </td>
+                    <td> ${database.active_connections} </td>
+                    <td> ${inserted} </td>
+                    <td> ${database.records.updated} </td>
+                    <td> ${database.records.deleted} </td>
+                    <td> ${fetched} </td>
+                    <td><span id="dynamic${counter}">Loading...</span></td>
+                    <td><img src="/static/network/img/Status_Unlock.png" alt="Unlock" width="50" height="50"></td>
+                </tr>
+            `;
+                $("#databaseTable tbody").append(append);
+                // console.log(char)
+                // $("#data" + counter).html(inserted);
+                if (char["first" + counter].length > 30) {
+                    char["first" + counter].shift()
+                }
+                $('#dynamic' + counter).sparkline(char["first" + counter], {
+                    type: 'bar',
+                    barColor: 'green',
+                    height: '35',
+                    barWidth: '6',
+                    barColor: '#007fff',
+                    negBarColor: 'green',
+                    zeroColor: 'red'
+                });
+
+                counter++;
+
+            }
+        }
+
+        function updateTableStat(data) {
+
+            $("#tableTable tbody").empty()
+            count = 1;
+            for (key in data["tables"]) {
+
+                var table = data["tables"][key];
+
+                var append = `
+                <tr>
+                    <td> ${count} </td>
+                    <td> ${table.name} </td>
+                    <td> ${table.size} </td>
+                </tr>
+            `;
+
+                $("#tableTable tbody").append(append);
+                count++;
+            }
+        }
+
+        function queryState(data) {
+
+            $("#queryTable tbody").empty()
+            for (key in data) {
+
+                var table = data[key];
+
+                var append = `
+                <tr>
+                    <td> ${table.datname} </td>
+                    <td> ${table.pid} </td>
+                    <td> ${table.state} </td>
+                    <td> ${table.query} </td>
+                </tr>
+            `;
+                $("#queryTable tbody").append(append);
+            }
+        }
+
+
+        function fullStat(data){
+            
+            $("#db_lock tbody").empty()
+            for (key in data) {
+
+                var table = data[key];
+                var append = `
+                    <tr>
+                        <td>${table.DataID}</td>
+                        <td>${table.Datname}</td>
+                        <td>${table.pid}</td>
+                        <td>${table.userid}</td>
+                        <td>${table.username}</td>
+                        <td>${table.Appname}</td>
+                        <td>${table.clientAddress}</td>
+                        <td>${table.ClientPort}</td>
+                        <td>${table.BackendStart}</td>
+                        <td>${table.QueryStart}</td>
+                        <td>${table.Startchange}</td>
+                        <td>${table.WaitEType}</td>
+                        <td>${table.WaitEvent}</td>
+                        <td>${table.Satrt}</td>
+                        <td>${table.Backendtype}</td>
+                    </tr>
+            `;
+
+                $("#db_lock tbody").append(append);
+            }
+        }
+
+        function makeRequest(postData) {
+
+            $.post("/database/testing/ajax", postData, function(data, status) {
+                if (!data["error"]) {
+                    // console.log(data);
+
+                    updateBanner(data);
+                    updateTableStat(data);
+                    updateDatabaseStat(data);
+                    fullStat(data["locks"]);
+                    queryState(data["queries"]);
+                    $(".mainContent").css("display", "block");
+
+                } else {
+                    Swal.fire("Incorrect Credentials");
+                    $(".mainContent").css("display", "none");
+                    startUpdate = false;
+                }
+            })
+        }
+
+        $('#selecteddb').change(function() {
+            HOST = $(this).children('option:selected').data('host');
+            PASSWORD = $(this).children('option:selected').data('pwd');
+            USER = $(this).children('option:selected').data('name');
+            PORT = $(this).children('option:selected').data('port');
+
+            // console.log(HOST, PASSWORD, USER, PORT);
+            startUpdate = true;
+        });
+
+        window.setInterval(function() {
+
+            if (!startUpdate) return;
+
+            data = {
+                "username": USER,
+                "host": HOST,
+                "password": PASSWORD,
+                "port": PORT
+            }
+            makeRequest(data);
+
+        }, 3000);
+
+        // funcions 
+        function stats(data) {
+            $("#tpa").html(data.tpa);
+            $("#actconn").html(data.activeConnection);
+            $("#iomax").html(data.iomax);
+            $("#read").html(data.readSpeed);
+            $("#write").html(data.writeSpeed);
+            $("#cpu").html(data.cpu);
+        }
+
+        function setDbQueries(data, table_id) {
+            var html = "";
+            for (var i in data) {
+                html += "<tr><td>" + data[i].database + "</td><td>" + data[i].query + "</td></tr>";
+            }
+            $("#" + table_id + " tbody").html(html);
+        }
+
+        function setDbStats(data, table_id) {
+            var html = "";
+            for (var i in data) {
+                html += "<tr><td>" + data[i].database + "</td><td>" + data[i].cpu + "</td><td>" + data[i].mem + "</td></tr>";
+            }
+            $("#" + table_id + " tbody").html(html);
+        }
+    </script>
+    {% endblock %}

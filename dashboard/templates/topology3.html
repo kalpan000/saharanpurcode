@@ -1,0 +1,321 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Asset Topology {% endblock %}{% block title_header %} Asset Topology {% endblock %}> {% block css %}
+<style>
+    .datacenter {
+        filter: invert(71%) sepia(100%) saturate(3199%) hue-rotate(2deg) brightness(105%) contrast(98%);
+    }
+    
+    .server {
+        filter: invert(9%) sepia(94%) saturate(7337%) hue-rotate(274deg) brightness(102%) contrast(115%);
+    }
+    
+    .servertype {
+        filter: invert(79%) sepia(20%) saturate(6080%) hue-rotate(208deg) brightness(86%) contrast(91%);
+    }
+    
+    .network {
+        filter: invert(61%) sepia(95%) saturate(2667%) hue-rotate(72deg) brightness(118%) contrast(119%);
+    }
+    
+    .networktype {
+        filter: invert(88%) sepia(11%) saturate(1362%) hue-rotate(58deg) brightness(89%) contrast(89%);
+    }
+    
+    .link {
+        stroke-width: 1.5px;
+    }
+    
+    .bottomright {
+        position: fixed;
+        bottom: 45px;
+        right: 5px;
+        border: 2px red solid;
+    }
+    
+    .demo {
+        background-color: rgb(255, 255, 255);
+        padding: 20px;
+        margin: 5px;
+    }
+    
+    .links line {
+        stroke: #999;
+        stroke-opacity: 0.6;
+        stroke-width: .5rem;
+    }
+    
+    .node circle {
+        stroke: #fff;
+        stroke-width: 1.5px;
+    }
+    
+    .node text {
+        fill: #666;
+        font-family: Helvetica;
+        font-size: 1rem;
+        font-weight: bolder;
+        text-transform: uppercase;
+    }
+</style>
+{% endblock %} {% block content %}
+
+<div style="position: absolute;top:142px;right:20px;z-index:10;">
+
+    <a href="/topology/1"><img src="/static/network/img/topo2.png" width="32px" height="32px"></a>
+    <a href="/topology/2"><img src="/static/network/img/topo2.webp" width="32px" height="32px"></a>
+    <a href="/topology/3"><img src="/static/network/img/topo3.svg" width="32px" height="32px"></a>
+    <a href="/topology/wlc"><img src="/static/network/img/topo4.png" width="32px" height="32px"></a>
+    <a href="/topology/sankey"><img src="/static/network/img/topo5.svg" width="38px" height="38px"></a>
+
+    <a class="btn btn-primary" href=""><span class="fa fa-refresh"></a>
+    <button class="btn btn-success" onclick="makeDefaultTopolgy('topo3')">Default</button>
+</div>
+
+<div class="demo bottomright">
+    <h4>Legends</h4>
+    <ul style="text-align: left;">
+        <li style="color: #649efd;">SNMP Available</li>
+        <li style="color: #fd6464;">SNMP Not Available</li>
+    </ul>
+</div>
+<!-- Load d3.js -->
+<script src="/static/dashboard/js/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+
+<svg width="1000" height="1000"></svg> {{ data|json_script:"data" }}
+
+<script>
+    // set the dimensions and margins of the graph
+    var margin = {
+        top: 10,
+        right: 30,
+        bottom: 30,
+        left: 40
+    }
+
+    function makegraph() {
+        var data = JSON.parse(document.getElementById('data').textContent);
+
+        // tooltip
+        var tooltip = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .style("background", "#fff")
+            .style("color", "#000")
+            .style("height", "200px")
+            .style("width", "auto")
+            .style("padding", "15px")
+            .style("border", "5px solid")
+            .style("border-radius", "10px")
+
+        // Initialize the links
+        var svg = d3.select("svg"),
+            width = +svg.attr("width"),
+            height = +svg.attr("height");
+
+        svg.attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 1000 1000")
+            .classed("svg-content", true)
+            .call(d3.zoom().on("zoom", function() {
+                svg.attr("transform", d3.event.transform)
+            }))
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")")
+            .on("zoom", function() {
+                return svg.attr("transform", d3.event.transform)
+            });
+
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+        var simulation = d3.forceSimulation(data.nodes) // Force algorithm is applied to data.nodes
+            .force("link", d3.forceLink() // This force provides links between nodes
+                .id(function(d) {
+                    return d.id;
+                }) // This provide  the id of a node
+                .links(data.links) // and this the list of links
+            )
+            .force("charge", d3.forceManyBody().strength(-800)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+            .force("center", d3.forceCenter(width / 2, height / 2)); // This force attracts nodes to the center of the svg area
+
+        var link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(data.links)
+            .enter().append("line")
+            .style("stroke", function(d) {
+                if (d.type == "datacenter")
+                    return "#aaa"
+                if (d.type == "network" && !d.status)
+                    return "#ff0000"
+                else if (d.type == "server" && !d.status)
+                    return "#ff0000"
+                else if (d.type == "storage" && !d.status)
+                    return "#ff0000"
+                else if (d.type == "blade chassis" && !d.status)
+                    return "#ff0000"
+                else if (d.status)
+                    return "#0062ff"
+                return "#bbff22"
+            })
+
+
+        var node = svg.selectAll(".node")
+            .data(data.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        // node.append("circle")
+        //     .attr("r", function(d) {
+        //         if (d.type == "datacenter") {
+        //             d.radius = d.name.length * 3.5;
+        //             return d.radius;
+        //         }
+        //         if (d.type == "network" || d.type == "server") {
+        //             d.radius = d.name.length * 2.4;
+        //             return d.radius;
+        //         }
+        //         return 20
+        //     })
+        //     .attr("class", function(d) {
+        //         return d.type
+        //     })
+        //     .on("mouseover", function(d) {
+        //         return tooltip.html(d.type + "<br>" + d.name), tooltip.style("visibility", "visible");
+        //     })
+        //     .on("mousemove", function() {
+        //         return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+        //     })
+        //     .on("mouseout", function() {
+        //         return tooltip.style("visibility", "hidden");
+        //     });
+        node.append("image")
+            .attr("xlink:href", function(d) {
+                console.log("HIHI",d)
+                if (d.type == "datacenter")
+                    return "/static/dashboard/images/post-office-building-clipart-office-building-orange-hi.png"
+                if (d.type == "server"){
+                    if (d.id == "10.1.45.14")
+                        return "/static/network/img/lb.svg"
+                    return "/static/network/img/vm.jpeg"
+                }
+                if (d.type == "network"){
+                    if (d.subtype == "router")
+                        return "/static/network/img/L7.png"
+                    if (d.subtype == "switch"){
+                        if (d.category == "AX")
+                            return "/static/network/img/default.png"
+                        else
+                            return "/static/network/img/L2-switch.svg"
+                    }
+                }
+                    //return "/static/network/img/L3.png"
+                if (d.type == "snmp")
+                    return "/static/network/img/snmp.svg"
+                if (d.type == "wlc")
+                    return "/static/network/img/wlc.svg"
+                if (d.type == "storage")
+                    return "/static/network/img/storage.svg"
+                if (d.type == "blade chassis")
+                    return "/static/network/img/chasi.jpeg"
+            })
+            .attr("x", -8)
+            .attr("y", function(d){
+                if (d.subtype == "router")
+                    return -30
+                return -8
+            })
+            .attr("width", function(d) {
+                if (d.type == "datacenter")
+                    return 50
+                if (d.type == "wlc")
+                    return 45
+                if (d.subtype == "router")
+                    return 45
+                else
+                    return 45
+            })
+            .attr("height", function(d) {
+                if (d.type == "datacenter")
+                    return 50
+                if (d.subtype == "router")
+                    return 35
+                else
+                    return 35
+            }).on("mouseover", function(d) {
+                return tooltip.html(d.type + "<br>" + d.name), tooltip.style("visibility", "visible");
+            })
+            .on("mousemove", function() {
+                return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+            })
+            .on("mouseout", function() {
+                return tooltip.style("visibility", "hidden");
+            }).on("click", function(d) {
+                window.location.href = `/dashboard/host/${d.id}`;
+            });
+
+        node.append("text")
+            .attr("text-anchor", "middle")
+            .text(function(d) {
+                if (d.type == "datacenter" || d.type == "network" || d.type == "server" || d.type == "wlc" || d.type == "blade chassis" || d.type == "storage")
+                    return d.id;
+                // if (d.type == "servertype")
+                //     return "S"
+                // if (d.type == "networktype")
+                //     return "N"
+            }).attr("transform", "translate(20,-15)");
+
+        simulation
+            .nodes(data.nodes)
+            .on("tick", ticked);
+
+        simulation.force("link")
+            .links(data.links);
+
+        function ticked() {
+            link
+                .attr("x1", function(d) {
+                    return d.source.x;
+                })
+                .attr("y1", function(d) {
+                    return d.source.y;
+                })
+                .attr("x2", function(d) {
+                    return d.target.x;
+                })
+                .attr("y2", function(d) {
+                    return d.target.y;
+                });
+
+            node.attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+        }
+
+        function dragstarted(d) {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+            if (!d3.event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+    }
+
+    makegraph();
+</script>
+{% endblock %}

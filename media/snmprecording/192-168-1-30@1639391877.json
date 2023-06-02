@@ -1,0 +1,1224 @@
+{
+    "sysdescr": "Cisco IOS Software, C3900e Software (C3900e-UNIVERSALK9-M), Version 15.1(4)M4, RELEASE SOFTWARE (fc1)\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2012 by Cisco Systems, Inc.\r\nCompiled Tue 20-Mar-12 22:07 by prod_rel_team",
+    "sysobjectid": "1.3.6.1.4.1.9.1.1144",
+    "sysuptime": "2087719",
+    "syscontact": "hawk",
+    "sysname": "cisco.cisco.local",
+    "syslocation": "delhi",
+    "interfaces": {
+        "1": {
+            "ifindex": "1",
+            "inOctect": 746796,
+            "outOctect": 320776,
+            "inErr": 0,
+            "name": "GigabitEthernet0/0",
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "0"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "",
+            "outErr": 0,
+            "ipv4": [
+                {
+                    "address": "192.168.1.30",
+                    "netmask": "255.255.255.0"
+                }
+            ]
+        },
+        "2": {
+            "ifindex": "2",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "GigabitEthernet0/1",
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "1"
+            ],
+            "adminstatus": "down",
+            "operstatus": "down",
+            "description": "",
+            "outErr": 0
+        },
+        "3": {
+            "ifindex": "3",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "GigabitEthernet0/2",
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "2"
+            ],
+            "adminstatus": "down",
+            "operstatus": "down",
+            "description": "",
+            "outErr": 0
+        },
+        "4": {
+            "ifindex": "4",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "GigabitEthernet0/3",
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "3"
+            ],
+            "adminstatus": "down",
+            "operstatus": "down",
+            "description": "",
+            "outErr": 0,
+            "ipv4": [
+                {
+                    "address": "192.168.1.45",
+                    "netmask": "255.255.255.0"
+                }
+            ]
+        },
+        "5": {
+            "ifindex": "5",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Backplane-GigabitEthernet0/4",
+            "mtu": "9600",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "4"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "",
+            "outErr": 0
+        },
+        "6": {
+            "ifindex": "6",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/0/0",
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "0",
+                "36",
+                "196",
+                "225",
+                "156",
+                "86"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "",
+            "outErr": 0
+        },
+        "7": {
+            "ifindex": "7",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/0/1",
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "0",
+                "36",
+                "196",
+                "225",
+                "156",
+                "87"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "",
+            "outErr": 0
+        },
+        "8": {
+            "ifindex": "8",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/0/2",
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "0",
+                "36",
+                "196",
+                "225",
+                "156",
+                "88"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "",
+            "outErr": 0
+        },
+        "9": {
+            "ifindex": "9",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/0/3",
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "0",
+                "36",
+                "196",
+                "225",
+                "156",
+                "89"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "",
+            "outErr": 0
+        },
+        "10": {
+            "ifindex": "10",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Null0",
+            "mtu": "1500",
+            "speed": "4294967295",
+            "mac": "",
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "",
+            "outErr": 0
+        },
+        "11": {
+            "ifindex": "11",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Vlan1",
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "4"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": "",
+            "outErr": 0
+        },
+        "12": {
+            "ifindex": "12",
+            "inOctect": 2097218,
+            "outOctect": 9756468,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 12",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "12"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": "",
+            "outErr": 0
+        },
+        "13": {
+            "ifindex": "13",
+            "inOctect": 3128008659,
+            "outOctect": 279840572,
+            "inErr": 10,
+            "name": "Ethernet Port on unit 1, port 13",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "13"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": "",
+            "outErr": 0
+        },
+        "14": {
+            "ifindex": "14",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 14",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "14"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": "",
+            "outErr": 0
+        },
+        "15": {
+            "ifindex": "15",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 15",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "15"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": "",
+            "outErr": 0
+        },
+        "16": {
+            "ifindex": "16",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 16",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "16"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": "",
+            "outErr": 0
+        },
+        "17": {
+            "ifindex": "17",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 17",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "17"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": "",
+            "outErr": 0
+        },
+        "18": {
+            "ifindex": "18",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 18",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "18"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": "",
+            "outErr": 0
+        },
+        "19": {
+            "ifindex": "19",
+            "inOctect": 9126611,
+            "outOctect": 26263968,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 19",
+            "mtu": "1518",
+            "speed": "100000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "19"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "",
+            "outErr": 0
+        },
+        "20": {
+            "ifindex": "20",
+            "inOctect": 10252295,
+            "outOctect": 35881943,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 20",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "20"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": "",
+            "outErr": 0
+        },
+        "21": {
+            "ifindex": "21",
+            "inOctect": 1959248551,
+            "outOctect": 2972512941,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 21",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "21"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "22": {
+            "ifindex": "22",
+            "inOctect": 91885225,
+            "outOctect": 2649790372,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 22",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "22"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "23": {
+            "ifindex": "23",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 23",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "23"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "24": {
+            "ifindex": "24",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 24",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "24"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "25": {
+            "ifindex": "25",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 25",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "25"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "26": {
+            "ifindex": "26",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 26",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "26"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "27": {
+            "ifindex": "27",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 27",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "27"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "28": {
+            "ifindex": "28",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Ethernet Port on unit 1, port 28",
+            "mtu": "1518",
+            "speed": "1000000000",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "28"
+            ],
+            "adminstatus": "up",
+            "operstatus": "lowerLayerDown",
+            "description": ""
+        },
+        "41": {
+            "ifindex": "41",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Console port",
+            "mtu": "0",
+            "speed": "0",
+            "mac": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "1000": {
+            "ifindex": "1000",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Loopback Interface 0",
+            "mtu": "0",
+            "speed": "0",
+            "mac": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "1001": {
+            "ifindex": "1001",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "VLAN ID 0001",
+            "mtu": "1500",
+            "speed": "0",
+            "mac": [
+                "60",
+                "44",
+                "153",
+                "200",
+                "213",
+                "0"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "",
+            "ipv4": [
+                {
+                    "address": "192.168.1.10",
+                    "netmask": "255.255.255.0"
+                }
+            ]
+        },
+        "10001": {
+            "ifindex": "10001",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/1",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "3"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10002": {
+            "ifindex": "10002",
+            "inOctect": 26252750,
+            "outOctect": 9114326,
+            "inErr": 0,
+            "name": "FastEthernet0/2",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "4"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "10003": {
+            "ifindex": "10003",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/3",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "5"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10004": {
+            "ifindex": "10004",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/4",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "6"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10005": {
+            "ifindex": "10005",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/5",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "7"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10006": {
+            "ifindex": "10006",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/6",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "8"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10007": {
+            "ifindex": "10007",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/7",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "9"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10008": {
+            "ifindex": "10008",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/8",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "10"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10009": {
+            "ifindex": "10009",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/9",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "11"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10010": {
+            "ifindex": "10010",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/10",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "12"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10011": {
+            "ifindex": "10011",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/11",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "13"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10012": {
+            "ifindex": "10012",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/12",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "14"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10013": {
+            "ifindex": "10013",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/13",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "15"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10014": {
+            "ifindex": "10014",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/14",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "16"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10015": {
+            "ifindex": "10015",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/15",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "17"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10016": {
+            "ifindex": "10016",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/16",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "18"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10017": {
+            "ifindex": "10017",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/17",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "19"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10018": {
+            "ifindex": "10018",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/18",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "20"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10019": {
+            "ifindex": "10019",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/19",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "21"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10020": {
+            "ifindex": "10020",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/20",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "22"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10021": {
+            "ifindex": "10021",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/21",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "23"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10022": {
+            "ifindex": "10022",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/22",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "24"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10023": {
+            "ifindex": "10023",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/23",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "25"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10024": {
+            "ifindex": "10024",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/24",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "26"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10101": {
+            "ifindex": "10101",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "GigabitEthernet0/1",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "1"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10102": {
+            "ifindex": "10102",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "GigabitEthernet0/2",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "10000000",
+            "mac": [
+                "100",
+                "233",
+                "80",
+                "92",
+                "231",
+                "2"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10501": {
+            "ifindex": "10501",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Null0",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "4294967295",
+            "mac": "",
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        }
+    },
+    "all_ipv4_addresses": [
+        "192.168.1.30"
+    ]
+}

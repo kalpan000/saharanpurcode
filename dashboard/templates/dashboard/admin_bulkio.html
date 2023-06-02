@@ -1,0 +1,16 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Admin Settings {% endblock %} {% block js %} {% endblock %} {% block css %}
+<style>
+    .col-lg-4 {
+        margin-bottom: 20px;
+    }
+    
+    .custom-btn {
+        font-size: xx-large;
+    }
+</style>
+{% endblock %} {% block title_header %}Settings{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="{% url 'exports' %}"><i class="fa fa-download"></i> | Exports</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="{% url 'import-export' %}"><i class='fa fa-upload'></i> | Imports</a></div>
+</div>
+{% endblock %}

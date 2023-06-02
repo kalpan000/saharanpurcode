@@ -1,0 +1,520 @@
+<!-- End #main -->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CDN Analysis</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+
+    <script src="/static/dashboard/js/d3.min.js"></script>
+
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="/static/dashboard/js/d3.geo.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.js"></script>
+
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/css/flag-icons.min.css" />
+    <style>
+        th {
+            cursor: pointer;
+        }
+        
+        .mytable td {
+            word-wrap: normal;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <div class="modal fade" id="visitor_info" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Visitor Information</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div id="chart" width="1000" height="500"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="d-flex align-items-center align-self-start">
+                                    <h2 class="mb-0" id="activelink">{{total_users}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">Total Users</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="d-flex align-items-center align-self-start">
+                                    <h2 class="mb-0" id="downlink">{{total_countries}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">Total Countries</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="d-flex align-items-center align-self-start">
+                                    <h2 class="mb-0" id="warninglink">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">Broken Links</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="d-flex align-items-center align-self-start">
+                                    <h2 class="mb-0" id="unsecuredlink">10</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">Warnings</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="d-flex align-items-center align-self-start">
+                                    <h2 class="mb-0" id="totalwebsite">15</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">Total Pages</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <canvas id="myChart" width="300" height="350"></canvas>
+            </div>
+            <div class="col">
+                <canvas id="myChart2" width="300" height="350"></canvas>
+            </div>
+            <div class="col">
+                <canvas id="myChart3" width="300" height="350"></canvas>
+            </div>
+            <div class="col">
+                <canvas id="myChart4" width="300" height="350"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+
+    <div class="container">
+        <h2 class="text-center">STATS</h2>
+        <div class="row mt-5 mb-5 table-responsive">
+            <table class="table table-striped table-hover" id="myTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <td>IP Address</td>
+                        <td>Country</td>
+                        <td>Region</td>
+                        <td>City</td>
+                        <td>Device Type</td>
+                        <td>Device</td>
+                        <td>Browser</td>
+                        <td>Browser Type</td>
+                        <td>System</td>
+                        <td>System Version</td>
+                        <td>Referrer</td>
+                        <td>Time</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tracker in obj %}
+                    <tr>
+                        <td>{{tracker.ip_address}}</td>
+                        <td>{{tracker.ip_country}} <span class="fi fi-{{tracker.ip_country}}"></span></td>
+                        <td>{{tracker.ip_region}}</td>
+                        <td>{{tracker.ip_city}}</td>
+                        <td>{{tracker.device_type}}</td>
+                        <td>{{tracker.device}}</td>
+                        <td>{{tracker.browser}}</td>
+                        <td>{{tracker.browser_version}}</td>
+                        <td>{{tracker.system}}</td>
+                        <td>{{tracker.system_version}}</td>
+                        <td>{{tracker.referrer}}</td>
+                        <td>{{tracker.timestamp}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {{new_data | json_script:"world"}} {{top_countries | json_script:"top_countries"}}
+
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+        var allData = JSON.parse(document.getElementById('world').textContent);
+        var top_countries = JSON.parse(document.getElementById('top_countries').textContent);
+
+        function replaceAllSpaces(inputStr) {
+            var l = inputStr.length;
+            var output = "";
+            for (var j = 0; j < l; j++) {
+                if (inputStr[j] == " ") output += "_";
+                else output += inputStr[j];
+            }
+            return output;
+        }
+        // console.log(allData)
+        var allDataObj = {};
+        for (index in allData) {
+            // console.log(allData[index])
+            allDataObj[allData[index][1]] = allData[index];
+        }
+
+
+        // console.log(allDataObj)
+        var w = 1200;
+        var h = 500;
+        // var proj = d3.geo.mercator();
+        // var path = d3.geo.path().projection(proj);
+        // var t = proj.translate(); // the projection's default translation
+        // var s = proj.scale() // the projection's default scale
+
+        var projection = d3.geo.mercator()
+            .translate([w / 2, h / 1.4]) // translate to center of screen. You might have 
+            .scale([740]);
+        var path = d3.geo.path().projection(projection);
+        // The svg
+        var map = d3.select("#chart").append("svg:svg")
+            .attr("width", w)
+            .attr("height", h)
+            .call(path);
+
+        var india = map.append("svg:g")
+            .attr("id", "india");
+
+        var div = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        // Load external data and boot
+        d3.json('static/world.geojson', function(json) {
+
+            //console.log("color scale is ");
+
+            var y = d3.scale.sqrt()
+                .domain([0, 28])
+                .range([0, 40]);
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("right");
+
+            //colors = ["#ff0000" , "#00ff00" , "#0000ff"]
+            india.selectAll("path")
+                .data(json.features)
+                .enter().append("path")
+                .attr("d", path)
+                // .style("fill", colors)
+                .style("opacity", 1)
+
+            .on('click', function(d, i) {
+                d3.select(this).transition().duration(300).style("opacity", 1);
+                div.transition().duration(300)
+                    .style("opacity", 1)
+                    //console.log("clicked on ")
+                    //console.log(d.properties.state);
+                var xx = allDataObj[d.properties.name];
+
+                if (xx) {
+                    $("#visitor_info .modal-title").html(xx[3]);
+                    $("#visitor_info .modal-body").html("Country : " + xx[1] + " <span class='fi fi-" + xx[2] + "'></span><br>" + "Country Code : " + xx[2] + "<br>" + "Total Visitors : " + xx[0]);
+                    $("#visitor_info").modal('show');
+                }
+
+            })
+
+            .on('mouseleave', function(d, i) {
+                    d3.select(this).transition().duration(100)
+                        .style("opacity", 1);
+                    div.transition().duration(100)
+                        .style("opacity", 1);
+                })
+                .on('mouseenter', function(d, i) {
+                    d3.select(this).transition().duration(100)
+                        .style("opacity", 0.5);
+                    div.transition().duration(100)
+                        .style("opacity", 1);
+
+                });
+            var ii = 0;
+            india.selectAll("path").transition().duration(100).style("fill", function(d) {
+                if (allDataObj[d.properties.name]) {
+                    return "#ffbf00";
+                } else
+                    return "#dbd6db";
+            });
+            india.selectAll("text")
+                .data(json.features)
+                .enter()
+                .append("text")
+                .attr("class", "fa")
+                .attr("transform", function(d) {
+                    return "translate(" + path.centroid(d) + ")";
+                })
+                .attr("dx", function(d) {
+                    return "0";
+                })
+                .attr("dy", function(d) {
+                    return "0.35em";
+                })
+                .style("fill", "#4a0702")
+                .text(function(d) {
+                    //console.log(xx)
+                    // if (allDataObj[replaceAllSpaces(d.properties.state)]) {
+                    //     //console.log(colors[ii++]);
+                    //     return `\uf276 ${allDataObj[replaceAllSpaces(d.properties.state)][3]}`;
+                    // }
+                });
+        });
+
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: top_countries["countries"]["labels"],
+                datasets: [{
+                    label: 'Top 5 Visited Countries',
+                    data: top_countries["countries"]["data"],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            maxRotation: 90,
+                            minRotation: 80
+                        },
+                        gridLines: {
+                            offsetGridLines: true, // à rajouter
+                            drawOnChartArea: false
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            offsetGridLines: true, // à rajouter
+                            drawOnChartArea: false
+                        }
+                    }],
+                }
+            }
+        });
+
+        var ctx = document.getElementById("myChart2");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: top_countries["devices"]["labels"],
+                datasets: [{
+                    label: 'Top 5 Devices Used',
+                    data: top_countries["devices"]["data"],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            maxRotation: 90,
+                            minRotation: 80
+                        },
+                        gridLines: {
+                            offsetGridLines: true, // à rajouter
+                            drawOnChartArea: false
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            offsetGridLines: true, // à rajouter
+                            drawOnChartArea: false
+                        }
+                    }],
+                }
+            }
+        });
+
+        var ctx = document.getElementById("myChart3");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: top_countries["browsers"]["labels"],
+                datasets: [{
+                    label: 'Top 5 Browser Used',
+                    data: top_countries["browsers"]["data"],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            maxRotation: 90,
+                            minRotation: 80
+                        },
+                        gridLines: {
+                            offsetGridLines: true, // à rajouter
+                            drawOnChartArea: false
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            offsetGridLines: true, // à rajouter
+                            drawOnChartArea: false
+                        }
+                    }],
+                }
+            }
+        });
+
+        var ctx = document.getElementById("myChart4");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: top_countries["most_visit"]["labels"],
+                datasets: [{
+                    label: 'Most Visited In a Day',
+                    data: top_countries["most_visit"]["data"],
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false
+                        }
+                    }],
+                }
+            }
+        });
+    </script>
+
+    
+</body>
+
+</html>

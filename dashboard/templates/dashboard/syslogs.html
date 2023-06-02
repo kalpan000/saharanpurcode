@@ -1,0 +1,133 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Logs {% endblock %} {% block js %}
+<script>
+</script>
+{% endblock %} {% block css %}
+
+<style>
+    table {
+        width: 100%;
+    }
+    
+    thead,
+    tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+    
+    tbody td {
+        text-align: left;
+    }
+    
+    tbody {
+        display: block;
+        overflow-y: auto;
+        table-layout: fixed;
+        max-height: 400px;
+    }
+</style>
+{% endblock %} {% block title_header %}Logs{% endblock %} {% block content %}
+<div class="log">
+    <div class="container form-inline">
+
+        <input type="button" class="form-control col-4" onclick="getlogs('sys')" value="Sytem Log">
+        <input type="button" class="form-control col-4" onclick="getlogs('kernal')" value="Kernal Log">
+        <input type="button" class="form-control col-4" onclick="getlogs('auth')" value="Auth Log">
+
+    </div>
+    <table class="table syslog" id="syslog">
+        <thead>
+            <tr>
+                <th id="myid"></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    var params = new window.URLSearchParams(window.location.search);
+    var ip = params.get('ip').trim();
+
+    function getlogs(type = "sys") {
+        $(".syslog tbody").empty()
+
+        if (type == "sys") {
+            $("#myid").html("System Logs <button class='btn btn-primary email' data-type='sys'>Send As Email</button> <span class='status'></span> <button type='button' class='btn btn-success' onclick='tableToExcel()'>Export in Excel</button>")
+        } else if (type == "kernal") {
+            $("#myid").html("Kernal Logs <button class='btn btn-primary email' data-type='kernal'>Send As Email</button> <span class='status'></span> <button type='button' class='btn btn-success' onclick='tableToExcel()'>Export in Excel</button>")
+        } else {
+            $("#myid").html("Auth Logs <button class='btn btn-primary email' data-type='auth'>Send As Email</button> <span class='status'></span> <button type='button' class='btn btn-success' onclick='tableToExcel()'>Export in Excel</button>")
+        }
+
+        $.ajax({
+            url: "/fetchsyslog/",
+            data: {
+                "ip": ip,
+                "type": type
+            },
+            type: "POST",
+            success: function(data, status) {
+                if (data["err"]) {
+                    $(".syslog tbody").html(data["data"]);
+                    return false;
+                }
+                data = data["data"];
+                var HTML = "";
+                for (var i in data) {
+                    HTML += "<tr><td>" + data[i]["log"] + "</td></tr>";
+                }
+                $(".syslog tbody").html(HTML);
+            },
+        })
+    }
+
+    function send_mail(type) {
+        $(".status").html("Sending Mail..");
+        $.ajax({
+            url: "/sendlog/",
+            data: {
+                "ip": ip,
+                "type": type
+            },
+            type: "POST",
+            success: function(data, status) {
+                if (data["err"]) {
+                    Swal.fire(data["data"]);
+                    return false;
+                }
+                $(".status").html("Mail Sent!!");
+                window.setInterval(function() {
+                    $(".status").html("");
+                }, 5000)
+            },
+        })
+    }
+    $(document).on("click", ".email", function() {
+        type = $(this).data("type");
+        send_mail(type);
+    });
+    $(document).ready(getlogs());
+
+    var tableToExcel = (function() {
+        var uri = 'data:application/vnd.ms-excel;base64,',
+            template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>',
+            base64 = function(s) {
+                return window.btoa(unescape(encodeURIComponent(s)))
+            },
+            format = function(s, c) {
+                return s.replace(/{(\w+)}/g, function(m, p) {
+                    return c[p];
+                })
+            }
+        return function() {
+            table = document.getElementById("syslog");
+            var ctx = {
+                worksheet: 'Worksheet',
+                table: table.innerHTML
+            }
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })();
+</script>
+{% endblock %}

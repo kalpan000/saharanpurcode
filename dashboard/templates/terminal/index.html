@@ -1,0 +1,149 @@
+ {% extends 'dashboard/header_footer.html' %} {% block title %} Terminal {% endblock %} {% block title_header %}Terminal{% endblock %} {% block css %}
+<style>
+    .myterminal {
+        padding: 20px;
+        height: auto;
+        border: 2px;
+        border-style: solid;
+        width: 100%;
+    }
+    
+    .cmdoutput {
+        text-align: left;
+        margin-top: 10px;
+        margin-left: 4%;
+    }
+    
+    .runcmd {
+        padding: 5px;
+        width: 100%;
+    }
+    
+    .terminal .cmd {
+        width: 96%;
+        float: right;
+    }
+    
+    .terminal .cmdexe {
+        width: 3%;
+        float: left;
+    }
+    
+    .addnewterminal {
+        border: 0px;
+        outline: none;
+        background: transparent;
+        margin-bottom: 25px;
+        margin-left: 10px;
+    }
+    
+    .removeterminal {
+        border: 0px;
+        font-size: 20px;
+        outline: none;
+        background: transparent;
+        margin-bottom: 5px;
+        margin-left: 99%;
+    }
+    
+    .closeterminal {
+        position: relative;
+        top: -17px;
+    }
+</style>
+{% endblock css %} {% block content %}
+<div class="row">
+    <h3 align="right" class='showterminallogs'><a href='/terminal/logs/'><i class="fa fa-history"></i></a></h3>
+</div>
+<div class="row divterminal" id="divterminal">
+
+</div>
+{% endblock %} {% block js %}
+<script>
+    function addNewField() {
+        divterminal = $(".divterminal");
+        HTML = "<div class='myterminal'>\
+            <button data-next='' class='removeterminal'><i class='fa fa-close closeterminal'></i></button>\
+        <div class='terminal'>\
+            <div class='cmd'>\
+                <input type='text' class='form-control runcmdonenter'>\
+            </div>\
+            <div class='cmdexe'>\
+                <button class='runcmd'><i class='fa fa-play'></i></button>\
+            </div>\
+            <div style='clear:both'></div>\
+            <div class='cmdoutput'>\
+                <span></span>\
+            </div>\
+        </div>\
+    </div>\
+    <button data-next='' class='addnewterminal'><i class='fa fa-plus'></i> New Command</button>";
+        divterminal.append(HTML);
+    }
+
+    addNewField();
+
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
+
+    function executeCmd(cmd, ele, runbtn) {
+        $(ele).html("");
+        if (cmd != "") {
+            data = {
+                'cmd': cmd
+            }
+            $.post('/terminal/data/', data, function(data, status) {
+                var statuscode = data["status"]
+                if (statuscode == 0) {
+                    $(runbtn).css('color', 'green');
+                }
+                else {
+                    $(runbtn).css('color', 'red');
+                }
+                $(ele).html("<pre>" + data["res"] + "</pre>");
+                $(ele).append("<i class='fa fa-clone'></i>");
+            })
+        } else {
+            $(ele).html("<pre>" + "Enter command" + "</pre>");
+        }
+    }
+    $('body').on('click', '.addnewterminal', function() {
+        addNewField();
+    })
+    $('body').on('click', '.removeterminal', function() {
+        $(this).parent().next().remove();
+        $(this).parent().remove();
+    })
+    $('body').on('click', '.fa-clone', function() {
+        var res = $(this).prev();
+        $(this).html(" Copied to clipboard!!");
+        copyToClipboard(res);
+        setTimeout(function() {
+            $(".fa-clone").html("");
+        }, 2000);
+    })
+
+    $('body').on('click', '.runcmd', function() {
+        var cmd = $(this).parent().prev().children().val();
+        var res = $(this).parent().next().next().children()[0];
+        var runbtn = $(this);
+        var data = executeCmd(cmd, res, runbtn);
+    })
+    $('body').on('keypress', '.runcmdonenter', function(e) {
+        var key = e.which;
+        var cmd = $(this).val();
+        var res = $(this).parent().next().next().next().children()[0];
+        var runbtn = $(this).parent().next().children();
+        if (key == 13) // the enter key code
+        {
+            var data = executeCmd(cmd, res, runbtn);
+            return false;
+        }
+    });
+</script>
+{% endblock js %}

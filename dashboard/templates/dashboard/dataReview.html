@@ -1,0 +1,391 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Auto Discovering {% endblock %} {% block js %} {% if msg %}
+<script>
+    Swal.fire('{{msg}}');
+</script>
+{% endif %}
+<script type="text/javascript">
+    var searchFrm = $('#searchFrm');
+    searchFrm.submit(function() {
+        $("#table tbody").html("");
+        // Swal.fire("Hello");
+        var formData = objectifyForm(searchFrm.serializeArray());
+        // console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: "/dataReview/ajax/",
+            data: formData,
+            success: function(response) {
+                data = response["data"];
+                var html = "";
+                for (var i in data) {
+                    console.log(data[i]["id"]);
+                    html += "<tr>\
+                            <td>" + data[i]["id"] + "</td>\
+                            <td>" + data[i]["Device_Asset_Tag"] + "</td>\
+                            <td>" + data[i]["IP_Address_col1"] + "." + data[i]["IP_Address_col2"] + "." + data[i]["IP_Address_col3"] + "." + data[i]["IP_Address_col4"] + "</td>\
+                            <td><a href='/asset/datacenter/information/hall/device/" + data[i]["id"] + "' class='btn btn-primary'>Details</a></td>\
+                        </tr>";
+                }
+                html += "<tr><td colspan='4'>Total Records Found: " + response["count"] + "</td></tr>";
+                $("#table tbody").append(html);
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err);
+            }
+        });
+        return false;
+    })
+</script>
+
+<script>
+    function uptimeTOdays(sec) {
+        seconds = Number(sec);
+        var d = Math.floor(seconds / (3600 * 24));
+        var h = Math.floor(seconds % (3600 * 24) / 3600);
+        var m = Math.floor(seconds % 3600 / 60);
+        var s = Math.floor(seconds % 60);
+
+        var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+        var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+        var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+        var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+        return (dDisplay + hDisplay + mDisplay + sDisplay).replace(/,\s*$/, "");
+    }
+
+    function bitToKB(bit) {
+        return (bit / 8000);
+    }
+</script>
+
+<script>
+    function getDetails(url, data) {
+        console.log("im running");
+        $.post(url, data, function(data, status) {
+            data = data["data"];
+            // console.log(data);
+            var sysHTML = "";
+            var devHTML = "";
+            var ipHTML = "";
+            var apHTML = "";
+            var apHTML1 = "";
+
+
+            var adminUp = 0;
+            var adminDown = 0;
+            var adminUnknown = 0;
+            var portUp = 0;
+            var portDown = 0;
+            var portUnknown = 0;
+            var pktIn = 0;
+            var pktOut = 0;
+
+            sysHTML = "<tr>\
+                        <td>" + data["sysname"] + "</td>\
+                        <td>" + data["sysdescr"] + "</td>\
+                        <td>" + uptimeTOdays(data["sysuptime"] / 100) + "</td>\
+                        <td>" + data["syscontact"] + "</td>\
+                        <td>" + data["syslocation"] + "</td>\
+                        <td>" + data["sysobjectid"] + "</td>\
+                    </tr>";
+            $("#systemInfoTbl tbody").html(sysHTML);
+
+            var interface = data["interfaces"];
+            var totalInterface = 0;
+            for (var index in interface) {
+                totalInterface += 1
+                if (interface[index]["adminstatus"] == "up") {
+                    adminUp += 1;
+                    interface[index]["adminstatus"] = "<i class='fa fa-circle text-success'></i>";
+                } else if (interface[index]["adminstatus"] == "down") {
+                    adminDown += 1
+                    interface[index]["adminstatus"] = "<i class='fa fa-circle text-muted'></i>"
+                } else {
+                    adminUnknown += 1
+                    interface[index]["adminstatus"] = "<i class='fa fa-circle text-danger'></i>"
+                }
+                if (interface[index]["operstatus"] = "up") {
+                    portUp += 1;
+                    interface[index]["operstatus"] = "<i class='fa fa-circle text-success'>"
+                } else if (interface[index]["operstatus"] == "down") {
+                    portDown += 1
+                    interface[index]["operstatus"] = "<i class='fa fa-circle text-muted'>"
+                } else {
+                    portUnknown += 1
+                    interface[index]["operstatus"] = "<i class='fa fa-circle text-danger'>"
+                }
+                pktIn += interface[index]["inOctect"];
+                pktOut += interface[index]["outOctect"];
+                devHTML += "<tr>\
+                    <td>" + interface[index]["ifindex"] + "</td>\
+                    <td>" + interface[index]["name"] + "</td>\
+                    <td>" + interface[index]["mtu"] + "</td>\
+                    <td>" + interface[index]["speed"] + "</td>\
+                    <td>" + interface[index]["mac"] + "</td>\
+                    <td>" + interface[index]["adminstatus"] + "</td>\
+                    <td>" + interface[index]["operstatus"] + "</td>\
+                    <td>" + interface[index]["inOctect"] + "</td>\
+                    <td>" + interface[index]["outOctect"] + "</td>\
+                    <td>" + interface[index]["inErr"] + "</td>\
+                    <td>" + interface[index]["outErr"] + "</td>\
+                    <td>" + interface[index]["description"] + "</td>\
+                    </tr>";
+                // if (interface[index]["ipv4"]) {
+                //     for (var ip in interface[index]["ipv4"]) {
+                //         devHTML += "<td>" + interface[index]["ipv4"][ip]["address"] + "</td>\
+                //     <td>" + interface[index]["ipv4"][ip]["netmask"] + "</td>";
+                //     }
+                // } else {
+                //     devHTML += "<td></td><td></td>";
+                // }
+                devHTML += "</tr>";
+            }
+            var comm = `<tr>
+            <td>${totalInterface}</td>
+            <td><i class='fa fa-arrow-up text-success'></i> ${adminUp} <i class='fa fa-arrow-down text-muted'></i> ${adminDown} <i class='fa fa-ban text-danger'></i> ${adminUnknown}</td>
+            <td><i class='fa fa-arrow-up text-success'></i> ${portUp} <i class='fa fa-arrow-down text-muted'></i> ${portDown} <i class='fa fa-ban text-danger'></i> ${portUnknown}</td>
+            <td>${pktIn}</td>
+            <td>${pktOut}</td>
+            </tr>`;
+            $("#comInterfaceTbl tbody").html(comm);
+
+            $("#systemInterfaceTbl tbody").html(devHTML);
+            var ipAddress = data["all_ipv4_addresses"];
+            for (var index in ipAddress) {
+                ipHTML += "<tr>\
+                    <td>" + index + "</td>\
+                    <td>" + ipAddress[index] + "</td>\
+                    </tr>";
+            }
+            $("#systemIPAdrTbl tbody").html(ipHTML);
+
+            var AP = data["AP"];
+            for (var index in AP) {
+                apHTML += "<tr>\
+                <td>" + AP[index]["profileNames"] + "</td>\
+                <td>" + AP[index]["row_status"] + "</td>\
+                <td>" + AP[index]["ssid"] + "</td>\
+                <td>" + AP[index]["wired"] + "</td>\
+                </tr>";
+            }
+            $("#APTbl tbody").html(apHTML);
+
+            var AP1 = data["sbn"];
+            for (var index in AP1) {
+                apHTML1 += "<tr>\
+                <td>" + AP1[index]["bsnAPName"] + "</td>\
+                <td>" + AP1[index]["bsnAPLocation"] + "</td>\
+                <td>" + AP1[index]["bsnAPMonitorOnlyMode"] + "</td>\
+                <td>" + AP1[index]["bsnAPOperationStatus"] + "</td>\
+                <td>" + AP1[index]["bsnAPSoftwareVersion"] + "</td>\
+                <td>" + AP1[index]["bsnAPBootVersion"] + "</td>\
+                <td>" + AP1[index]["bsnAPPrimaryMwarName"] + "</td>\
+                <td>" + AP1[index]["bsnAPReset"] + "</td>\
+                <td>" + AP1[index]["bsnAPStatsTimer"] + "</td>\
+                <td>" + AP1[index]["bsnAPPortNumber"] + "</td>\
+                <td>" + AP1[index]["bsnAPModel"] + "</td>\
+                <td>" + AP1[index]["bsnAPSerialNumber"] + "</td>\
+                <td>" + AP1[index]["bsnAPClearConfig"] + "</td>\
+                <td>" + AP1[index]["bsnApIpAddress"] + "</td>\
+                <td>" + AP1[index]["bsnAPType"] + "</td>\
+                <td>" + AP1[index]["bsnAPIsStaticIP"] + "</td>\
+                <td>" + AP1[index]["bsnAPNetmask"] + "</td>\
+                <td>" + AP1[index]["bsnAPGateway"] + "</td>\
+                <td>" + AP1[index]["bsnAPStaticIPAddress"] + "</td>\
+                <td>" + AP1[index]["bsnAPBridgingSupport"] + "</td>\
+                <td>" + AP1[index]["bsnAPGroupVlanName"] + "</td>\
+                <td>" + AP1[index]["bsnAPIOSVersion"] + "</td>\
+                <td>" + AP1[index]["bsnAPCertificateType"] + "</td>\
+                <td>" + AP1[index]["bsnAPEthernetMacAddress"] + "</td>\
+                <td>" + AP1[index]["bsnAPAdminStatus"] + "</td>\
+                </tr>";
+            }
+            $("#APTbl1 tbody").html(apHTML1);
+        });
+    }
+    $("body").on("click", "#fetchdetails", function() {
+        // var host = $(this).data("host");
+        // var cstr = $(this).data("cstr");
+        var host = prompt("Enter Host");
+        var cstr = prompt("Enter Community String");
+        var data = {
+            "host": host,
+            "cstr": cstr,
+        }
+        getDetails("/getsnmp/", data)
+        window.setInterval(function() {
+            getDetails("/getsnmp/", data)
+        }, 15000)
+    });
+</script>
+{% endblock %} {% block css %}
+<style>
+    th {
+        text-align: center;
+    }
+    
+    td {
+        text-align: center;
+    }
+</style>
+{% endblock %} {% block title_header %}Review{% endblock %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-md-offset-1 boxStyle" style="border:1px solid black;">
+            <form id="searchFrm">
+                {% csrf_token %}
+                <div class="form-group row">
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-md-4">
+                        <select class="form-control" name="filter">
+                    <option value="ip">IP</option>
+                    <option value="device">Device Tag</option>
+                </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <input name="value" type="text" id="" class="form-control" value="" placeholder="Show All or type">
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+
+                <hr>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <input type="submit" class="btn btn-primary" value="Search">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-9 col-md-offset-1 boxStyle" id="dataDiv" style="border:1px solid black;">
+            <table class="table" id="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Device Tag</th>
+                        <th>Host</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div style="height:100px"></div>
+<!-- SNMP TABLE-->
+<div class="container">
+    <div class="row">
+        <button data-host="127.0.0.1" data-cstr="public" class="btn btn-primary" id="fetchdetails">Fetch Data</button>
+    </div>
+</div>
+<br>
+<table border='1' class='table' id='systemInfoTbl'>
+    <thead>
+        <tr>
+            <th>SYSTEM</th>
+            <th>DESCRIPTION</th>
+            <th>UPTIME</th>
+            <th>CONTACT</th>
+            <th>LOCATION</th>
+            <th>OBJECT ID</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<table border="1" class="table" id="comInterfaceTbl">
+    <thead>
+        <tr>
+            <td>Total Interface</td>
+            <td>Admin Status</td>
+            <td>Port Status</td>
+            <td>Packet IN</td>
+            <td>Packet OUT</td>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+<table border='1' class='table' id='systemInterfaceTbl'>
+    <thead>
+        <tr>
+            <th>INDEX</th>
+            <th>NAME</th>
+            <th>MTU</th>
+            <th>SPEED</th>
+            <th>MAC</th>
+            <th>ADMIN STATUS</th>
+            <th>OPER STATUS</th>
+            <th>IN OCTET</th>
+            <th>OUT OCTECT</th>
+            <th>IN ERR</th>
+            <th>OUT ERR</th>
+            <th>DESCRIPTION</th>
+            <!-- <th>ADDRESS</th>
+            <th>NETMASK</th> -->
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<div class="table-responsive">
+    <table border='1' class='table' id='APTbl1'>
+        <thead>
+            <tr>
+                <th>bsnAPName</th>
+                <th>bsnAPLocation</th>
+                <th>bsnAPMonitorOnlyMode</th>
+                <th>bsnAPOperationStatus</th>
+                <th>bsnAPSoftwareVersion</th>
+                <th>bsnAPBootVersion</th>
+                <th>bsnAPPrimaryMwarName</th>
+                <th>bsnAPReset</th>
+                <th>bsnAPStatsTimer</th>
+                <th>bsnAPPortNumber</th>
+                <th>bsnAPModel</th>
+                <th>bsnAPSerialNumber</th>
+                <th>bsnAPClearConfig</th>
+                <th>bsnApIpAddress</th>
+                <th>bsnAPType</th>
+                <th>bsnAPIsStaticIP</th>
+                <th>bsnAPNetmask</th>
+                <th>bsnAPGateway</th>
+                <th>bsnAPStaticIPAddress</th>
+                <th>bsnAPBridgingSupport</th>
+                <th>bsnAPGroupVlanName</th>
+                <th>bsnAPIOSVersion</th>
+                <th>bsnAPCertificateType</th>
+                <th>bsnAPEthernetMacAddress</th>
+                <th>bsnAPAdminStatus</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<table border='1' class='table' id='APTbl'>
+    <thead>
+        <tr>
+            <th>Profile Namwe</th>
+            <th>Row Status</th>
+            <th>SSID</th>
+            <th>Wires</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<table border='1' class='table' id='systemIPAdrTbl'>
+    <thead>
+        <tr>
+            <th>INDEX</th>
+            <th>IP ADDRESS</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+{% endblock %}

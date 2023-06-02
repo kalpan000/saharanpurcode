@@ -1,0 +1,107 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} 
+	
+   {% block css %} {% endblock %}  {% block content %} 
+   <style>
+	   .cont{
+		   width: 100%;
+	   }
+     h1{
+       margin: 20px;
+     }
+
+     form{
+         border: 1px solid black;
+         padding: 10px;
+         margin: 10px;
+     }
+
+     form input , form select , .restoreBtn , .backupBtn{
+         padding: 5px;
+     }
+
+    .card {
+        box-shadow: 0 0 2px black;
+        margin: 5px;
+    }
+
+
+
+   </style>
+
+
+{% block title_header %}Database{% endblock %}
+<section class="col-md-4" style="padding: 20px; left: 50%; transform: translate(-50% , 0);">
+
+	
+
+    <form  class="col-12">
+        <h1> Select Datacenter </h1>
+        <select class="col-lg-12 datacenterNames">
+            <option Selected disabled> -- No Datacenter Selected -- </option>
+            {% for datacenter in datacenters %}
+                <option value="{{datacenter.DataCenterName}}"> {{datacenter.DataCenterName}} </option>
+            {% endfor %}
+        </select>
+		{% csrf_token %}
+        <br><br><br>
+        <input type="button" class="datacenterSubmit" value="Submit">  </input>
+    </form>
+
+</section>
+
+<section class="col-md-12" id="appendCard" style="padding: 20px; left: 50%; transform: translate(-50% , 0);">
+
+</section>
+
+
+
+<!-- D3 graphs -->
+<script src="{% static '/dashboard/js/d3.min.js' %}"></script>
+
+
+<script>
+
+function addCard(title , content){
+    var html = "";
+    html = "\
+    <div class='card col-md-3'>\
+        <div class='card-body'>\
+            <h5 class='card-title'>"+ title +"</h5>\
+            <p class='card-text' style='text-align:left;'>"+ content +"</p>\
+        </div>\
+    </div>";
+
+    $("#appendCard").append(html);
+}
+
+$(".datacenterSubmit").on("click" , function(e){
+    e.preventDefault();
+    
+    $("#appendCard").empty();
+    var name = $(".datacenterNames").val();
+
+    $.get("/datacenterallload/" + name  ,  function(data , status){
+        if(data["error"]){
+            Swal.fire("Something went wrong.");
+            return;
+        }
+
+        var content = "";
+        console.log(data);
+
+        center = data["data"]["datacenter"];
+        content = "Name " + center['name'] + "<br>" + "Country " + center['country'] + "<br>Address " + center['address'] + "<br>Contact " + center['center'] + "<br>State " + center['state'];
+
+        ooof = data["data"]
+
+        deviceContent = "Total Devices " + ooof["devices"]["total"] + "<br>Total Cabinets " + ooof["cabinets"]["total"];
+
+        addCard("Datacenter Information" , content);
+        addCard("Device Information" , deviceContent);
+    });
+
+});
+</script>
+
+
+{% endblock %}

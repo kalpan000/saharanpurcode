@@ -1,0 +1,15 @@
+{
+    "ifDescr": "Intel(R) Wireless-AC 9560 160MHz\u0000",
+    "index": 19,
+    "last_ifHCInOctets": 0,
+    "last_ifHCOutOctets": 0,
+    "last_timestamp": 1653399191,
+    "stats": [
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-05-24 19:03:11"
+        }
+    ],
+    "utilization": 0
+}

@@ -1,0 +1,225 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Edit Datacenter {% endblock %} {% block js %} {% endblock %} {% block css %} {% endblock %} {% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background:#337ab7;color:white;">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Update Data Center</a>
+                    </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <!---->
+
+
+                        <div class="row">
+                            {% comment %}
+                            <div class="col-md-2">
+                            </div> {% endcomment %}
+
+                            <div class="col-md-12">
+                                <div class="border">
+                                    <form class="form" action="" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="form_type" value="formOne">
+                                        <div class="form-group">
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Data Center Tag*</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input required class="form-control" type="text" id="data_center_tag" name="data_center_tag" value="{{datacenter.dataCenterTag}}" readonly />
+                                                    <!--<p style="color:red;">Error!!</p>-->
+                                                </div>
+
+
+                                                {% comment %}
+                                                <div class="col-md-2">
+
+                                                </div> {% endcomment %}
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Data Center Name</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" id="data_center_name" name="data_center_name" value="{{datacenter.DataCenterName}}" />
+
+                                                </div>
+                                                {% comment %}
+                                                <div class="col-md-2">
+
+                                                </div> {% endcomment %}
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Sqr Mtr*</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="number" value="{{datacenter.sqr_mtr}}" required="required" class="form-control" min="1" id="sqr_mtr" name="sqr_mtr" />
+
+                                                </div>
+                                                {% comment %}
+                                                <div class="col-md-2">
+
+                                                </div> {% endcomment %}
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Delivery Address*</label>
+                                                </div>
+                                                <div class="col-md-2">
+
+
+                                                    <input class="form-control" value="India" type="text" id="address_country" name="address_country" readonly />
+
+                                                </div>
+
+                                                <div class="col-md-2">
+
+                                                    <datalist id="states">
+			{% for i in states %}
+			<option>{{ i.state_name }}</option>
+			{% endfor %}
+		      </datalist>
+                                                    <input required list="states" value="{{datacenter.Add_state}}" class="form-control" placeholder="State" type="text" id="address_state" name="address_state" />
+
+                                                </div>
+
+                                                <div class="col-md-2">
+
+                                                    <input required class="form-control" type="text" value={{datacenter.Address}} placeholder="Address" id="address_text" name="address_text" />
+
+                                                </div>
+
+                                                {% comment %}
+                                                <div class="col-md-2">
+
+                                                </div> {% endcomment %}
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Contact*</label>
+                                                </div>
+
+                                                <div class="col-md-3 text-center">
+
+                                                    <div class="form-group">
+                                                        <input class="form-check-input" type="radio" id="contact-external" name="contact" value="external" checked />
+                                                        <label class="form-check-label" for="contact-external">External</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3 form-group text-center">
+
+                                                    <input class="form-check-input" type="radio" id="contact-internal" name="contact" value="internal" />
+                                                    <label class="form-check-label" for="contact-internal">Internal</label>
+
+                                                </div>
+
+                                                {% comment %}
+                                                <div class="col-md-2">
+
+                                                </div> {% endcomment %}
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Personal Details</label>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input class="form-control" type="text" id="full_name" value="{{datacenter.PersonalDet_fname}}" name="full_name" placeholder="Full Name" required="required" />
+
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <input class="form-control" type="email" id="email_contact" value="{{datacenter.PersonalDet_email}}" name="email_contact" placeholder="Email ID" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Invalid email address" required="required" />
+
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <input class="form-control" id="email_contact" name="phone_contact" value="{{datacenter.phone}}" placeholder="Phone" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="10" required="required" />
+
+                                                </div>
+
+
+                                                <div class="col-md-2">
+
+
+
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <label>Capacity in MW*</label>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="number" value="{{datacenter.Capacity_in_MW}}" class="form-control" id="capacity" name="capacity" />
+
+                                                </div>
+                                                {% comment %}
+                                                <div class="col-md-2">
+
+                                                </div> {% endcomment %}
+                                            </div>
+
+                                            <br>
+
+                                            <br>
+                                            <hr>
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input class="btn btn-primary form-control" type="submit" name="submit" value="Submit" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <a class="btn btn-info form-control" href="/asset/forms/">Go Back</a>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+
+
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!---->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

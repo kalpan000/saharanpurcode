@@ -1,0 +1,15 @@
+{
+    "ifDescr": "WAN Miniport (IPv6)\u0000",
+    "index": 14,
+    "last_ifHCInOctets": 0,
+    "last_ifHCOutOctets": 0,
+    "last_timestamp": 1653399189,
+    "stats": [
+        {
+            "InSpeed": 0,
+            "OutSpeed": 0,
+            "time": "2022-05-24 19:03:09"
+        }
+    ],
+    "utilization": 0
+}

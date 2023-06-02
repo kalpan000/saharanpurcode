@@ -1,0 +1,240 @@
+/* CABLES */
+
+.cont {
+    width: 100%;
+}
+
+.deviceSelection, .ethernetColor, .ethernetType, .fiberColor, .fiberType {
+    padding: 10px;
+    margin-top: 30px;
+}
+
+.ethernetTable, .fiberTable {
+    margin-top: 30px;
+}
+
+.ethernetTable td, .ethernetTable th {
+    padding: 10px;
+    ;
+}
+
+.ethernetTable th {
+    text-align: center;
+}
+
+.fiberTable td, .fiberTable th {
+    padding: 10px;
+    ;
+}
+
+.fiberTable th {
+    text-align: center;
+}
+
+.node {
+    height: 50px;
+    width: 50px;
+}
+
+.node>img {
+    height: 50px;
+    width: 50px;
+    background-image: url("{% static 'network/img/smallserver.png' %}");
+    background-size: 100% 100%;
+    background-color: transparent;
+}
+
+
+
+.node {
+    position: relative;
+    margin: 10px;
+    z-index: 10;
+    border: none;
+}
+
+.node:after {
+    content: no-close-quote;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    background-color: black;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    margin-left: -2px;
+    margin-top: -2px;
+}
+
+.line {
+    position: absolute;
+    width: 1px;
+    background-color: green;
+    z-index: 1;
+    ;
+}
+
+.childNode {
+    position: relative;
+    left: 600px;
+    z-index: 10;
+}
+
+.chart1 {
+    height: 200px;
+}
+
+.cables-heading {
+    margin: 20px;
+}
+
+
+/*POP UP*/
+
+td:first-letter {
+    text-transform: capitalize;
+}
+
+
+/* Popup container - can be anything you want */
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/*POP UP*/
+
+/*ADD HOC*/
+
+.customBorder {
+    border: 1px solid black;
+}
+
+/*ADD HOC*/
+
+
+
+
+.panel {
+    text-align: center;
+}
+
+.panel-default {
+    border-color: #337ab7
+}
+
+/* TAB BAR STYLE */
+
+#exTab3 .nav-pills>li>a {
+    border-radius: 4px;
+    font-size: 18px;
+}
+
+#exTab3 .nav-pills>li>a:hover {
+    color: #fff;
+}
+
+#exTab3 .tab-content {
+    padding: 5px 15px;
+}
+
+.nav-pills>li+li {
+    margin-left: 0px !important;
+    margin-bottom: 30px;
+}
+
+#exTab3 .nav-pills>li>a>i {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 15px;
+    -webkit-transition-duration: 0.7s;
+    -moz-transition-duration: 0.7s;
+    -o-transition-duration: 0.7s;
+    transition-duration: 0.7s;
+}
+
+.nav-pills>li.color-blue>a {
+    background-color: #337ab7 !important;
+}
+
+.nav-pills>li.color-green>a {
+    background-color: #33b7a3 !important;
+}
+
+.color-green a,
+.color-red a,
+.color-blue a {
+    color: #fff;
+}
+
+.nav-pills>li.color-red>a {
+    background-color: #b73346 !important;
+}
+
+.tab-pane {
+    padding: 5px 15px;
+}
+
+.col-lg-2 {
+    width: 19.990%;
+}

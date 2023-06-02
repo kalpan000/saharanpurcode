@@ -1,0 +1,431 @@
+{% load static %}
+<section class="col-md-12">
+    <div class="graph0 chart1 col-md-12" id="graph0" style="width: 100%;"></div> 
+</section>
+
+<section class="col-md-12">
+    <h1 class="cables-heading">Graph</h1>
+    <select class="deviceSelection col-md-3" id="deviceSelection"> 
+        <option data-deviceid="-1" selected disabled> -- No Device Selected --</option>
+        
+    </select>
+    
+
+    <div class="graphgraph col-md-12" style="overflow: auto; height: 500px; padding: 50px; border: solid 1px black;"></div>
+
+</section>
+
+<section class="sectionethernet col-md-6" style="background-color: white; padding: 10px;">
+    <h1 class="col-md-12 cables-heading"> Ethernet Cables </h1>
+    <select class="ethernetColor mainTwo ethone col-md-6" id="forethernet"> 
+        <option selected disabled> -- Select Cable Color --</option>
+    </select>
+    <select class="ethernetType mainTwoTwo ethone col-md-6" id="forethernetType"> 
+        <option selected disabled> -- Select Cable Type --</option>
+    </select>
+    <h1 class="col-md-12 cables-heading" style="margin: 10px;"> </h1>
+
+    <div class="chart1 col-md-12" id="chart1"></div>
+    <table class="col-md-12 ethernetTable" border="3">
+
+        <tr>
+            <th colspan="5"> Ethernet </th>
+        </tr>
+
+        <tr>
+            <th> Color </th>
+            <th> Cord Length  </th>
+            <th> Type </th>
+            <th> Quantity </th>
+            <th> Add / Withdraw  </th>
+        </tr>
+
+    </table>
+
+    
+</section>
+
+<section class="sectionfiber col-md-6" style="background-color: white; padding: 10px;">
+    
+    <h1 class="col-md-12 cables-heading"> Fiber Cables </h1>
+    <select class="fiberColor mainTwo fibone col-md-6" id="forfiber"> 
+        <option selected disabled> -- Select Cable Color --</option>
+    </select>
+    <select class="fiberType mainTwoTwo fibone col-md-6" id="forfiberType"> 
+        <option selected disabled> -- Select Cable Type --</option>
+    </select>
+    <h1 class="col-md-12 cables-heading" style="margin: 10px;"> </h1>
+    
+    <div class="chart1 col-md-12" id="chart2"></div>
+    <table class="col-md-12 fiberTable" border="3">
+
+        <tr>
+            <th colspan="5"> Fiber </th>
+        </tr>
+
+        <tr>
+            <th> Color </th>
+            <th> Cord Length  </th>
+            <th> Type </th>
+            <th> Quantity </th>
+            <th> Add / Withdraw  </th>
+        </tr>
+
+    </table>
+
+
+</section>
+{{cablesData | json_script:"tags-data"}}
+{{deviceData | json_script:"tags-deviceData"}}
+
+<script src="{% static '/dashboard/js/plotly.js' %}"></script>
+<script>
+
+    var deviceData = JSON.parse(document.getElementById('tags-deviceData').textContent);
+
+    for (var d in deviceData) {
+        $("#deviceSelection").append("<option data-deviceID = '" + deviceData[d]['id'] + "' > " + deviceData[d]["name"] + " </option>");
+    }
+
+
+    var records = JSON.parse(document.getElementById('tags-data').textContent);
+
+
+    var CABLES_DATA = {
+        "ethernet": {
+            "color": ["Gray", "Green", "Yellow", "Orange", "Purple", "Blue", "Red", "Black", "Pink", "White"],
+            "hex": ["#422c", "#353c", "#101c", "#150c", "#264c", "#291c", "#194c", "#000", "#FFC0CB", "#fff"],
+            "length": [0.5, 1, 2, 2.5, 5, 6, 8, 10, 15, 20, 25],
+            "type": ["Cat5", "Cat5E", "Cat6", "Cat6A", "atT7", "Cat8"]
+        },
+
+        "fiber": {
+            "color": ["Yellow", "Orange", "Blue"],
+            "hex": ["#101c", "#150c", "#291c"],
+            "length": [1, 2, 3, 5, 10, 20],
+            "type": ["Fiber", "Singlemode", "Multimode", "POF"]
+        }
+    }
+
+    var ALL_CABLE_TYPES = CABLES_DATA["ethernet"]["type"].concat(CABLES_DATA["fiber"]["type"]);
+    var ALL_CABLE_TYPES_QUANTITY = [];
+
+    var GLOBAL_DATA_X = [];
+    var GLOBAL_DATA_Y = [];
+
+    for (var index in ALL_CABLE_TYPES) {
+        var foundSomething = false;
+        var totalQuantity = 0;
+
+        for (var key in records) {
+            if (key.includes(ALL_CABLE_TYPES[index])) {
+                console.log(key + " includes " + ALL_CABLE_TYPES[index]);
+                foundSomething = true;
+                totalQuantity += records[key];
+            }
+        }
+        if (foundSomething) {
+            GLOBAL_DATA_X.push(ALL_CABLE_TYPES[index]);
+            GLOBAL_DATA_Y.push(totalQuantity);
+        }
+        else {
+            GLOBAL_DATA_X.push(ALL_CABLE_TYPES[index]);
+            GLOBAL_DATA_Y.push(0);
+        }
+    }
+
+
+
+    var firstRun = true;
+    for (var i = 0; i < CABLES_DATA["ethernet"]["color"].length; i++) {
+        $(".ethernetColor").append("<option data-index='" + i + "' > " + CABLES_DATA['ethernet']['color'][i] + " </option>");
+    }
+
+
+    for (var i = 0; i < CABLES_DATA["fiber"]["color"].length; i++) {
+        $(".fiberColor").append("<option data-index='" + i + "' > " + CABLES_DATA['fiber']['color'][i] + " </option>");
+    }
+
+    for (var i = 0; i < CABLES_DATA["ethernet"]["type"].length; i++) {
+        $("#forethernetType").append("<option  data-index='" + i + "' > " + CABLES_DATA['ethernet']['type'][i] + " </option>");
+    }
+
+
+    for (var i = 0; i < CABLES_DATA["fiber"]["type"].length; i++) {
+        $("#forfiberType").append("<option data-index='" + i + "' > " + CABLES_DATA['fiber']['type'][i] + " </option>");
+    }
+
+
+
+    function printTable(type, col, cableType) {
+        if (type == "ethernet") {
+            $(".deleteME2").remove();
+        }
+        else {
+            $(".deleteME1").remove();
+        }
+        var appendThis = "";
+        var chartData = {
+            "X": [],
+            "Y": [],
+        };
+
+        for (var i = 0; i < CABLES_DATA[type]["length"].length; i++) {
+            var len = CABLES_DATA[type]['length'][i];
+
+
+            appendThis += (type == 'fiber' ? "<tr class='deleteME1'><td>" + col + "</td>" : "<tr class='deleteME2'><td>" + col + "</td>");
+            appendThis += "<td>" + len + " Mtr </td>";
+            appendThis += "<td>" + cableType + "</td>";
+
+            chartData["X"].push(len + "M");
+
+            if (records[col + '' + len + '' + cableType]) {
+                appendThis += "<td>" + records[col + '' + len + '' + cableType] + "</td>";
+                chartData["Y"].push(records[col + '' + len + '' + cableType]);
+            }
+            else {
+                appendThis += "<td> 0 </td>";
+                chartData["Y"].push(0);
+            }
+
+            appendThis += "<td> <button class='fiberBtn' ' id='" + col + '' + len + '' + cableType + "'  onclick='sendPostRequest(this)'> Add / Withdraw </button> </td></tr>";
+
+        }
+
+        return [chartData, appendThis];
+
+    }
+
+
+    $('.ethone').on('change', function (e) {
+
+        var col = $("#forethernet").val();
+        var cableType = $("#forethernetType").val();
+
+        if (!col || !cableType) {
+            return;
+        }
+
+        var hmmm = printTable("ethernet", col, cableType);
+        $(".ethernetTable").append(hmmm[1]);
+
+
+        graph1("chart1", "Cable Data", hmmm[0]["X"], hmmm[0]["Y"]);
+
+    });
+
+    $('.fibone').on('change', function (e) {
+
+        var col = $("#forfiber").val();
+        var cableType = $("#forfiberType").val();
+
+
+        if (!col || !cableType) {
+            return;
+        }
+
+        var hmmm = printTable("fiber", col, cableType);
+        $(".fiberTable").append(hmmm[1]);
+
+        graph1("chart2", "Cable Data", hmmm[0]["X"], hmmm[0]["Y"]);
+
+    });
+
+    function sendPostRequest(e) {
+        console.log($(e).attr("class"));
+        var qty = prompt("Enter new quantity");
+        cname = $(e).attr("class");
+
+        if (qty === null) {
+            return; //break out of the function early
+        }
+        id = $(e).attr("id");
+
+
+        if (isNaN(qty)) {
+            Swal.fire("Enter a number")
+            return;
+        }
+
+        if ((qty + "").length == 0) {
+            Swal.fire("Enter a number");
+            return;
+        }
+
+        qty = parseInt(qty);
+        data2 = {
+            "title": id,
+            "qty": qty
+        }
+
+        $.post("post/", data2, function (xyz, status) {
+            Swal.fire("Updated Successfully");
+        });
+
+    }
+
+
+
+    $('.deviceSelection').on('change', function (e) {
+        var id = $(this).attr("id");
+        var index = $(this).children(":selected").attr("data-deviceid");
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+
+        if (index == "-1") {
+            console.log("skipped");
+            return;
+        }
+        console.log("SELECTED ID " + index);
+
+        $.post("connections/", { "deviceID": index, "deviceName": valueSelected }, function (output, status) {
+            console.log(output);
+            $(".graphgraph").html("");
+            $(".graphgraph").append("<div title='ID: "+index+"\nDevice: "+valueSelected+"' class='node' id='parentDevice'> <img src='/static/network/img/server.png'> </div>");
+            output = output["connections"];
+            var uniqueID = "unique";
+            for (var i in output) {
+                console.log(output[i]);
+                var iiid = uniqueID + output[i]['id'] + output[i]['port'];
+                var iiidLine = "line" + uniqueID + output[i]['id'] + output[i]['port'];
+
+                $(".graphgraph").append("<div title='ID: "+output[i]["id"]+"\nDevice: "+output[i]["device"]+"\nPORT: "+output[i]['port']+"' class='node childNode' id='" + iiid + "'> <img src='/static/network/img/smallserver.png'> </div>");
+                $(".graphgraph").append("<div class='line' id='" + iiidLine + "'> <img> </div>");
+
+                adjustLine(document.getElementById("parentDevice"), document.getElementById(iiid), document.getElementById(iiidLine));
+            }
+
+        });
+
+    });
+
+
+    $(".btn2").on("click", function () {
+        Swal.fire("BTN 2");
+    });
+
+
+    $(".btn3").on("click", function () {
+        Swal.fire("BTN 3");
+    });
+
+
+    //graph1("chart1" , "Cable Management" , )
+    tempX1 = [];
+    tempX2 = [];
+    for (var i = 0; i < CABLES_DATA["ethernet"]["type"].length; i++) {
+        tempX1.push(0);
+    }
+
+    for (var i = 0; i < CABLES_DATA["fiber"]["type"].length; i++) {
+        tempX2.push(0);
+    }
+
+    graph1("chart1", "Cable Data", CABLES_DATA["ethernet"]["type"], tempX1);
+    graph1("chart2", "Cable Data", CABLES_DATA["fiber"]["type"], tempX2);
+    graph1("graph0", "Cable Stock", GLOBAL_DATA_X, GLOBAL_DATA_Y , true);
+
+
+    function insert(arr, element, max_size = MAX_ARRAY_SIZE, insertOnOverflow = true) {
+        if (arr.length >= max_size) {
+            if (!insertOnOverflow) return;
+            arr.shift();
+        }
+        arr.push(element);
+    }
+
+    function randomColor() {
+        return "#" + Math.floor(Math.random() * 16777215).toString(16);
+    }
+
+
+    function graph1(id, Title, X, Y , width = false) {
+
+        var data = []
+        var widths = [];
+        var index = 0;
+        for (var i in X) {
+            widths.push(0.5);
+        }
+
+        var obj = {
+            x: X,
+            y: Y,
+            width: widths,
+            type: 'bar'
+        }
+
+
+        data.push(obj);
+
+        var layout = {
+            title: Title,
+            yaxis: {
+                rangemode: 'tozero'
+            },
+            margin: { l: 40, r: 0, b: 50, t: 0, pad: 0 },
+            autosize: true,
+        };
+
+        if (width){
+            layout["width"] = 1100;
+        }
+
+        Plotly.newPlot(id, data, layout, { displayModeBar: false });
+
+    }
+
+    $(".ethernetColor option:eq(1)").prop('selected', true)
+    $(".fiberColor option:eq(1)").prop('selected', true)
+    $("#forethernetType option:eq(1)").prop('selected', true)
+    $("#forfiberType option:eq(1)").prop('selected', true)
+
+
+    $(".ethernetColor").trigger('change');
+    $(".fiberColor").trigger('change');
+    $("#forethernetType").trigger('change');
+    $("#forfiberType").trigger('change');
+
+    
+    function adjustLine(from, to, line) {
+
+        var fT = from.offsetTop + from.offsetHeight / 2;
+        var tT = to.offsetTop + to.offsetHeight / 2;
+        var fL = from.offsetLeft + from.offsetWidth / 2;
+        var tL = to.offsetLeft + to.offsetWidth / 2;
+
+        var CA = Math.abs(tT - fT);
+        var CO = Math.abs(tL - fL);
+        var H = Math.sqrt(CA * CA + CO * CO);
+        var ANG = 180 / Math.PI * Math.acos(CA / H);
+
+        if (tT > fT) {
+            var top = (tT - fT) / 2 + fT;
+        } else {
+            var top = (fT - tT) / 2 + tT;
+        }
+        if (tL > fL) {
+            var left = (tL - fL) / 2 + fL;
+        } else {
+            var left = (fL - tL) / 2 + tL;
+        }
+
+        if ((fT < tT && fL < tL) || (tT < fT && tL < fL) || (fT > tT && fL > tL) || (tT > fT && tL > fL)) {
+            ANG *= -1;
+        }
+        top -= H / 2;
+
+        line.style["-webkit-transform"] = 'rotate(' + ANG + 'deg)';
+        line.style["-moz-transform"] = 'rotate(' + ANG + 'deg)';
+        line.style["-ms-transform"] = 'rotate(' + ANG + 'deg)';
+        line.style["-o-transform"] = 'rotate(' + ANG + 'deg)';
+        line.style["-transform"] = 'rotate(' + ANG + 'deg)';
+        line.style.top = top + 'px';
+        line.style.left = left + 'px';
+        line.style.height = H + 'px';
+    }
+
+    //adjustLine(document.getElementById('node1'), document.getElementById('node2'), document.getElementById('line1'));
+
+</script>

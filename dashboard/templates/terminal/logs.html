@@ -1,0 +1,40 @@
+ {% extends 'dashboard/header_footer.html' %} {% block title %} Terminal {% endblock %} {% block title_header %}Logs{% endblock %} {% block css %}
+<style>
+    th,
+    td {
+        text-align: center;
+        font-size: 20px;
+    }
+</style>
+{% endblock css %} {% block content %}
+<div class="row terminallogs" id="terminallogs">
+    <table class="table" id="logs">
+        <thead>
+            <th>S.No</th>
+            <th>Command</th>
+            <th>Device</th>
+            <th>User</th>
+            <th>Execute At</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+{% endblock %} {% block js %}
+<script>
+    function fetchLogs(cmd, ele, runbtn) {
+        $.get('/terminal/logs/data/', {}, function(data, status) {
+            var data = data["data"];
+            var HTML = "";
+            for (var i in data) {
+                HTML += "<tr><td>" + data[i]["id"] + "</td>\
+                        <td>" + data[i]["cmd"] + "</td>\
+                        <td>" + data[i]["device"] + "</td>\
+                        <td>" + data[i]["user_id"] + "</td>\
+                        <td>" + data[i]["created_at"] + "</td></tr>";
+            }
+            $("#logs tbody").html(HTML);
+        })
+    }
+    fetchLogs()
+</script>
+{% endblock js %}

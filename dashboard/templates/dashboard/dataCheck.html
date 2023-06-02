@@ -1,0 +1,115 @@
+{% extends 'dashboard/header_footer.html' %} {% block title %} Threshold {% endblock %} {% block title_header %} Threshold {% endblock %} {% block content %}
+
+<div class="col-md-9 col-md-offset-1 boxStyle" style="border:1px solid black;">
+    <table class="table">
+        <thead>
+        <tr>
+            <th colspan="4" class="myheading">Appliance</th>
+        </tr>
+            <tr>
+                <th>Service</th>
+                <th>Threshold</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>CPU</th>
+                <th><input type="text" value="{{settings.cpu_threshold}}" class="form-control"></th>
+                <th><button data-type="cpu" class="btn btn-primary changesetting" data-devicetype="{{type}}">Change</button>
+                    <button data-type="cpu" class="btn btn-success resetsetting" data-devicetype="{{type}}">Reset</button></th>
+            </tr>
+            <tr>
+                <th>RAM</th>
+                <th><input type="text" value="{{settings.usedRam}}" class="form-control"></th>
+                <th><button data-type="ram" class="btn btn-primary changesetting" data-devicetype="{{type}}">Change</button>
+                    <button data-type="ram" class="btn btn-success resetsetting" data-devicetype="{{type}}">Reset</button></th>
+            </tr>
+            <tr>
+                <th>SWAP</th>
+                <th><input type="text" value="{{settings.usedSMemory}}" class="form-control"></th>
+                <th><button data-type="swap" class="btn btn-primary changesetting" data-devicetype="{{type}}">Change</button>
+                    <button data-type="swap" class="btn btn-success resetsetting" data-devicetype="{{type}}">Reset</button></th>
+            </tr>
+            <tr>
+                <th>STORAGE</th>
+                <th><input type="text" value="{{settings.usedStorage}}" class="form-control"></th>
+                <th><button data-type="storage" class="btn btn-primary changesetting" data-devicetype="{{type}}">Change</button>
+                    <button data-type="storage" class="btn btn-success resetsetting" data-devicetype="{{type}}">Reset</button></th>
+            </tr>
+            {% if type == "appliance" %}
+                <tr>
+                    <th>IOWAIT</th>
+                    <th><input type="text" value="{{settings.iowait}}" class="form-control"></th>
+                    <th><button data-type="iowait" class="btn btn-primary changesetting" data-devicetype="{{type}}">Change</button>
+                        <button data-type="iowait" class="btn btn-success resetsetting" data-devicetype="{{type}}">Reset</button></th>
+                </tr>
+                <tr>
+                    <th>TEMPERATURE</th>
+                    <th><input type="text" value="{{settings.temperature}}" class="form-control"></th>
+                    <th><button data-type="temp" class="btn btn-primary changesetting" data-devicetype="{{type}}">Change</button>
+                        <button data-type="temp" class="btn btn-success resetsetting" data-devicetype="{{type}}">Reset</button></th>
+                </tr>
+            {% endif %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4" id="result"></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %} {% block js %}
+<script>
+
+      var url = new URL( window.location.href);
+        var ip = url.searchParams.get("ip");
+        if (ip == null || ip == undefined || ip == false || ip == ""){
+            $(".myheading").text("Appliance Settings")
+        }
+        else{
+            $(".myheading").text("Device "+ ip +" Settings")
+        }
+    function chageSettings(type, value, ele , devicetype , ip) {
+        var ele = $(ele);
+        data = {
+            'type': type,
+            'value': value,
+            "ip" : ip,
+            "devicetype" : devicetype
+        }
+        $.post('/device/settings/', data, function(data, status) {
+            var response = data["data"];
+            var values = data["value"];
+            ele.val(values);
+            $("#result").html(response);
+        });
+    }
+    $(".changesetting").click(function() {
+        var type = $(this).data("type");
+        var input = $(this).parent().prev().children();
+        var devicetype = $(this).data("devicetype");
+
+        var url = new URL( window.location.href);
+        var ip = url.searchParams.get("ip");
+        if (ip == null || ip == undefined || ip == false || ip == ""){
+            ip = "";
+        }
+        var val = input.val();
+        chageSettings(type, val, input , devicetype , ip);
+    })
+    $(".resetsetting").click(function() {
+        var type = $(this).data("type");
+        var input = $(this).parent().prev().children();
+        var devicetype = $(this).data("devicetype");
+
+        var url = new URL( window.location.href);
+        var ip = url.searchParams.get("ip");
+        if (ip == null || ip == undefined || ip == false || ip == ""){
+            ip = "";
+        }
+        var val = "reset"
+        chageSettings(type, val, input, devicetype , ip);
+    })
+</script>
+{% endblock %}

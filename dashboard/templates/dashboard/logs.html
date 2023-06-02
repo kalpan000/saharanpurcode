@@ -1,0 +1,51 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Logs {% endblock %} {% block js %}
+
+{% endblock %} {% block css %}
+<style>
+.logs{
+    text-align: left;
+}
+    .logger {
+        text-align: left;
+        overflow-y: scroll;
+        height:400px;
+    }
+    pre{
+        width:90%;
+    }
+    .cls_0:before{
+        content: 'NOTSET';
+    }
+    .cls_10:before{
+        content: 'DEBUG';
+    }
+    .cls_20:before{
+        content: 'INFO';
+    }
+    .cls_30:before{
+        content: 'WARNING';
+    }
+    .cls_40:before{
+        content: 'ERROR';
+    }
+    .cls_50:before{
+        content: 'CRITICAL';
+    }
+    .cls_0, .cls_20{
+        color:green;
+    }
+    .cls_10, .cls_30{
+        color:orange;
+    }
+    .cls_40, .cls_50{
+        color:red;
+    }
+</style>
+{% endblock %} {% block title_header %}Logs{% endblock %} {% block content %}
+<div class="logs"><p><b>Date Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message</b></p><p>---------------------------------------------------------------------------------------</p><div class="logger"> {% for log in logs %}
+
+    <p style="font-family: 'Lucida Console';margin-bottom: 0.3em;">{{log.create_datetime|date:'d-m-y H:iA'}} 
+    <span class='cls_{{log.level}}'></span>: {{log.msg}}</p>
+    {% if log.trace %}<pre>{{log.trace}}</pre>{% endif %}
+
+{% endfor %}</div></div> {% endblock %}

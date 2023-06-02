@@ -1,0 +1,498 @@
+{% extends 'dashboard/header_footer.html' %} {% block title %} Web Monitoring {% endblock title %} 
+{% block js %}
+{% if msg %}
+<script> 
+Swal.fire("Web URL already present");
+</script> 
+{% endif %}
+{% endblock js %}
+{% block title_header %}Websites{% endblock %}
+{% block content %}
+<style>
+    table,
+    td,
+    th {
+        width: 100%;
+        table-layout: fixed;
+        color: white;
+        padding-block-start: initial;
+        padding-top: 10px;
+        font-family: arial, sans-serif;
+        border: 12px solid white;
+        text-align: center;
+        padding: 8px;
+    }
+    
+    #t01 tr:nth-child(even) {
+        background-color: #559409;
+    }
+    
+    #t01 tr:nth-child(odd) {
+        background-color: #559409;
+    }
+    /* Style the counter cards */
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        width: 85%;
+        text-align: center;
+        background-color: #f1f1f1;
+    }
+    
+    .card-counter {
+        box-shadow: 2px 2px 10px #DADADA;
+        margin: 5px;
+        background-color: #fff;
+        height: 100px;
+        border-radius: 5px;
+        transition: .3s linear all;
+    }
+    
+    .card-counter:hover {
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+    }
+    
+    .card-counter.primary {
+        background-color: #007bff;
+        color: #FFF;
+    }
+    
+    .card-counter.danger {
+        background-color: #ef5350;
+        color: #FFF;
+    }
+    
+    .card-counter.success {
+        background-color: #66bb6a;
+        color: #FFF;
+    }
+    
+    .card-counter.info {
+        background-color: #26c6da;
+        color: #FFF;
+    }
+    
+    .card-counter i {
+        font-size: 5em;
+        opacity: 0.2;
+    }
+    
+    .card-counter .count-numbers {
+        /* position: absolute; */
+        /* right: 35px; */
+        top: 20px;
+        font-size: 32px;
+        display: block;
+    }
+    
+    .card-counter .count-name {
+        /* position: absolute; */
+        /* right: 35px; */
+        top: 65px;
+        text-transform: capitalize;
+        display: block;
+        font-size: 18px;
+    }
+    .col-md-3{
+        width: 22.5%;
+        padding:0px;
+margin-right: 10px;
+border-style:solid;
+border-radius:12px;
+border-color: #0489ff;
+    }
+    .column .col-md-2{
+        width:20%;
+    }
+    .addmargin{
+        margin-bottom:10px;
+    }
+    {% comment %} .js-plotly-plot{
+        height:50px; width:50px;left: 120px;position: absolute;margin-top: -34px;
+    } {% endcomment %}
+    @import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow);
+</style>
+<div class="row">
+    <div class="column">
+        <div class="col-md-2"> 
+            <div class="card-counter primary">
+                <span class="count-numbers" id="activelink">0</span>
+                <span class="count-name">Active Websites</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter info">
+                <span class="count-numbers" id="downlink">0</span>
+                <span class="count-name">Down Websites</span>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter danger">
+                <span class="count-numbers" id="warninglink">0</span>
+                <span class="count-name">Warning Websites</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter success" style="background-color:#382b75">
+                <span class="count-numbers" id="unsecuredlink">0</span>
+                <span class="count-name">Non Secured</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter success" style="background-color:teal">
+                <span class="count-numbers">{{totalWebsite}}</span>
+                <span class="count-name">Total Websites</span>
+            </div>
+        </div>
+    </div>
+</div>
+        <br><br>
+<!--inner block start here-->
+<div class="inner-block" style="padding:0">
+    <div class=" cols-grids panel-widget">
+        <div class="row">
+            <div class="column">
+                <form class="form-inline" method="POST">
+                {% csrf_token %}
+  <div class="input-group mb-2 mr-sm-2">
+    <select class="form-control" style="" name="protocol">
+    <option>http://</option>
+    <option>https://</option>
+    </select>
+  </div>
+  <div class="input-group mb-2 mr-sm-2" style="z-index:0;">
+    <input type="text" class="form-control" name="website_name" size="45" placeholder="xyz.com">
+  </div>
+  <button type="submit" class="btn btn-primary mb-2">Submit</button>
+</form>
+            </div>
+        </div>
+        <br><br>
+        <div class="container">
+            <div class="row" style="height:1000px">
+            <div class="column" id="tableBigTable">
+                <div class="mainWebBody">
+
+                    {% for i in website_pack %}
+                
+                    <div class="col-md-3 addmargin">
+                        <div class="row">
+<div style='position:relative;z-index:2;'>
+                        <br>
+                            
+                    
+                            <span class="count-status">
+                            <i data-id="{{i.id}}" data-favorite="{{ i.is_favorite }}" style="font-size:30px; {% if i.is_favorite  %} color:yellow; {% else %} color:black; {% endif %} position:absolute;top:-10px;right:0; margin:20px; cursor:pointer;" class="favoriteStar fa fa-star"></i>
+                            <img id="earth_{{i.id}}" src="/static/dashboard/images/earth_red.png" width="100px" height="100px"><br><br><b id="status_{{i.id}}" style="color:red;">OFFLINE</b>
+                            </span><br>
+                            <span id="website_{{i.id}}" class="count-numbers"><b>{{i.website}}</b></span><br>
+                            <span class="count-response"></span><br><br>
+                            <span class="count-response"><b>Loading...</b></span><br><br>
+                            <span class="count-response" style="left: 78px;position: absolute;">
+                            <img id="status_image_{{i.id}}" src="/static/dashboard/images/status_grey.jpeg" width="40px" height="35px">
+                            <a onclick="deleteweb('{{i.id}}')" class="btn btn-danger"><i class="fa fa-trash" style="font-color:red;"></i></a>
+
+                            <img id="secured_img_{{i.id}}" src="/static/dashboard/images/unsecured.png" width="40px" height="35px">
+                          
+                            </span>
+                                                   
+                        </div>
+                        </div>
+                        <div class="row" id='myDiv1{{i.id}}' style="text-align: center;height: 100px;"></div>
+                        
+                    </div>
+                
+                {% endfor %}
+                
+    
+                </div>
+
+                <style>
+                    .paginatorClass button {
+                        background:grey;
+                        color: black;
+                    }
+                    .paginatorClass input{
+                        color:black;
+                    }
+
+                    .paginatorClass : hover{
+                        color:black;
+                    }
+
+
+                </style>
+                <div class="paginatorClass col-md-12" style="color:black; background:white;">  </div>
+            </div>
+        </div>
+        <div class="chute chute-center text-center"></div>
+    </div>
+</div>
+</div>
+<script src='/static/dashboard/js/plotly.js'></script>
+<script>
+
+function deleteweb(id){
+    Swal.fire({
+        title: 'Are you sure want to delete?',
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location = `/web/monitoring/delete/${id}`;
+        }
+        })  
+}
+
+var ALL_WEBSITE_DATA = {};
+function printWebData(tableID , data){
+        $("#" + tableID + " .mainWebBody").empty();
+
+        var html = "";
+        var unsecuredlink = 0, warninglink = 0;
+        for (var i = 0; i < data.length ; i++){
+            var color = data[i]["is_favorite"] ? "color : yellow" : "color : black";
+            var http_https_img = data[i]["website"];
+            html = "";
+            var HTTP_IMG_src;
+            var SEC_IMG_src;
+            if (http_https_img.startsWith("https")){
+                HTTP_IMG_src = "/static/dashboard/images/status_grey.jpeg";
+                SEC_IMG_src = "/static/dashboard/images/https_secured.png";
+            }
+            else{
+                unsecuredlink += 1;
+                HTTP_IMG_src = "/static/dashboard/images/status_green.jpeg";
+                SEC_IMG_src = "/static/dashboard/images/http_unsecured.png";
+            }
+            //html += "<div class='col-md-3'><div class='row'> <div style='position:relative;z-index:2;'> <br>";
+                if (data[i]["status"]){
+                    if (data[i]["time"] < 1){
+                        html += "<div class='col-md-3 addmargin'>\
+                        <div class='row'> <div style='position:relative;z-index:2;'> <br>\
+                        <span class='count-status'>\
+                            <i data-id='"+data[i]["id"]+"' data-favorite='"+data[i]["is_favorite"]+"' style='"+color+";font-size:30px;position:absolute;top:-10px;right:0; margin:20px; cursor:pointer;' class='favoriteStar fa fa-star'></i>\
+                            <img id='earth_"+data[i]["id"]+"' src='/static/dashboard/images/earth_blue.png' width='100px' height='100px'><br><br>\
+                            <b id='status_"+data[i]["id"]+"' style='color:green;'>ONLINE</b>\
+                            </span><br>\
+                            <span id='website_"+data[i]["id"]+"' class='count-numbers'><b>"+data[i]["website"]+"</b></span><br>\
+                            <span id='rt_"+data[i]["id"]+"' class='count-response'>RT: "+data[i]["time"]+"</span><br><br>\
+                            <span id='uptime_"+data[i]["id"]+"' class='count-response' onclick='uptime("+data[i]["uptime"]+", \"uptime_"+data[i]["id"]+"\")'>UPTIME</span><br><br>\
+                            <span class='count-response' style='left: 60px;position: absolute;'>\
+                            <img id='status_image_"+data[i]["id"]+"' src='"+HTTP_IMG_src+"' width='40px' height='35px'>\
+                            <a onclick='deleteweb("+data[i]["id"]+")' class='btn btn-danger'><i class='fa fa-trash' style='font-color:red;'></i></a>\
+                            <img id='secured_img_"+data[i]["id"]+"' src='"+SEC_IMG_src+"' width='40px' height='35px'>\
+                            <a href='/cdn?url="+data[i]["website"]+"' target='_blank'><img class='cdnLink' src='/static/dashboard/images/cdn.png' width='35px' height='35px'></a>\
+                            <div id='myDiv"+data[i]["id"]+"'></div>\
+                            </span></div></div><div class='row' id='myDiv1"+data[i]["id"]+"' style='text-align: center;height: 100px;'></div></div>";
+                    }                          
+                    else{
+                        warninglink += 1; 
+                        html += "<div class='col-md-3 addmargin'>\
+                        <div class='row'> <div style='position:relative;z-index:2;'> <br>\
+                        <span class='count-status'>\
+                        <i data-id='"+data[i]["id"]+"' data-favorite='"+data[i]["is_favorite"]+"' style='"+color+";font-size:30px;position:absolute;top:-10px;right:0; margin:20px; cursor:pointer;' class='favoriteStar fa fa-star'></i>\
+                        <img id='earth_"+data[i]["id"]+"' src='/static/dashboard/images/earth_amber.png' width='100px' height='100px'><br><br><b id='status_"+data[i]["id"]+"' style='color:orange;'>ONLINE</b>\
+                        </span><br>\
+                        <span id='website_"+data[i]["id"]+"' class='count-numbers'><b>"+data[i]["website"]+"</b></span><br>\
+                        <span id='rt_"+data[i]["id"]+"' class='count-response'>RT: "+data[i]["time"]+"</span><br><br>\
+                        <span id='uptime_"+data[i]["id"]+"' class='count-response' onclick='uptime("+data[i]["uptime"]+", \"uptime_"+data[i]["id"]+"\")'>UPTIME</span><br><br>\
+                        <span class='count-response' style='left: 60px;position: absolute;'>\
+                        <img id='status_image_"+data[i]["id"]+"' src='"+HTTP_IMG_src+"' width='40px' height='35px'>\
+                        <a  onclick='deleteweb("+data[i]["id"]+")' class='btn btn-danger'><i class='fa fa-trash' style='font-color:red;'></i></a>\
+                        <img id='secured_img_"+data[i]["id"]+"' src='"+SEC_IMG_src+"' width='40px' height='35px'>\
+                        <a href='/cdn?url="+data[i]["website"]+"' target='_blank'><img class='cdnLink' src='/static/dashboard/images/cdn.png' width='35px' height='35px'></a>\
+                        <div id='myDiv"+data[i]["id"]+"'></div>\
+                        </span></div></div><div class='row' id='myDiv1"+data[i]["id"]+"' style='text-align: center;height: 100px;'></div></div>"                         
+                    }
+                }
+                else{
+                    html += "<div class='col-md-3 addmargin' style='background-color:#ff000061'>\
+                        <div class='row'> <div style='position:relative;z-index:2;'> <br>\
+                        <span class='count-status'>\
+                    <i data-id='"+data[i]["id"]+"' data-favorite='"+data[i]["is_favorite"]+"' style='"+color+";font-size:30px;position:absolute;top:-10px;right:0; margin:20px; cursor:pointer;' class='favoriteStar fa fa-star'></i>\
+                    <img id='earth_"+data[i]["id"]+"' src='/static/dashboard/images/earth_red.png' width='100px' height='100px'><br><br><b id='status_"+data[i]["id"]+"' style='color:red;'>OFFLINE</b>\
+                    </span><br>\
+                    <span id='website_"+data[i]["id"]+"' class='count-numbers'><b>"+data[i]["website"]+"</b></span><br>\
+                    <span id='rt_"+data[i]["id"]+"' class='count-response'>RT: "+data[i]["time"]+"</span><br><br>\
+                    <span id='uptime_"+data[i]["id"]+"' class='count-response' onclick='uptime("+data[i]["uptime"]+", \"uptime_"+data[i]["id"]+"\")'>UPTIME</span><br><br>\
+                    <span class='count-response' style='left: 78px;position: absolute;'>\
+                    <img id='status_image_"+data[i]["id"]+"' src='/static/dashboard/images/status_grey.jpeg' width='40px' height='35px'>\
+                    <a  onclick='deleteweb("+data[i]["id"]+")' class='btn btn-danger'><i class='fa fa-trash' style='font-color:red;'></i></a>\
+                    <img id='secured_img_"+data[i]["id"]+"' src='/static/dashboard/images/unsecured.png' width='40px' height='35px'></span></div></div><div class='row' id='myDiv1"+data[i]["id"]+"' style='text-align: center;height: 100px;'></div></div>";
+                }
+                //console.log(data[i]["rs"]);
+                //console.log("running");
+                var tempID = "myDiv1"+data[i]["id"];
+                //console.log("TEMMMMMP", tempID);
+                //console.log(ALL_WEBSITE_DATA);
+                //console.log(data[i]["rs"]);
+                if(!ALL_WEBSITE_DATA[tempID]){
+                    ALL_WEBSITE_DATA[tempID] = [];
+                }
+        $("#warninglink").html(warninglink);
+        $("#unsecuredlink").html(unsecuredlink);
+        $("#" + tableID + " .mainWebBody").append(html);
+        var element = $('#uptime_'+data[i]["id"]);
+        //console.log("Start Clicking on uptime");
+        element.click();
+        graph1("myDiv1"+data[i]["id"] , data[i]["rs"], ALL_WEBSITE_DATA[tempID]); 
+        //graph1(tempID, value.rs , ALL_WEBSITE_DATA[tempID]);
+            }
+            //html += "<div class='row' id='myDiv1{{i.id}}' style='text-align: center;height: 100px;'></div></div>";
+
+        
+
+    }
+
+$('body').on('click', '.favoriteStar', function() {
+
+    var id = $(this).data("id");
+    var isFavorite = $(this).data("favorite");
+    if(isFavorite == "" || isFavorite == "False" || isFavorite == "false"){
+        isFavorite = false;
+    }
+    else isFavorite = true;
+
+    console.log("isFavorite is " + isFavorite);
+    var obj = $(this);
+
+    $.get("/web/ajax/favorite/" , { "id" : id , "isFavorite" : isFavorite} , function(data,  status){
+        console.log("AJAX FUNCTION CALL");
+        console.log(data);
+        if(data["error"]){
+            Swal.fire("something went wrong");
+            return;
+        }
+
+        if(!isFavorite){
+            obj.css("color" , "yellow");
+        }
+        else{
+            obj.css("color" , "black");
+        }
+
+        obj.data("favorite" , !isFavorite);
+
+
+
+    });
+
+});
+function insert(arr , element , max_size = 10 , insertOnOverflow = true){
+		  if(arr.length >= max_size){
+			  if(!insertOnOverflow) return;
+			  arr.shift();
+		  }
+		  arr.push(element);	
+	  }
+
+  function graph1(id , list , dataList){
+  
+		var data = []
+		//insert(dataList , list)
+
+        var obj = {
+            y: list,
+            type: "scatter",
+            mode: "lines",
+            line: {
+                color: 'rgb(178, 181, 180)',
+                width: 0.4
+            },
+            fill: "tozeroy",
+            fillcolor: "#b2b5b452",
+        }
+
+		data.push(obj);
+
+		var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 15,
+            r: 15,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        //width:300,
+        legend: {"orientation": "h"},
+        xaxis: {
+            showgrid: false,
+            showline: false,
+            showticklabels: false
+        },
+        yaxis: {
+            showgrid: false,
+            showline: false,
+            showticklabels: false
+        }
+    };
+		
+    Plotly.newPlot(id , data, layout, {displayModeBar: false});
+}
+</script>
+<script>
+
+
+
+function callX(){
+    $.ajax({
+        url: "/web/monitoring/response",
+        type: 'GET',
+        dataType: 'json',
+        success: function(res) {
+            //console.log(res);
+            // array of objects 
+            // array of objects 
+            $("#activelink").html(res["total"]);
+            $("#downlink").html(res["down"]);
+            printWebData("tableBigTable" , res["website_pack"]);
+        }
+    });
+}
+setInterval(function() {
+    callX();
+}, 3000);
+</script>
+<script>
+//ADD TRAILING 0 TO SINGLE DIGIT IN UPTIME
+    function AddZero(n){
+        return (n < 10 ? '0' : '') + n;
+    }
+    // FUNCTION FOR SYSTEM UPTIME
+    function uptime(second, divID){
+        //Swal.fire(divID);
+        second = second;
+        d = new Date();
+        d.setDate(0);
+        d.setHours(0);
+        d.setMinutes(0);
+        d.setSeconds(second, 0);
+        //setInterval(function() {
+            if (d.getDate() != 0){
+            dt =  d.getDate()+"D"; 
+            }
+            hr = AddZero(d.getHours());
+            min = AddZero(d.getMinutes());
+            sec = AddZero(d.getSeconds());
+            //d.setTime(d.getTime() + 1000);
+            //console.log(hr + " " + min + " " + sec);
+                document.getElementById(divID).innerHTML = hr + ":" + min + ":" + sec;
+        //}, 1000);
+    }
+</script>
+<!--inner block end here-->
+{% endblock %}

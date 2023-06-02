@@ -1,0 +1,47 @@
+ {% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} {% endblock %} {% block js %}
+<script>
+    $('.changeGroup').on('change', function() {
+        $(".table tbody").html("");
+        $.post("/test/group/", {
+            "user": this.value
+        }, function(data, status) {
+            for (var i in data["a_all"]) {
+                $(".table tbody").append(`
+            <tr><td>${data["a_all"][i]["codename"].split("_").join(" ")}</td></tr>
+            `);
+            }
+        });
+    });
+</script>
+{% endblock %} {% block css %}
+<style>
+    table {
+        text-transform: capitalize;
+    }
+</style>
+{% endblock %} {% block content %}
+
+
+<select style="width: 15%;margin-right: 6px;" class="form-control changeGroup" name="user">
+  <option value disabled selected>--SELECT GROUP--</option>
+        {% for grp in all_group %}
+        <option value="{{grp}}">
+          {{grp}}
+        </option>
+        
+        {% endfor %}
+</select>
+<br><br>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Available Permissions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+
+</table>{% endblock %}

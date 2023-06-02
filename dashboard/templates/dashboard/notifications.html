@@ -1,0 +1,380 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Notifications {% endblock %} {% block js %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="{% static '/dashboard/js/plotly.js' %}"></script>
+<script>
+$(document).on("click",".Futurecmdbtn", function(){
+        var txt = $(this).data("text")
+        $('.FutureCmd').modal('show');
+        $('.FutureCmdTitle').html("Enter the corrective action<br><br>"+txt);
+        $('.FutureCmdBody').html("<input class='form-control' type='text' placeholder='Enter Command'><br><button class='btn btn-info futureSave'>Clear Cache</button> <div style='display:grid; gap:2rem'><div class='checkbox'><input type='checkbox'></div>Auto Correct</div>");
+    });
+
+    
+    $(document).on("click",".futureSave", function(){
+        $(".saveInfo").html("Method has been saved it will auto execute if same alert arises")
+        
+        window.setTimeout(function(){
+        $('.FutureCmd').modal('hide');
+        $('.FutureCmdTitle').html("");
+        $('.FutureCmdBody').html("");
+        $(".saveInfo").html("");
+        },3000)
+    });
+    
+    $(document).ready(function() {
+        $('#notification_table').DataTable({
+            //searching: true
+            'iDisplayLength': 200,
+            "searching": true,   // Search Box will Be Disabled
+            "ordering": true,    // Ordering (Sorting on Each Column)will Be Disabled
+            "info": false,         // Will show "1 to n of n entries" Text at bottom
+            "lengthChange": false, // Will Disabled Record number per page
+            "bPaginate": false
+        });
+    });
+</script>
+<script>
+    var displayBar = {
+        displayModeBar: false
+    }
+    var margin = {
+        l: 25,
+        r: 0,
+        b: 20,
+        t: 25,
+        pad: 0
+    }
+    function severityGraph(l, m, h) {
+        var trace1 = {
+            x: ['Low', 'Medium', 'High'],
+            y: [l, m, h],
+            marker: {
+                color: ['rgba(45,222,38,0.8)', 'rgba(45,38,222,0.8)', 'rgba(222,45,38,0.8)']
+            },
+            type: 'bar'
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            showlegend: false,
+            title: 'Severity',
+            margin: margin
+        };
+
+        Plotly.newPlot('graphSeverity', data, layout, displayBar);
+    }
+
+    function DataGraph(appliance, dashboard, web) {
+        var data = [{
+            values: [appliance, dashboard, web],
+            labels: ['Appliance', 'Dashboard', 'Web'],
+            type: 'pie'
+        }];
+
+        var layout = {
+            showlegend: false,
+            title: 'Data',
+            margin: margin
+        };
+
+        Plotly.newPlot('graphData', data, layout, displayBar);
+
+    }
+
+    function TimeGraph(time, notif) {
+        var trace1 = {
+            x: time,
+            y: notif,
+            type: 'scatter'
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            showlegend: false,
+            title: 'Time Graph',
+            margin: margin
+        };
+
+        Plotly.newPlot('graphTime', data, layout, displayBar);
+
+    }
+
+    function ApplianceData(cpuUsage,cpuTemp,Ram,Swap,Storage,IOwait) {
+        var data = [{
+            values: [cpuUsage,cpuTemp,Ram,Swap,Storage,IOwait],
+            labels: ['CPU Usage', 'CPU Temp', 'RAM Usage','Swap','Storage','IOWait'],
+            hoverinfo: 'label+percent+name',
+            hole: .4,
+            type: 'pie'
+        }];
+
+        var layout = {
+            showlegend: false,
+            title: 'Appliance Data',
+            margin: margin,
+            annotations: [{
+                font: {
+                    size: 10
+                },
+                showarrow: false,
+                text: 'AD',
+                x: 0.50,
+                y: 0.5
+            }],
+        };
+
+        Plotly.newPlot('graphAppliance', data, layout, displayBar);
+    }
+
+    function WebData(name, occurence) {
+        var data = [{
+            values: occurence,
+            labels: name,
+            hoverinfo: 'label+percent+name',
+            hole: .4,
+            type: 'pie'
+        }];
+
+        var layout = {
+            showlegend: false,
+            title: 'Web Monitoring Data',
+            margin: margin,
+            annotations: [{
+                font: {
+                    size: 10
+                },
+                showarrow: false,
+                text: 'WM',
+                x: 0.50,
+                y: 0.5
+            }],
+        };
+
+        Plotly.newPlot('graphWeb', data, layout, displayBar);
+    }
+
+    function DashboardData() {
+        var data = [{
+            values: [16, 15, 12, 6, 5],
+            labels: ['User', 'Notification', 'Camera', 'Websites', 'Data Center'],
+            hoverinfo: 'label+percent+name',
+            hole: .4,
+            type: 'pie'
+        }];
+
+        var layout = {
+            showlegend: false,
+            title: 'Dashboard Data',
+            margin: margin,
+            annotations: [{
+                font: {
+                    size: 10
+                },
+                showarrow: false,
+                text: 'DD',
+                x: 0.50,
+                y: 0.5
+            }],
+        };
+
+        Plotly.newPlot('graphDashboard', data, layout, displayBar);
+    }
+    severityGraph({{low}},{{med}},{{high}});
+    DataGraph({{appliance}},{{dashboard}},{{web}});
+    TimeGraph({{times|safe}},{{datas}});
+    ApplianceData({{cpuUsage}},{{cpuTemp}},{{Ram}},{{Swap}},{{Storage}},{{IOwait}});
+    //DashboardData();
+    WebData({{webname|safe}},{{webnameoccu}});
+</script>
+<script>
+function getCount(){
+    $.get("/notifications/count", function(data, status){
+        if (data["count"] > 0){
+        $("#lastpage").removeClass("disabled");
+        $("#lastpage").html(Math.ceil(data["count"]/100));
+        $("#lastpage").attr("href", "?page="+Math.ceil(data["count"]/100))
+        }
+        else{
+        $("#lastpage").addClass("disabled");
+        $("#lastpage").hide();
+        }
+    });
+}
+getCount();
+window.setInterval(function(){
+getCount();
+}, 5000)
+    
+
+$("#start").val($("#notification_table tbody tr td:eq(-6)").html());
+$("#end").val($("#notification_table tbody tr td:eq(0)").html());
+
+
+function handleDelete(url){
+    Swal.fire({
+    title: 'Are you sure you want to delete this item?',
+    showCancelButton: true,
+    confirmButtonText: 'Delete',
+    }).then((result) => {
+    if (result.isConfirmed) {
+        window.location.href = `/notificationDelet/${url}/`
+    }
+    })
+}
+</script>
+{% endblock %} {% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+<style>
+    td {
+        text-align: left;
+    }
+    .high{
+        background: #ff000014;
+    }
+    .predictive{
+        background: #5c00ff14;
+    }
+
+    .checkbox input{
+    outline: none;
+    height: 20px;
+    width: 39px;
+    border-radius: 50px;
+    -webkit-appearance: none;
+    position: relative;
+    background: #e6e6e6;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    .checkbox input:checked{
+    background: #664AFF;
+    }
+    .checkbox input:before{
+    position: absolute;
+    content: "";
+    left: 0;
+    height: 100%;
+    width: 20px;
+    background: linear-gradient(#fff,#f2f2f2,#e6e6e6,#d9d9d9);
+    box-shadow: 0 2px 5px rgba(0,0,0,.2);
+    border-radius: 50px;
+    transform: scale(0.85);
+    transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    input:checked:before{
+    left: 19px;
+    }
+</style>
+{% endblock %} {% block title_header %}Notification{% endblock %} {% block content %}
+<style>
+.high{
+        background: #ff000014;
+    }
+    .predictive{
+        background: #5c00ff14;
+    }
+</style>
+
+<div class="modal FutureCmd fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title FutureCmdTitle"></h4>
+            </div>
+            <div class="modal-body FutureCmdBody"></div>
+            <div class="modal-footer" style="display: block ruby;">
+                <p class='saveInfo'></p>
+                <a class="btn btn-default futureSave">Save</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-2 col-md-offset-1" id="graphSeverity" style="height: 150px;"></div>
+    <div class="col-md-2" id="graphData" style="height: 150px;"></div>
+    <div class="col-md-2" id="graphTime" style="height: 150px;"></div>
+    <div class="col-md-2" id="graphAppliance" style="height: 150px;"></div>
+    <!--<div class="col-md-2" id="graphDashboard" style="height: 150px;"></div>-->
+    <div class="col-md-2" id="graphWeb" style="height: 150px;"></div>
+</div>
+<br><br>
+<form action="" method="POST">
+{% csrf_token %}
+<select name="bulkoper" class="form-control">
+<option value="read">Mark all as read</option>
+<option value="delete">Delete All</option>
+</select>
+
+<input type="hidden" id="start" name="start" value="">
+<input type="hidden" id="end" name="end" value="">
+
+<button type="submit" class="btn btn-primary">Go</button>
+</form>
+<br><br>
+<ul class="pagination">
+    {% if data.has_previous %}
+      <li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in data.paginator.page_range %}
+      {% if data.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% endif %}
+    {% endfor %}
+    {% if data.has_next %}
+      <li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+<table id="notification_table" class="table">
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Read</th>
+            <th>Action</th>
+            <th>Priority</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for notification in data %}
+        <tr class="{% if notification.severity == "high" or notification.severity == "future" %}high{% elif notification.severity == "predictive" %}predictive{% endif %}">
+            <td>{{notification.id}}</td>
+            <td>{{notification.title}}:<br>{{notification.data}}</td>
+            <td>{% if notification.severity == "predictive" %}Tomorrow{% else %}{{notification.date}}{% endif %}</td>
+            <td><a class="btn {% if notification.is_read %}disabled{% endif %}" href="{% url 'notification_read' notification.id %}">Mark As Read</a></td>
+            <td><a onclick="return confirm('Are you sure you want to delete this item?');" href="{% url 'notification_delete' notification.id %}"><i class="fa fa-trash"></i></a> <a href="/raiseticket/?id={{notification.id}}&amp;title={{notification.title}}&amp;content={{notification.content}}" class="text-success raiseTicket"><i class="fa fa-ticket"></i></a>{% if notification.severity == "future" %} <a data-text="{{notification.data}}" class="text-success Futurecmdbtn"><i class="fa fa-bolt"></i></a>{% endif %}</td>
+            <td>{% if notification.severity == "future" %}High{% else %}{{notification.severity|capfirst}}{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% comment %} {% if data.has_other_pages %} {% endcomment %}
+  <ul class="pagination">
+    {% if data.has_previous %}
+      <li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in data.paginator.page_range %}
+      {% if data.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% endif %}
+    {% endfor %}
+    {% if data.has_next %}
+      <li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% comment %} {% endif %} {% endcomment %}
+{% endblock %}

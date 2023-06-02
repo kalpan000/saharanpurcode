@@ -1,0 +1,914 @@
+{% extends "dashboard/header_footer.html" %} {% load static %} {% block css %}
+<style>
+    .inputDIv {
+        border: 3px solid #443142;
+        padding: 12px;
+        background: #0dffc7;
+    }
+    
+    .play-button {
+        color: #e95656;
+        font-size: 24px;
+    }
+    
+    .play-button-div {
+        height: 50px;
+        border: 1px solid #f147dc;
+        background: #363232 !important;
+        border-radius: 10px;
+    }
+    
+    .terminal-input {
+        /* background-color: #2a3038; */
+        height: 50px;
+        padding: 12px;
+        font-size: 20px;
+        font-family: monospace;
+        letter-spacing: 1px;
+        /* border: 1px solid #2a272a; */
+        border-radius: 10px;
+        margin-left: 2px;
+    }
+    
+    .cmdoutput {
+        text-align: left;
+        margin-top: 10px;
+        margin-left: 4%;
+    }
+    
+    .play-button:hover {
+        cursor: pointer;
+    }
+    
+    .add-command {
+        padding: 12px;
+        justify-content: center;
+    }
+    
+    .input-box-main-div {
+        padding-bottom: 20px;
+    }
+</style>
+{% endblock css %} {% block content %}
+<div class="page-header">
+    <!--<h3 class="page-title"> Rig </h3>-->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a>Device</a></li>
+            <li class="breadcrumb-item active" aria-current="page" id="curpage-ip"></li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8 col-sm-12 col-xl-8 my-auto" id="uptime">
+                    </div>
+                    <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-timer text-success ml-auto"></i>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                            <h2 class="mb-0" id="ossystem"></h2>
+                        </div>
+                        <h5 class="text-muted font-weight-normal" id="machine"></h5>
+                    </div>
+                    <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-linux text-warning ml-auto"></i>
+                    </div>
+                </div>
+
+                <!--<div class="row">
+                    <div class="col-9">
+                        <button class="btn btn-primary openterminal" style="width: 100%;padding: 20px;">
+                        <h4 class="text-center">Open Terminal</h4>
+                        </button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-primary threshold" style="width: 100%;padding: 17px;">
+                        <i class="icon-md mdi mdi-settings ml-auto"></i>
+                        </button>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">General Information</h4>
+                <div id="system" class="table-responsive" style="height: 230px; display: block;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">GPU Information</h4>
+                <div id="gpu" class="table-responsive" style="height: 230px; display: block;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body text-center">
+                <h4 class="card-title">Fan Rate</h4>
+                <i class="mdi mdi-fan" style="font-size: 7rem;color: gray;"></i>
+                <div id="fanrate" style="display: block;font-weight: bolder;font-size: large;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">CPU Temperature</h4>
+                <div id="temp" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">CPU Utilization</h4>
+                <div id="cpuusage" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Virtual Memory</h4>
+                <div id="memory" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Swap Memory</h4>
+                <div id="swap" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">IOWait</h4>
+                <div id="iowait" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Disk Utilization</h4>
+                <div id="disk" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Core Utilization</h4>
+                <div id="cpu" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Load Average</h4>
+                <div id="load" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Download Speed</h4>
+                <div id="downnetwork" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Upload Speed</h4>
+                <div id="upnetwork" style="height: 230px; display: block;" class="chartjs-render-monitor"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %} {% block js %} 
+<script src='/static/dashboard/js/echarts.js'></script>
+{{ data|json_script:"cred" }}
+<script>
+    var cred = JSON.parse(document.getElementById('cred').textContent);
+    cred = {
+        "host": cred["ip"],
+        "username": cred["username"],
+        "password": cred["password"],
+        "port": cred["port"]
+    };
+    $("#curpage-ip").html(cred["host"]);
+    // TERMMINAL
+    function executeCmd(cmd, ele, runbtn, cred) {
+        $(ele).html("");
+        var command = {
+            "cmd": cmd
+        };
+        var data = Object.assign(cred, command);
+        $(runbtn).css('color', 'green');
+        $(runbtn).html("<i class='mdi mdi-pause'></i>");
+        if (cmd != "") {
+            data = data
+            $.post('/rig/terminal/data/', data, function(data, status) {
+                $(runbtn).html("<i class='mdi mdi-play'></i>")
+                var statuscode = data["error"];
+                if (!statuscode) {
+                    $(runbtn).css('color', 'green');
+                } else {
+                    $(runbtn).css('color', 'red');
+                }
+                $(ele).html("<pre>" + data["data"] + "</pre>");
+                $(ele).append("<i class='mdi mdi-content-copy'></i>");
+            })
+        } else {
+            $(runbtn).css('color', 'green');
+            $(runbtn).html("<i class='mdi mdi-play'></i>")
+            $(ele).html("<pre>" + "Enter command" + "</pre>");
+        }
+    }
+    $(document).on("click", ".threshold", function() {
+        var host = cred["host"];
+        window.open("/threshold?ip=" + host, "_blank")
+    })
+    $('body').on('click', '.mdi-content-copy', function() {
+        var res = $(this).parent();
+        $(this).html(" Copied to clipboard!!");
+        copyToClipboard(res);
+        setTimeout(function() {
+            $(".mdi-content-copy").html("");
+        }, 2000);
+    })
+
+    $('body').on('click', '.runcmd', function() {
+        var cmd = $(this).next().val();
+        var res = $(this).parent().next();
+        var runbtn = $(this);
+        var credentials = cred;
+        var data = executeCmd(cmd, res, runbtn, credentials);
+    })
+    $('body').on('keypress', '.runcmdonenter', function(e) {
+        var key = e.which;
+        var cmd = $(this).val();
+        var res = $(this).parent().next();
+        var runbtn = $(this).parent().children()[0];
+        var credentials = cred;
+        if (key == 13) // the enter key code
+        {
+            var data = executeCmd(cmd, res, runbtn, credentials);
+            return false;
+        }
+    });
+    // END TERMMINAL
+    TEMPChart = echarts.init(document.getElementById('temp'));
+    temp_chart = {
+        series: [{
+            type: 'gauge',
+            center: ['50%', '60%'],
+            startAngle: 200,
+            endAngle: -20,
+            min: 0,
+            max: 100,
+            splitNumber: 10,
+            itemStyle: {
+                color: '#FFAB91'
+            },
+            progress: {
+                show: true,
+                width: 30
+            },
+            pointer: {
+                show: false
+            },
+            axisLine: {
+                lineStyle: {
+                    width: 30
+                }
+            },
+            axisTick: {
+                distance: -45,
+                splitNumber: 5,
+                lineStyle: {
+                    width: 2,
+                    color: '#999'
+                }
+            },
+            splitLine: {
+                distance: -52,
+                length: 14,
+                lineStyle: {
+                    width: 3,
+                    color: '#999'
+                }
+            },
+            axisLabel: {
+                distance: -10,
+                color: '#999',
+                fontSize: 20
+            },
+            anchor: {
+                show: false
+            },
+            title: {
+                show: false
+            },
+            detail: {
+                valueAnimation: true,
+                width: '60%',
+                lineHeight: 40,
+                borderRadius: 8,
+                offsetCenter: [0, '-15%'],
+                fontSize: 20,
+                fontWeight: 'bolder',
+                formatter: '{value} °C',
+                color: 'auto'
+            },
+            data: [{
+                value: 20
+            }]
+        }, {
+            type: 'gauge',
+            center: ['50%', '60%'],
+            startAngle: 200,
+            endAngle: -20,
+            min: 0,
+            max: 100,
+            itemStyle: {
+                color: '#FD7347'
+            },
+            progress: {
+                show: true,
+                width: 8
+            },
+            pointer: {
+                show: false
+            },
+            axisLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                show: false
+            },
+            detail: {
+                show: false
+            },
+            data: [{
+                value: 20
+            }]
+        }]
+    };
+    CPUChart = echarts.init(document.getElementById('cpu'));
+
+    cpu_chart = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'horizontal',
+            show: true,
+            data: [],
+            bottom: "5%",
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: []
+        },
+        yAxis: {
+            type: 'value',
+        },
+        series: []
+    };
+
+    DownloadChart = echarts.init(document.getElementById('downnetwork'));
+
+    download_chart = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        legend: {
+            data: [],
+            bottom: "5%"
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [],
+        },
+        yAxis: [{
+            type: 'value',
+            name: 'Download',
+            min: 0,
+        }],
+        series: []
+    };
+
+    UploadChart = echarts.init(document.getElementById('upnetwork'));
+
+    upload_chart = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        legend: {
+            data: [],
+            bottom: "5%"
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [],
+        },
+        yAxis: [{
+            type: 'value',
+            name: 'Upload',
+            min: 0,
+        }],
+        series: []
+    };
+
+    LoadChart = echarts.init(document.getElementById('load'));
+
+    load_chart = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        legend: {
+            show: true,
+            data: [],
+            bottom: "5%"
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: []
+        },
+        yAxis: {
+            type: 'value',
+        },
+        series: []
+    };
+
+
+    MemoryChart = echarts.init(document.getElementById('memory'));
+    memory_chart = {
+        tooltip: {
+            formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [{
+            name: 'Memory Utilization',
+            type: 'gauge',
+            progress: {
+                show: true
+            },
+            detail: {
+                valueAnimation: true,
+                fontSize: 15,
+                fontWeight: 'bolder',
+                formatter: '{value} %',
+            },
+            data: [{
+                value: 0,
+            }]
+        }]
+    };
+
+    SwapMemoryChart = echarts.init(document.getElementById('swap'));
+    smemory_chart = {
+        tooltip: {
+            formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [{
+            name: 'Swap Memory Utilization',
+            type: 'gauge',
+            progress: {
+                show: true
+            },
+            detail: {
+                valueAnimation: true,
+                fontSize: 15,
+                fontWeight: 'bolder',
+                formatter: '{value} %',
+            },
+            data: [{
+                value: 0,
+            }]
+        }]
+    };
+
+    IOWAITChart = echarts.init(document.getElementById('iowait'));
+    iowait_chart = {
+        tooltip: {
+            formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [{
+            name: 'IOWAIT Utilization',
+            type: 'gauge',
+            progress: {
+                show: true
+            },
+            detail: {
+                valueAnimation: true,
+                fontSize: 15,
+                fontWeight: 'bolder',
+                formatter: '{value} %',
+            },
+            data: [{
+                value: 0,
+            }]
+        }]
+    };
+
+    DiskChart = echarts.init(document.getElementById('disk'));
+    disk_chart = {
+        tooltip: {
+            formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [{
+            name: 'Disk Utilization',
+            type: 'gauge',
+            progress: {
+                show: true
+            },
+            detail: {
+                valueAnimation: true,
+                fontSize: 15,
+                fontWeight: 'bolder',
+                formatter: '{value} %',
+            },
+            data: [{
+                value: 0,
+            }]
+        }]
+    };
+
+    CPUPerChart = echarts.init(document.getElementById('cpuusage'));
+    cpuper_chart = {
+        series: [{
+            type: 'gauge',
+            axisLine: {
+                lineStyle: {
+                    width: 20,
+                    color: [
+                        [0.3, '#67e0e3'],
+                        [0.7, '#37a2da'],
+                        [1, '#fd666d']
+                    ]
+                }
+            },
+            pointer: {
+                itemStyle: {
+                    color: 'auto'
+                }
+            },
+            axisTick: {
+                distance: -30,
+                length: 8,
+                lineStyle: {
+                    color: '#fff',
+                    width: 2
+                }
+            },
+            splitLine: {
+                distance: -30,
+                length: 30,
+                lineStyle: {
+                    color: '#fff',
+                    width: 4
+                }
+            },
+            axisLabel: {
+                color: 'auto',
+                distance: 30,
+            },
+            detail: {
+                valueAnimation: true,
+                formatter: '{value} %',
+                color: 'auto',
+                fontSize: 15,
+            },
+            data: [{
+                value: 0
+            }]
+        }]
+    };
+
+    function uptimeTOdays(sec) {
+        time = Number(sec) / 100;
+        var d = Math.floor(time / (3600 * 24));
+        time = Math.floor(time % (3600 * 24))
+        var h = Math.floor(time / 3600);
+        time = Math.floor(time % 3600)
+        var m = Math.floor(time / 60);
+        time = Math.floor(time % 60)
+        var s = time
+
+        return [d + " " + "Days ", h + " " + "H : " + m + " " + "M : " + s + " " + "S"];
+    }
+
+    function populateData(received_data) {
+        if (received_data == null) {
+            return;
+        }
+        var uptime = uptimeTOdays(received_data["uptime"]["uptime"]);
+        var days = uptime[0];
+        var hours = uptime[1];
+        document.getElementById("uptime").innerHTML = "<div class='d-flex d-sm-block d-md-flex align-items-center'><h2 class='mb-0'>" + days + "</h2></div><h5 class='text-muted font-weight-normal'>" + hours + "</h5>";
+        document.getElementById("ossystem").innerHTML = received_data["systeminfo"]["os"];
+        document.getElementById("machine").innerHTML = received_data["systeminfo"]["machine"];
+
+        var HTML = "<table class='table'>\
+                    <tbody>\
+                        <tr>\
+                            <th scope='row'>Release</th>\
+                            <td class='table-data'>" + received_data["systeminfo"]["release"] + "</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Version</th>\
+                            <td class='table-data'>" + received_data["systeminfo"]["version"] + "</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Processor</th>\
+                            <td class='table-data'>" + received_data["systeminfo"]["processor"] + "</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Kernal</th>\
+                            <td class='table-data'>" + received_data["systeminfo"]["kernalname"] + "</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Host</th>\
+                            <td class='table-data'>" + received_data["systeminfo"]["host"] + "</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Chassis</th>\
+                            <td class='table-data'>" + received_data["getchasis"] + "</td>\
+                        </tr>\
+                    </tbody>\
+                </table>";
+        document.getElementById("system").innerHTML = HTML;
+        var GPU = "No GPU Available";
+        if (received_data["GPU"][0]) {
+            GPU = "<table class='table'>\
+                    <tbody>\
+                        <tr>\
+                            <th scope='row'>Product</th>\
+                            <td class='table-data'>" + received_data["GPU"][0]["product"] + "</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Vendor</th>\
+                            <td class='table-data'>" + received_data["GPU"][0]["vendor"] + "</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Width</th>\
+                            <td class='table-data'>" + received_data["GPU"][0]["width"] + " bits</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Clock</th>\
+                            <td class='table-data'>" + (received_data["GPU"][0]["clock"]) * 0.000001 + " MHz</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope='row'>Latency</th>\
+                            <td class='table-data'>" + received_data["GPU"][0]["configuration"]["latency"] + "</td>\
+                        </tr>\
+                    </tbody>\
+                </table>";
+        }
+        document.getElementById("gpu").innerHTML = GPU;
+        document.getElementById("fanrate").innerHTML = received_data["fan_rate"] + " frpm";
+        tStorage = 0;
+        tUsedStorage = 0;
+
+        for (var i in received_data["storage"]){
+            tStorage += 1;
+            tUsedStorage += received_data["storage"][i]["used%"]
+        }
+        disk_chart.series[0].data[0].value = (tUsedStorage / tStorage ).toFixed(2);
+        DiskChart.setOption(disk_chart);
+
+        memory_chart.series[0].data[0].value = (received_data["memory"]["free"]/ received_data["memory"]["total"]).toFixed(2);
+        MemoryChart.setOption(memory_chart);
+
+        smemory_chart.series[0].data[0].value = (received_data["memory"]["swapUsed%"]).toFixed(2);
+        SwapMemoryChart.setOption(smemory_chart);
+
+        temp_chart.series[0].data[0].value = (received_data["cpu_temp"]);
+        TEMPChart.setOption(temp_chart);
+
+        iowait_chart.series[0].data[0].value = (received_data["cpu"]["iowait"]).toFixed(2);
+        IOWAITChart.setOption(iowait_chart);
+
+        cpuper_chart.series[0].data[0].value = (received_data["cpu"]["used"]).toFixed(2);
+        CPUPerChart.setOption(cpuper_chart);
+
+        var maxLen = 5;
+        cpu_chart.xAxis.data.push(received_data["time"]);
+        series_created = false
+        if (cpu_chart.series.length > 0) {
+            series_created = true
+        }
+        for (const [key, value] of Object.entries(received_data["cpu"]["cores"])) {
+            if (!series_created) {
+                temp_obj = {
+                    'name': key,
+                    'type': 'line',
+                    'data': [value]
+                };
+                cpu_chart.series.push(temp_obj);
+                new_val = key;
+                cpu_chart.legend.data.push(new_val);
+            } else {
+                for (i = 0; i < cpu_chart.series.length; ++i) {
+                    if (cpu_chart.xAxis.data.length > maxLen) {
+                        cpu_chart.series[i].data.shift();
+                        cpu_chart.xAxis.data.shift();
+                    }
+                    if (cpu_chart.series[i]["name"] == key) {
+                        cpu_chart.series[i].data.push(value);
+                        break;
+                    }
+                }
+            }
+        }
+        CPUChart.setOption(cpu_chart);
+
+        download_chart.xAxis.data.push(received_data["time"]);
+        series_created = false;
+        if (download_chart.series.length > 0) {
+            series_created = true
+        }
+        for (const [key, value] of Object.entries(received_data["network"])) {
+            if (!series_created) {
+                temp_obj = {
+                    'name': value["name"],
+                    'type': 'line',
+                    'data': [value["rbytes"]]
+                };
+                // console.log(temp_obj)
+                download_chart.series.push(temp_obj);
+                new_val = value["name"];
+                download_chart.legend.data.push(new_val);
+            } else {
+                for (i = 0; i < download_chart.series.length; ++i) {
+                    if (download_chart.xAxis.data.length > maxLen) {
+                        download_chart.series[i].data.shift();
+                        download_chart.xAxis.data.shift();
+                    }
+                    if (download_chart.series[i]["name"] == value["name"]) {
+                        download_chart.series[i].data.push(value["rbytes"]);
+                        break;
+                    }
+                }
+            }
+        }
+        DownloadChart.setOption(download_chart);
+
+        upload_chart.xAxis.data.push(received_data["time"]);
+        series_created = false;
+        if (upload_chart.series.length > 0) {
+            series_created = true
+        }
+        for (const [key, value] of Object.entries(received_data["network"])) {
+            if (!series_created) {
+                temp_obj = {
+                    'name': value["name"],
+                    'type': 'line',
+                    'data': [value["sbytes"]]
+                };
+                // console.log(temp_obj)
+                upload_chart.series.push(temp_obj);
+                new_val = value["name"];
+                upload_chart.legend.data.push(new_val);
+            } else {
+                for (i = 0; i < upload_chart.series.length; ++i) {
+                    if (upload_chart.xAxis.data.length > maxLen) {
+                        upload_chart.series[i].data.shift();
+                        upload_chart.xAxis.data.shift();
+                    }
+                    if (upload_chart.series[i]["name"] == value["name"]) {
+                        upload_chart.series[i].data.push(value["sbytes"]);
+                        break;
+                    }
+                }
+            }
+        }
+        UploadChart.setOption(upload_chart);
+
+        load_chart.xAxis.data.push(received_data["time"]);
+        series_created = false
+        if (load_chart.series.length > 0) {
+            series_created = true
+        }
+        for (const [key, value] of Object.entries(received_data["loadavg"])) {
+            if (!series_created) {
+                temp_obj = {
+                    'name': key + " min",
+                    'type': 'line',
+                    'data': [value]
+                };
+                load_chart.series.push(temp_obj);
+                new_val = key + " min";
+                load_chart.legend.data.push(new_val);
+            } else {
+
+                for (i = 0; i < load_chart.series.length; ++i) {
+                    if (load_chart.xAxis.data.length > maxLen) {
+                        load_chart.series[i].data.shift();
+                        load_chart.xAxis.data.shift();
+                    }
+                    if (load_chart.series[i]["name"] == key + " min") {
+                        load_chart.series[i].data.push(value);
+                        break;
+                    }
+                }
+            }
+        }
+        LoadChart.setOption(load_chart);
+    }
+
+    function showalert(data) {
+        document.getElementById("system").innerHTML = "<br>" + data;
+    }
+
+    function realtime() {
+        $.ajax({
+            url: '/sshData',
+            type: 'POST',
+            data: cred,
+            success: function(data) {
+                if (data["error"]) {
+                    showalert(data["data"])
+                    return;
+                }
+                var data = data["data"];
+                populateData(data);
+            },
+        });
+    }
+    realtime();
+    setInterval(function() {
+        realtime();
+    }, 5000)
+
+    $(document).on('click', '.openterminal', function() {
+        var HTML = "<div class='row'>\
+                    <div class='inputDIv w-100'>\
+                        <div class='input-group-prepend input-box-main-div'>\
+                            <span class='input-group-text play-button-div runcmd'><i class='mdi mdi-play' aria-hidden='true'></i></span>\
+                            <input type='text' class='form-control terminal-input runcmdonenter'>\
+                        </div>\
+                        <div class='cmdoutput'>\
+                        </div>\
+                    </div>\
+                </div>";
+        showModal("Terminal", HTML)
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,696 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} CCTV {% endblock title %}
+{% block title_header %}CCTV{% endblock %}
+{% block content %}
+<style>
+    section {
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+    }
+    
+    table,
+    td,
+    th {
+        width: 100%;
+        table-layout: fixed;
+        color: white;
+        padding-block-start: initial;
+        padding-top: 10px;
+        font-family: arial, sans-serif;
+        border: 12px solid white;
+        text-align: center;
+        padding: 8px;
+    }
+    
+    #t01 tr:nth-child(even) {
+        background-color: #559409;
+    }
+    
+    #t01 tr:nth-child(odd) {
+        background-color: #559409;
+    }
+    /* Style the counter cards */
+    
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        width: 85%;
+        text-align: center;
+        background-color: #f1f1f1;
+    }
+    
+    .card-counter {
+        box-shadow: 2px 2px 10px #DADADA;
+        margin: 5px;
+        background-color: #fff;
+        height: 100px;
+        border-radius: 5px;
+        transition: .3s linear all;
+    }
+    
+    .card-counter:hover {
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+    }
+    
+    .card-counter.primary {
+        background-color: #007bff;
+        color: #FFF;
+    }
+    
+    .card-counter.danger {
+        background-color: #ef5350;
+        color: #FFF;
+    }
+    
+    .card-counter.success {
+        background-color: #66bb6a;
+        color: #FFF;
+    }
+    
+    .card-counter.info {
+        background-color: #26c6da;
+        color: #FFF;
+    }
+    
+    .card-counter i {
+        font-size: 5em;
+        opacity: 0.2;
+    }
+    
+    .card-counter .count-numbers {
+        /* position: absolute; */
+        /* right: 35px; */
+        top: 20px;
+        font-size: 32px;
+        display: block;
+    }
+    
+    .card-counter .count-name {
+        /* position: absolute; */
+        /* right: 35px; */
+        top: 65px;
+        text-transform: capitalize;
+        display: block;
+        font-size: 18px;
+    }
+    
+    .bs-example {
+        margin: 20px;
+    }
+    
+    #dd {
+        background-color: cadetblue;
+        padding-top: 10px;
+        border: 12px solid white;
+        color: white;
+        font-weight: bold;
+    }
+    .column .col-md-2{
+        width:20%;
+    }
+    #overlayText {
+ position:absolute;
+  top:30%;
+  left:20%;
+  z-index:1;
+}
+
+#topText {
+  color: black;
+  font-size: 20px;
+  align-self: center;
+}
+.allrecbtn{
+    
+}
+    @import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow);
+</style>
+
+<link href="/static/dashboard/css/video-js.css" rel="stylesheet">
+<!--inner block start here-->
+<div class="row">
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter primary">
+                <span class="count-numbers">{{cctv_links_count|add:camera_cctv_count}}</span>
+                <span class="count-name">Total Cameras</span>
+            </div>
+        </div>
+    </div>
+
+
+
+ 
+ 
+ <!-- JS code -->
+ <!-- If you'd like to support IE8 (for Video.js versions prior to v7) 
+ <script src="{% static 'dashboard/js/hls.js' %}"></script>-->
+ <script src="{% static 'dashboard/js/videojs.js' %}"></script>
+
+
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter success">
+                <span class="count-numbers">{{cctvTotal}}</span>
+                <span class="count-name">Working</span>
+                <span class="count-name" style="font-size:10px;">(IP Camera Monitoring)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter danger">
+                <span class="count-numbers">{{cctvDown}}</span>
+                <span class="count-name">Not Working</span>
+                <span class="count-name" style="font-size:10px;">(IP Camera Monitoring)</span>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter success">
+                <span class="count-numbers">{{cameraTotal}}</span>
+                <span class="count-name">Working</span>
+                <span class="count-name" style="font-size:10px;">(CCTV Dashboard Monitoring)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="col-md-2">
+            <div class="card-counter danger">
+                <span class="count-numbers">{{cameraDown}}</span>
+                <span class="count-name">Not Working</span>
+                <span class="count-name" style="font-size:10px;">(CCTV Dashboard Monitoring)</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="inner-block">
+    <div class="cols-grids panel-widget" style="margin-top: -50px;">
+        <div class="row">
+
+            <!--  -->
+            <div class="panel-group" id="accordion">
+            <div class="panel panel-default" style="border-color: #000">
+                    <div class="panel-heading" style="background-color: #000;color: white;">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">IP Camera Monitoring</a>
+                        </h4>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <form action="{% url 'cctv' %}" method="POST" align="center" class="form-inline"> 
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="formTwo">
+                                <fieldset>
+                                    <input class="form-control" type="text" placeholder="Enter Username" name="username" style=" width: 200px;">
+                                    <input class="form-control" type="password" placeholder="Enter Password" name="password" style=" width: 200px;">
+                                    <input class="form-control" type="text" required placeholder="address" name="name" style=" width: 300px;">
+                                    <input class="form-control" type="text" required placeholder="Camera name" name="cname" style=" width: 200px;">
+                                    <input class="form-control btn btn-primary" type="submit" name="submit" value="Add" style="">
+                                </fieldset>
+                            </form>
+                            <br>
+                            <div class="row text-center">
+                                <div class="row text-center" id="CCTVDashboardMonitoring">
+                                        {% for k in cctv_links %}
+                                        <div data-ip="rtsp://{% if k.username %}{{k.username}}:{% else %}{% endif %}{% if k.password %}{{k.password}}@{% else %}{% endif %}{{k.name}}" data-id="{{k.id}}" class="card col-md-3 text-center" style="width: 350px;padding:10px; margin:10px; ">
+                                         <i data-type="CAM" data-id="{{k.id}}" data-favorite="{{ k.is_favorite }}" style="font-size:30px; right:-20px; {% if k.is_favorite  %} color:yellow; {% else %} color:black; {% endif %} position:absolute;top:207px;right:0; margin:20px; cursor:pointer;" class="favoriteStar fa fa-star"></i>
+                                        
+                                            <video id='video{{k.id}}' class='video-js vjs-default-skin vjs-big-play-centered vjs-16-9' controls loop>
+                                                <source type='video/mp4' src='/media/tempCCTV/temp.mp4'>
+                                            </video>
+                                            <div class="overlayText">
+                                                <p id="topText">{{k.cameraname}}</p>
+                                            </div>
+                                        
+                                         
+                                            <div class="card-body" style="margin-top:10px;">
+                                                <a href="" class="btn btn-primary startVideo"><i class='fa fa-play'></i></a>
+                                                <!--<a href="" class="btn btn-primary pauseVideo">Pause</a>-->
+                                                <a href="" class="btn btn-primary stopVideo"><i class='fa fa-stop'></i></a>
+                                                <a href="" class="btn btn-primary startRecording"><i class='fa fa-circle'></i></a>
+                                                <a href="{% url 'delete_cctv' k.id %}" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-danger"><i class='fa fa-trash'></i></a>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <a class='btn btn-warning allrecbtn' href='/streamrecordings/' target='_blank'>All Recordings</a>
+                                    <div class="paginatorClass col-md-12"></div>                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                {% comment %}  {% endcomment %}
+                <div class="panel panel-default" style="border-color: #000">
+                    <div class="panel-heading" style="background-color: #000;color: white;">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">CCTV Dashboard Monitoring</a>
+                        </h4>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <form action="{% url 'cctv' %}" method="POST" class="form-inline form-group">
+                                {% csrf_token %}
+                                <input class="form-control" type="hidden" name="form_type" value="formOne">
+                                <input class="form-control" type="text" placeholder="Enter your CCTV URL" name="name" style="width: 300px;">
+                                
+                                <input class="form-control" type="hidden" placeholder="Enter Username" value="" name="username">
+                                <input class="form-control" type="hidden" placeholder="Enter Password" value="" name="password">
+
+                                <input class="form-control btn btn-primary" type="submit" name="submit" value="Add" style="">
+                            </form>
+                            <div class="row text-center" id="IPCameraMonitoring">
+                                <div class="mainmainbody">
+                                    {% for k in camera_links %}
+                                    <div class="card col-md-3 text-center" style="width: 18rem;padding:20px;margin-right: 30px;margin-top: 20px;">
+                                         <i data-type="CCTV" data-id="{{k.id}}" data-favorite="{{ k.is_favorite }}" style="font-size:30px; right:-20px; {% if k.is_favorite  %} color:yellow; {% else %} color:black; {% endif %} position:absolute;top:-10px;right:0; margin:20px; cursor:pointer;" class="favoriteStar fa fa-star"></i>
+                                        <iframe src="{{k.url}}" class="card-img-top" title="" width="100%" height="150px"></iframe>
+                                        <div class="card-body">
+                                            <a href="{% url 'delete_camera' k.id %}" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-danger"><i class='fa fa-trash'></i></a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                
+                                </div>
+                                
+                <style>
+                    .paginatorClass button {
+                        margin:5px;
+                    }
+                    .paginatorClass input{
+                        color:black;
+                    }
+
+                    .paginatorClass : hover{
+                    }
+
+
+                </style>
+                                    <div class="paginatorClass col-md-12"></div>
+                {% comment %}  {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+
+            <div class="chute chute-center text-center">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(".tempVideoRun").on("click" , function(){
+        id = $(this).data("id");
+        var player = videojs(id);
+        player.play();
+  
+    });
+    
+
+    
+    $(".tempVideoStop").on("click" , function(){
+        id = $(this).data("id");
+        var player = videojs(id);
+        player.pause();
+    });
+
+    var TOTAL_RECORDS_IN_A_TABLE = {{total_records_to_Show}};
+
+    // $("body").on("click" , ".stopVideo" , function(e){
+    //     e.preventDefault();
+    //     var img = $( $(this).parents(".card") ).children(".card-img-top");
+    //     url = $(img).data("url");
+    //     username = $(img).data("username");
+    //     password = $(img).data("password");
+
+    //     var duration = parseInt(prompt("Enter duration in minutes"));
+
+    // }); 
+
+    $("body").on("click" , ".startRecording" , function(e){
+        e.preventDefault();
+        
+        
+        var id = $( $(this).parents(".card") ).data("id");
+        var ip = $( $(this).parents(".card") ).data("ip");
+
+        var duration = prompt("Enter duration for the recording in seconds");
+        var check = confirm("Once recording has been started it cannot be stopped, are you sure you want to continue?");
+        if (!check) return;
+
+        var sendthis = {
+            "id" : id,
+            "url" : ip,
+            "duration" : duration
+        }
+
+        $.post("/recordstream/" , sendthis , function(data , status){
+            console.log(data);
+            Swal.fire(data["message"])
+        });
+    });
+
+    // $("body").on("click" , ".stopRecording" , function(e){
+    //     e.preventDefault();
+        
+    //     var id = $( $(this).parents(".card") ).data("id");
+
+    //     console.log("stopping id " + id);
+    //     $.get("/stoprecording/" + id , function(data , status){
+    //         console.log(data);
+    //         Swal.fire("Recording stopped");
+    //     });
+    // });
+
+
+
+    $("body").on("click" , ".pauseVideo" , function(e){
+        e.preventDefault();
+        
+        var id = $( $(this).parents(".card") ).data("id");
+        var player = videojs('video' + id);
+        if (!player.paused()) {
+            $(this).html = "Pasued";
+            player.pause();
+        } else {
+            $(this).html = "Played";
+            player.play();
+        }
+    });
+
+    $("body").on("click" , ".stopVideo" , function(e){
+        e.preventDefault();
+        
+        var id = $( $(this).parents(".card") ).data("id");
+
+        console.log("stopping id " + id);
+        $.get("/stopstream/" + id , function(data , status){
+            var player = videojs('video' + id);
+            player.src({ type: 'video/mp4', src: "/media/tempCCTV/temp.mp4"});
+            player.pause();
+        });
+    });
+
+
+    function resetTimer(){
+        $.get("/resetTimer/" , function(data , status){
+            console.log(data);
+        });
+    }
+
+    resetTimer();
+    window.setInterval(resetTimer , 30000); // 29seconds
+
+    $("body").on("click" , ".startVideo" , function(e){
+        e.preventDefault();
+        
+        var id = $( $(this).parents(".card") ).data("id");
+        var ip = $( $(this).parents(".card") ).data("ip");
+        var sendthis = {
+            "id" : id,
+            "url" : ip
+        }
+        var retries = 15;
+
+        $.post("/playstream/" , sendthis , function(data , status){
+            console.log("Result" , data);
+
+            var interval = window.setInterval(function(){
+                console.log("Running setInterval");              
+                var url = data["message"]           
+
+                if (retries <= 0){
+                    clearInterval(interval);
+                    Swal.fire("Unable to play the stream for video id" + id);
+                }
+
+                try{
+                    $.get("/" + url , function(d , s){
+                        if (s == "success"){
+                            var player = videojs('video' + id);
+                            player.src({ type: 'application/x-mpegURL', src: "/" + url });  
+                            
+                            player.on('error', function() {
+                                console.log("Here error occured: ", player.error());
+                            });
+                            
+                            player.play();
+                            clearInterval(interval);
+                        }
+                        else{
+                            retries -= 1;
+                            console.log("Video not found, retries" , retries);
+                        }
+                    })
+
+                }catch(err){
+                    retries -= 1;
+                    console.log("Something went wrong" , err);
+                }
+
+            } , 2000);
+        });  
+    });
+    
+  
+
+ function printIPCamera(tableID , data){
+        console.log("New Data CCTV " + PAGE_HOLDER[tableID]["pageNO"]);
+        console.log(data);
+        $('#' + tableID + ' .mainmainbody').empty();
+        var html = "";
+        for(var i = 0; i < data.length ; i++){
+            var color = data[i]["is_favorite"] ? "color : yellow" : "color : black";
+            html += "<div class='card col-md-3 text-center' style='width: 18rem;padding:20px;margin-right: 30px;margin-top: 20px;'>\
+                <i data-type='CAM' data-id='" + data[i]['id'] + "' data-favorite='" + data[i]['is_favorite'] + "' style='font-size:30px; right:-20px; position:absolute;top:-10px;right:0; margin:20px; cursor:pointer; "+ color +" ' class='favoriteStar fa fa-star'></i>\
+                <iframe src='" + data[i]['url'] + "' class='card-img-top' title='' width='100%' height='150px'></iframe>\
+                <div class='card-body'>\
+                    <a href='cctv/delete/camera/"+ data[i]['id'] +"' onclick='return confirm(\"Are you sure you want to delete this item?\");' class='btn btn-danger'><i class='fa fa-trash'></i></a>\
+                </div>\
+            </div>";
+        }
+
+        $('#' + tableID + ' .mainmainbody').append(html);
+
+
+    }
+
+    function printCCTVDashboard(tableID , data){
+        console.log("New Data CAMERA " + PAGE_HOLDER[tableID]["pageNO"]);
+        console.log(data);
+        $('#' + tableID + ' .mainmainbody').empty();
+
+        var html = "";
+        for(var i = 0; i < data.length ; i++){
+            var color = data[i]["is_favorite"] ? "color : yellow" : "color : black";
+            if (data[i]["username"]) {data[i]["username"] += ":"} else data[i]["username"]="";
+            if (data[i]["password"]) {data[i]["password"] += "@"} else data[i]["password"]="";
+            html += "<div data-ip='rtsp://"+data[i]["username"]+data[i]["password"]+ data[i]['name'] +"' data-id='"+ data[i]['id'] +"' class='card col-md-3 text-center' style='width: 350px;margin:10px;'>\
+                <i data-type='CCTV' data-id='" + data[i]['id'] + "' data-favorite='" + data[i]['is_favorite'] + "' style='font-size:30px; right:-20px; position:absolute;top:207px;right:0; margin:20px; cursor:pointer; "+ color +" ' class='favoriteStar fa fa-star'></i>\
+                <video id='video"+ data[i]['id'] +"'  class='video-js vjs-default-skin  vjs-16-9' width='300' height='300'>\
+                    <source type='application/x-mpegURL' src='/media/tempCCTV/temp.mp4'>\
+                 </video>'\
+                 <div class='overlayText'>\
+                    <p id='topText'>"+data[i]['cameraname']+"</p>\
+                </div>\
+                <div class='card-body' style='margin-top:10px;'>\
+                    <a class='btn btn-primary startVideo'><i class='fa fa-play'></i></a>\
+                    <a  class='btn btn-primary stopVideo'><i class='fa fa-stop'></i></a>\
+                    <a  class='btn btn-primary startRecording'><i class='fa fa-circle'></i></a>\
+                    <a href='cctv/delete/cctv/"+ data[i]['id'] +"' onclick='return confirm(\"Are you sure you want to delete this item?\");' class='btn btn-danger'><i class='fa fa-trash'></i></a>\
+                </div>\
+            </div>";
+        }
+
+        $('#' + tableID + ' .mainmainbody').append(html);
+
+    }
+    var PAGE_HOLDER = {
+        "IPCameraMonitoring" : {
+            "colspan" : 7,
+            "url" : "/cctv/ajax/ipcamera/",
+            "totalRows" : {{camera_cctv_count}},
+            "colors" : ["#0000ff" , "#ff0000"], // [true , false]
+            "totalRecordsToShow" : TOTAL_RECORDS_IN_A_TABLE,
+            "pageNO" : 1,
+            "printTableFunction" : printIPCamera,
+            "recording": "/streamrecordings/"
+        },
+        "CCTVDashboardMonitoring" : {
+            "colspan" : 7,
+            "url" : "/cctv/ajax/cctvcamera/",
+            "totalRows" : {{cctv_links_count}},
+            "colors" : ["#0000ff" , "#ff0000"], // [true , false]
+            "totalRecordsToShow" : TOTAL_RECORDS_IN_A_TABLE,
+            "pageNO" : 1,
+            "printTableFunction" : printCCTVDashboard,
+            "recording": "/streamrecordings/"
+        }
+    };
+
+    for(key in PAGE_HOLDER){
+        createPagination(key);
+    }
+
+  
+    function createPagination(tableID){
+        
+        var url = PAGE_HOLDER[key]["url"] ;
+        var totalRows =  PAGE_HOLDER[key]["totalRows"];
+        var totalRecordsToShow =  PAGE_HOLDER[key]["totalRecordsToShow"];
+        var footerColSpan =  PAGE_HOLDER[key]["colspan"]
+        var page = 1;
+        var recordingpage = PAGE_HOLDER[key]["recording"]
+
+        var totalPages = Math.ceil(totalRows / totalRecordsToShow);
+        PAGE_HOLDER[tableID]["totalPages"] = totalPages;
+
+        var appendThis = "<tr><td class='form-inline' colspan='"+ footerColSpan +"'>";
+        
+        appendThis += "<button data-tableid = '"+ tableID +"' data-page='"+ page +"' data-url='"+ url +"' class='btn btn-primary paginationButton' value='previous'> Previous </button>";
+        appendThis += "<button data-tableid = '"+ tableID +"' data-page='"+ page +"' data-url='"+ url +"' class='btn btn-primary paginationButton' value='1'> 1 </button>"
+
+        appendThis += "<input id='"+ tableID + "-inputTag" +"' data-tableid = '"+ tableID +"' data-page='"+ page +"' data-url='"+ url +"' class='form-control' placeholder='Page No.' value='"+ page +"' style='width:50px; padding:5px;'>"
+
+        if(totalPages >= 2){
+            appendThis += "<button data-tableid = '"+ tableID +"' data-page='"+ page +"' data-url='"+ url +"' class='btn btn-primary paginationButton' value='"+ totalPages +"'> "+ totalPages +" </button>";
+        }
+        appendThis += "<button data-tableid = '"+ tableID +"' data-page='"+ page +"' data-url='"+ url +"' class='btn btn-primary paginationButton' value='next'> Next </button>";
+        appendThis += "<button data-tableid = '"+ tableID +"' data-page='"+ page +"' data-url='"+ url +"' class='btn btn-primary paginationButtonSubmit' value='Submit'> Submit </button>";
+        
+        if (tableID == "CCTVDashboardMonitoring"){
+            appendThis += "<a class='btn btn-warning allrecbtn' href='"+recordingpage+"' target='_blank'>All Recordings</<a></td></tr>";
+        }
+        //console.log("APPENDING ");
+        //console.log(appendThis);
+        $("#" + tableID +" .paginatorClass").append(appendThis);
+        //console.log("appened");
+    }
+
+    $(".paginationButtonSubmit").on("click" , function(){
+        var url = $(this).data("url");
+        var tableID = $(this).data("tableid");
+        var pageNO = $(this).val();
+
+        var inputData = $("#" + tableID+"-inputTag").val();
+
+        if( isNaN(inputData) ) return
+        
+
+        if(inputData > PAGE_HOLDER[tableID]["totalPages"] || inputData <= 0 || inputData == PAGE_HOLDER[tableID]["totalPages"]){
+            return;
+        }
+        
+
+        PAGE_HOLDER[tableID]["pageNO"] = parseInt(inputData);
+        console.log("page number " +  PAGE_HOLDER[tableID]["pageNO"])
+        console.log(PAGE_HOLDER[tableID]);
+
+        
+        setMainTableAjaxRequest(tableID , url);
+
+
+    });
+
+    $(".paginationButton").on("click" , function(){
+        var url = $(this).data("url");
+        var tableID = $(this).data("tableid");
+        var pageNO = $(this).val();
+        var currentPage = PAGE_HOLDER[tableID]["pageNO"];
+        var totalPages = PAGE_HOLDER[tableID]["totalPages"]
+
+        if(pageNO == "next" && ( currentPage + 1 <= totalPages ))
+            pageNO = currentPage + 1;
+        
+        else if(pageNO == "previous" && ( currentPage - 1 > 0 ))
+            pageNO = currentPage - 1;
+        
+        else {
+            if( isNaN(pageNO) ) return
+            pageNO = parseInt(pageNO);
+        }
+
+
+        if(currentPage == pageNO) return;
+
+        $("#" + tableID+"-inputTag").val(pageNO);
+
+        PAGE_HOLDER[tableID]["pageNO"] = pageNO;
+        console.log("page number " +  PAGE_HOLDER[tableID]["pageNO"])
+        console.log(PAGE_HOLDER[tableID]);
+
+        setMainTableAjaxRequest(tableID , url);
+
+    });
+
+
+    function setMainTableAjaxRequest(tableID , url){
+        var pageNO = PAGE_HOLDER[tableID]["pageNO"];
+        $.get(url + "?page=" + pageNO + "&max=" + TOTAL_RECORDS_IN_A_TABLE , function(data , status){
+            console.log(status);
+            console.log(data);
+            if(data["error"]){
+                Swal.fire("Error " + data["error"]);
+                return;
+            }
+
+            PAGE_HOLDER[tableID]["printTableFunction"](tableID , data.user_li);
+            
+
+        });
+    }
+
+
+
+
+$(".favoriteStar").on("click" , function(){
+    var id = $(this).data("id");
+    var isFavorite = $(this).data("favorite");
+    var type=$(this).data("type");
+    if(isFavorite == "" || isFavorite == "False" || isFavorite == "false"){
+        isFavorite = false;
+    }
+    else isFavorite = true;
+    
+
+    var obj = $(this);
+
+    $.get("/cctv/ajax/favorite/" , { "id" : id , "isFavorite" : isFavorite , "type" : type} , function(data,  status){
+        console.log(data);
+        if(data["error"]){
+            Swal.fire("something went wrong");
+            return;
+        }
+
+           
+        if(!isFavorite){
+            obj.css("color" , "yellow");
+        }
+        else{
+            obj.css("color" , "black");
+        }
+
+
+        obj.data("favorite" , !isFavorite);
+
+
+    });
+
+
+
+
+});
+
+
+</script>
+{% endblock %}

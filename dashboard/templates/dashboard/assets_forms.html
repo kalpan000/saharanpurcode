@@ -1,0 +1,1255 @@
+{% extends 'dashboard/header_footer.html' %}
+{% load static %} {% block title %} Assets forms {% endblock %} 
+{% block js %}
+<script>
+
+    function LotsOfIfElse(expression, setValueToZero = false) {
+
+        changeIPFieldState();
+        $("#networks").hide();
+        $("#security").hide();
+        $("#patchpanel").hide();
+        $("#server").hide();
+        $("#chasisblade").hide();
+        $("#loadbalancer").hide();
+        $("#storage").hide();
+        $("#tapelib").hide();
+        $("#pdu").hide();
+        $("#ups").hide();
+        $("#vms").hide();
+        
+        switch (expression){
+            case "Network" : $("#networks").show();  break;
+            case "Server" : $("#server").show();  break;
+            case "Blade Chassis" : $("#chasisblade").show();  break;
+            case "Storage" : $("#storage").show();  break;
+            case "Security" : $("#security").show();  break;
+            case "Load Balancer" :$("#loadbalancer").show();   break;
+            case "Tape Library" : $("#tapelib").show();  break;
+            case "Patch Panel" : $("#patchpanel").show();  break;
+            case "PDU" : $("#pdu").show();  break;
+            case "vm" : $("#vms").show();  break;
+            case "UPS" : { 
+                if (setValueToZero) {
+                    $("#ip_address43 , #ip_address44 , #ip_address42 , #ip_address41").val(0);
+                }
+                $("#ups").show();
+                break;
+            }
+        }
+    }
+
+    function setTwoNumberDecimal(event) {
+        this.value = parseFloat(this.value).toFixed(3);
+    }
+    $("#unit_location").attr('disabled', true);
+    $("#device_height").attr('disabled', true);
+    $(function () {
+        var dtToday = new Date();
+
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if (month < 10)
+            month = '0' + month.toString();
+        if (day < 10)
+            day = '0' + day.toString();
+
+        var maxDate = year + '-' + month + '-' + day;
+        $('#ExpireDate').attr('min', maxDate);
+        $('#datepick').attr('min', maxDate);
+    });
+    function setVariablesOnLoad(port, name, host) {
+        // minor change
+        // minor change 2
+        //const queryString = window.location.search;
+        //console.log(queryString);
+        //const urlParams = new URLSearchParams(queryString);
+
+
+        if (port) {
+            console.log(port);
+        }
+
+        if (name) {
+            $("#device_asset_tag").val(name);
+        }
+
+        if (host) {
+            var parts = host.split(".");
+            $("#ip_address41").val(parts[0]);
+            $("#ip_address42").val(parts[1]);
+            $("#ip_address43").val(parts[2]);
+            $("#ip_address44").val(parts[3]);
+            $("#showIP").css("display", "block");
+            $("#removeIP").css("display", "none");
+            $("#comingIP").html(host);
+        }
+
+    }
+
+    //setVariablesOnLoad();
+
+
+
+    function changeIPFieldState() {
+        $("#ip_address41").prop('readonly', true);
+        $("#ip_address42").prop('readonly', true);
+        $("#ip_address43").prop('readonly', true);
+        $("#ip_address44").prop('readonly', true);
+    }
+
+    function dc_change() {
+        var token = '{{csrf_token}}';
+        //var dc = $("#datacenter").val();
+        var sel = $("#data_center");
+        var sel1 = $("#datacenter");
+        var sel2 = $("#device_datacenter");
+        sel[0].options.length = 0;
+        sel1[0].options.length = 0;
+        sel2[0].options.length = 0;
+        sel.append($("<option></option>").attr({ "disabled": "disabled", "selected": "selected" }).text("--Select Datacenter--"));
+        sel1.append($("<option></option>").attr({ "disabled": "disabled", "selected": "selected" }).text("--Select Datacenter--"));
+        sel2.append($("<option></option>").attr({ "disabled": "disabled", "selected": "selected" }).text("--Select Datacenter--"));
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            type: 'POST',
+            url: "{% url 'showdc' %}",
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $.each(value, function (key, value) {
+                        //rack_row and rack_rows are different
+                        sel.append($("<option></option>").attr("value", value[0]).text(value[2]));
+                        sel1.append($("<option></option>").attr("value", value[0]).text(value[2]));
+                        sel2.append($("<option></option>").attr("value", value[0]).text(value[2]));
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+    function cabinet_change() {
+        var token = '{{csrf_token}}';
+        var dc = $("#datacenter").val();
+        var sel = $("#rack_rows");
+        sel[0].options.length = 0;
+        sel.append($("<option></option>").attr({ "disabled": "disabled", "selected": "selected" }).text("--Select Row--"));
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            type: 'POST',
+            url: "{% url 'showrows' %}",
+            data: {
+                'id': dc,
+            },
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $.each(value, function (key, value) {
+                        //rack_row and rack_rows are different
+                        sel.append($("<option></option>").attr("value", value[0]).text(value[2]));
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+    function device_datacenter() {
+        var token = '{{csrf_token}}';
+        var dc = $("#device_datacenter").val();
+        var sel = $("#device_rack_rows");
+        sel[0].options.length = 0;
+        sel.append($("<option></option>").attr({ "disabled": "disabled", "selected": "selected" }).text("--Select Row--"));
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            type: 'POST',
+            url: "{% url 'showrows' %}",
+            data: {
+                'id': dc,
+            },
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $.each(value, function (key, value) {
+                        //rack_row and rack_rows are different
+                        sel.append($("<option></option>").attr("value", value[0]).text(value[2]));
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+    function device_rack_rows() {
+        var token = '{{csrf_token}}';
+        var dc = $("#device_datacenter").val();
+        var row = $("#device_rack_rows").val();
+        var sel = $("#device_cabinet");
+        sel[0].options.length = 0;
+        sel.append($("<option></option>").attr({ "disabled": "disabled", "selected": "selected" }).text("--Select Rack Cabinet--"));
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            type: 'POST',
+            url: "{% url 'showracks' %}",
+            data: {
+                'device_id': dc,
+                'row_id': row,
+            },
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $.each(value, function (key, value) {
+                        //rack_row and rack_rows are different
+                        sel.append($("<option></option>").attr("value", value[0]).text(value[3]));
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+    function device_hieght_from_cabinet() {
+        console.log("Enterd")
+        var token = '{{csrf_token}}';
+        var dc = $("#device_datacenter").val();
+        var row = $("#device_rack_rows").val();
+        var rack = $("#device_cabinet").val();
+        var sel = $("#unit_location");
+        sel[0].options.length = 0;
+        sel.append($("<option></option>").attr({ "disabled": "disabled", "selected": "selected" }).text("--Select Unit Location--"));
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            type: 'POST',
+            url: "{% url 'showunitloc' %}",
+            data: {
+                'device_id': dc,
+                'row_id': row,
+                'rack_id': rack,
+            },
+            success: function (response) {
+                //console.log(response["rackheight"].split(","));
+                for (var input = 1; input <= response["rows"]; input++) {
+                    sel.append($("<option></option>").attr("value", input).text(input + " u"));
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+    function check_hieght_from_cabinet() {
+        var token = '{{csrf_token}}';
+        var dc = $("#device_datacenter").val();
+        var row = $("#device_rack_rows").val();
+        var rack = $("#device_cabinet").val();
+        var unit = $("#unit_location").val();
+        var sel = $("#uniterr");
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            type: 'POST',
+            url: "{% url 'checkunitloc' %}",
+            data: {
+                'device_id': dc,
+                'row_id': row,
+                'rack_id': rack,
+                'unit': unit,
+            },
+            success: function (response) {
+                sel.html(response["info"]);
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+    function check_device_height_left() {
+        var token = '{{csrf_token}}';
+        var rack = $("#device_cabinet").val();
+        var unit = $("#unit_location").val();
+        var sel = $("#device_height");
+        sel[0].options.length = 0;
+        sel.append($("<option></option>").attr({ "disabled": "disabled", "selected": "selected" }).text("--Select Device Height--"));
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            type: 'POST',
+            url: "{% url 'leftheight' %}",
+            data: {
+                'rack_id': rack,
+                'unit': unit,
+            },
+            success: function (response) {
+                for (var input = 1; input <= response["height"]; input++) {
+                    sel.append($("<option></option>").attr("value", input).text(input));
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+    $(document).ready(function () {
+
+        $("#previewDevice").click(function (e) {
+            var htmlData = "<br>";
+            var dc = $("#device_datacenter option:selected").text();
+            var row = $("#device_rack_rows option:selected").text();
+            var rack = $("#device_cabinet option:selected").text();
+            var loc = $("#unit_location option:selected").text();
+            var height = $("#device_height option:selected").text();
+            var type = $("#device_type option:selected").text();
+
+
+            var device = $("#device_type").val()
+            if (device == "Network") {
+                var Ncategory = $("#network_device_type_cat").val();
+                var Nports = $("#network_device_type_ports option:selected").text();
+                var Nuplink = $("#network_device_type_uplink option:selected").text();
+                var Npatchcol = $("#patch_color option:selected").text();
+                htmlData += "Category: " + Ncategory + "<br>Ports: " + Nports + "<br>Uplinks: " + Nuplink + "<br>Patch Color: " + Npatchcol + "<br>";
+            }
+            else if (device == "Server") {
+                var Serverports = $("#server_device_type option:selected").text();
+                htmlData += "Ports: " + Serverports + "<br>";
+            }
+            else if (device == "Blade Chassis") {
+                var Blade = $("#chasis_type_blades option:selected").text();
+                var Bladetotal = $("#chasis_device_type_tblades option:selected").text();
+                htmlData += "Blade: " + Blade + "<br>Total: " + Bladetotal + "<br>";
+            }
+            else if (device == "Storage") {
+                var Storagecontrol = $("#storage_device_type_control option:selected").text();
+                var Storagedisk = $("#storage_device_type_disks option:selected").text();
+                var Storagecapacity = $("#storage_capicity_range option:selected").text();
+                var StorageUnit = $("#storage_capicity_input option:selected").text();
+                htmlData += "Stoeage Control: " + Storagecontrol + "<br>Storage Disk: " + Storagedisk + "<br>Storage Capacity: " + Storagecapacity + "<br>Storage Unit: " + StorageUnit + "<br>";
+            }
+            else if (device == "Security") {
+                var Seccategory = $("#security_device_type_category option:selected").text();
+                var Secport = $("#security_device_type_ports option:selected").text();
+                var Secuplink = $("#security_device_type_uplink option:selected").text();
+                var Secpatchcol = $("#patch_color_two option:selected").text();
+                htmlData += "Category: " + Seccategory + "<br>Ports: " + Secport + "<br>Uplinks: " + Secuplink + "<br>Patch Color: " + Secpatchcol + "<br>";
+            }
+            else if (device == "Load Balancer") {
+                var Loadports = $("#load_device_type_ports option:selected").text();
+                var Loaduplink = $("#load_device_type_uplink option:selected").text();
+                htmlData += "Ports: " + Loadports + "<br>Uplinks: " + Loaduplink + "<br>";
+            }
+            else if (device == "Tape Library") {
+                var Tapemagazine = $("#tape_device_type_magazine option:selected").text();
+                var Tapeiotype = $("#tape_device_typ_io option:selected").text();
+                var Tapetype = $("#tape_type option:selected").text();
+                var Tapelib = $("#tape_device_type_tape_capicity option:selected").text();
+                var Tapecapacity = $("#tape_device_type_storage_capicity option:selected").text();
+                var Tapespace = $("#tape_device_type_space option:selected").text();
+                htmlData += "Magazine: " + Tapemagazine + "<br>IO Type: " + Tapeiotype + "<br>Tape type: " + Tapetype + "<br>Tape Library: " + Tapelib + "<br>Tape Capacity: " + Tapecapacity + "<br>Tape Space: " + Tapespace + "<br>";
+            }
+            else if (device == "UPS") {
+                var upsport = $("#ups_device_type option:selected").text();
+                htmlData += "Ports: " + upsport + "<br>";
+            }
+            else {
+                htmlData = "<br>";
+            }
+            var asset = $("#device_asset_tag").val();
+            var desc = $("#device_description").val();
+            var make = $("#DeviceMake option:selected").text();
+            var model = $("#DeviceModel").val();
+            var idate = $("#InstallDate").val();
+            var edate = $("#ExpireDate").val();
+            var txt = $("#txtBox").val();
+            var wat = $("#DeviceWatt").val();
+            var ip1 = $("#ip_address41").val();
+            var ip2 = $("#ip_address42").val();
+            var ip3 = $("#ip_address43").val();
+            var ip4 = $("#ip_address44").val();
+            var notes = $("#special_notes4").val();
+
+            $("#myModal1 .modal-body").html("<p>Data Center: " + dc + "<br>Row: " + row + "<br> Rack: " + rack + "<br>Location: " + loc + "<br>Height: " + height + "<br>Type: " + type + htmlData + "Asset Tag: " + asset + "<br>Description: " + desc + "<br>Make: " + make + "<br>Model: " + model + "<br>Installation Date: " + idate + "<br>Expiry Date: " + edate + "<br>Wattage: " + wat + "<br>IP Address: " + ip1 + "." + ip2 + "." + ip3 + "." + ip4 + "<br>Special Notes: " + notes + "</p>");
+
+            $("#myModal1").modal();
+        });
+
+        $("#networks").hide();
+        $("#security").hide();
+        $("#patchpanel").hide();
+        $("#server").hide();
+        $("#chasisblade").hide();
+        $("#loadbalancer").hide();
+        $("#storage").hide();
+        $("#tapelib").hide();
+        $("#pdu").hide();
+        $("#ups").hide();
+        $("#vms").hide();
+
+
+
+        // The end
+
+        //cabinet_change();
+        $("#datacenter").change(function () {
+            cabinet_change();
+        });
+
+        //device_datacenter();
+        $("#device_datacenter").change(function () {
+            device_datacenter();
+        });
+
+        $("#device_rack_rows").change(function () {
+            device_rack_rows();
+        });
+
+        $("#device_cabinet").change(function () {
+            device_hieght_from_cabinet();
+        });
+        $("#unit_location").change(function () {
+            check_hieght_from_cabinet();
+            check_device_height_left();
+        });
+        
+        $("#pdu_category_smart , #patch_category_smart").click(function () {
+            $("#removeIP").css('display', 'block');
+            changeIPFieldState();
+        });
+        $("#pdu_category_normal , #patch_category_normal").click(function () {
+            $("#removeIP").css('display', 'none');
+            changeIPFieldState();
+        });
+     
+  
+        $("#showForMin").css('display', 'block');
+        $("#scheduleMin").attr('required', true);
+        $("#scheduleType").change(function () {
+            var type = $(this).val();
+            if (type == 'I') {
+                $("#showForMin").css('display', 'block');
+                $("#scheduleMin").attr('required', true);
+            }
+            else {
+                $("#showForMin").css('display', 'none');
+                $("#scheduleMin").attr('required', false);
+            }
+        });
+
+        $(".rack_type3").change(function () {
+            var rt3 = $('input[name="rack_type3"]:checked').val();
+            if (rt3 == "standard") {
+                $("#customised_rt_information").val("42");
+                $("#customised_rt_information").attr("disabled", "True");
+            } 
+            else if (rt3 == "customised" || rt3 == "network") {
+                $("#customised_rt_information").removeAttr("disabled");
+            } 
+            
+        });
+
+
+
+        
+        
+         
+
+        $("#chasis_type_blades").change(function () {
+            var half_full = $("#chasis_type_blades").val()
+            if (half_full == "Half") {
+                Swal.fire("Haf");
+            }
+        });
+
+        $("#quickTemplate").change(function () {
+            var token = '{{csrf_token}}';
+            var temp = $("#quickTemplate").val();
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                type: 'POST',
+                url: "{% url 'getTemplateData' %}",
+                data: {
+                    'id': temp,
+                },
+                success: function (response) {
+                    //Swal.fire("Enterd")
+                    ("#device_datacenter").val(response["datacenter"]);
+                    ("#device_rack_rows").val(response["date_center_row"]);
+                    ("#device_cabinet").val(response["data_center_rack"]);
+                    device_datacenter();
+                    ("#device_description").val(response["Device_Description"]);
+                    ("#device_asset_tag").val(response["Device_Asset_Tag"]);
+                    ("#unit_location").val(response["Unit_Location"]);
+                    ("#device_height").val(response["device_height"]);
+                    ("#device_type").val(response["type_of_device"]);
+                    //
+
+                    LotsOfIfElse(response["type_of_device"] , true)
+
+
+                    $("#ip_address41").val(response["IP_Address_col1"]);
+                    $("#ip_address42").val(response["IP_Address_col2"]);
+                    $("#ip_address43").val(response["IP_Address_col3"]);
+                    $("#ip_address44").val(response["IP_Address_col4"]);
+                    $("#special_notes4").val(response["Special_Notes"]);
+                    $("#DeviceMake").val(response["deviceMake"]);
+                    $("#DeviceModel").val(response["deviceModel"]);
+                    $("#InstallDate").val(response["installDate"]);
+                    $("#ExpireDate").val(response["expiredate"]);
+                    $("#txtBox").val(response["ownerDesc"]);
+
+                    $('#fourthform').find(':radio[name=DeviceOwner][value="' + response["deviceOwner"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':radio[name=patch_category_pos][value="' + response["patch_position"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':radio[name=network_category][value="' + response["network_device_category"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':radio[name=pdu_category][value="' + response["pdu_category"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':radio[name=pdu_category_pos][value="' + response["pdu_position"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':radio[name=ups_category_load][value="' + response["ups_max_loads"] + '"]').prop('checked', true);
+
+                    $('#fourthform').find(':checkbox[name=network_category_fibre][value="' + response["network_connection_type_fibre"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':checkbox[name=network_category_ethernet][value="' + response["network_connection_type_ehthernet"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':checkbox[name=server_category_fibre][value="' + response["server_type_fibre"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':checkbox[name=server_category_ethernet][value="' + response["server_type_ehthernet"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':checkbox[name=chasis_category_fibre][value="' + response["chassis_type_fibre"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':checkbox[name=chasis_category_ethernet][value="' + response["chassis_type_ehthernet"] + '"]').prop('checked', true);
+
+                    $('#fourthform').find(':checkbox[name=security_category_fibre][value="' + response["security_connection_type_fibre"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':checkbox[name=security_category_ethernet][value="' + response["security_connection_type_ehthernet"] + '"]').prop('checked', true);
+
+                    $('#fourthform').find(':checkbox[name=storage_category_fibre][value="' + response["storage_type_fibre"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':checkbox[name=storage_category_ethernet][value="' + response["storage_type_ehthernet"] + '"]').prop('checked', true);
+
+                    $('#fourthform').find(':checkbox[name=load_category_fibre][value="' + response["load_type_fibre"] + '"]').prop('checked', true);
+                    $('#fourthform').find(':checkbox[name=load_category_ethernet][value="' + response["load_type_ehthernet"] + '"]').prop('checked', true);
+
+                    $("#DeviceWatt").val(response["deviceWatt"]);
+
+                    $("#network_device_type_cat").val(response["network_sub_category"]);
+                    $("#network_device_type_ports").val(response["network_number_of_ports"]);
+                    $("#network_device_type_uplink").val(response["network_uplink_ports_wan"]);
+
+                    $("#security_device_type_category").val(response["security_device_category"]);
+                    $("#security_device_type_ports").val(response["security_number_of_ports_lan"]);
+                    $("#security_device_type_uplink").val(response["security_network_uplink_ports_wan"]);
+
+                    $("#server_device_type").val(response["server_number_of_ports"]);
+
+                    $("#chasis_type_blades").val(response["chassis_number_of_blades"]);
+                    $("#chasis_device_type_tblades").val(response["chassis_total_blades_slots"]);
+                    $("#load_device_type_ports").val(response["load_number_of_ports"]);
+                    $("#load_device_type_uplink").val(response["load_uplink_ports_wan"]);
+
+                    $("#tape_device_type_magazine").val(response["tapelib_number_of_magazine"]);
+                    $("#tape_device_typ_io").val(response["tapelib_number_io_station"]);
+                    $("#tape_type").val(response["tapelib_type"]);
+                    $("#tape_device_type_tape_capicity").val(response["tapelib_number_tape_capacity"]);
+                    $("#tape_device_type_storage_capicity").val(response["tapelib_storage_capacity"]);
+                    $("#tape_device_type_space").val(response["tapelib_space_occupied"]);
+
+                    $("#storage_device_type_control").val(response["storage_number_of_controllers"]);
+                    $("#storage_device_type_disks").val(response["storage_number_of_disks"]);
+                    $("#storage_capicity_range").val(response["storage_capicity_range"]);
+                    $("#storage_capicity_input").val(response["storage_capicity_input"]);
+
+                    $("#ups_device_type").val(response["ups_number_of_power_ports"]);
+
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    Swal.fire(err.Message);
+                }
+            });
+        });
+
+    });
+
+
+    // Ajax code to send the POST request to Validate the Host Port 830
+    // Sending request with the parameters and recieving response that is to be shown on console
+    // And then as a message in error or success
+
+</script>
+
+
+<script type="text/javascript" charset="utf8" src="{% static 'dashboard/js/datatable.js' %}"></script>
+<script type="text/javascript" src="{% static 'dashboard/js/js-cookies.js' %}"></script>
+
+<script>
+    function handleDelDC(id) {
+
+            Swal.fire({
+        title: 'Are you sure you want to delete this item?',
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location = `/asset/datacenter/hall/delete/${id}/`;
+        }
+        })  
+    }
+    function handleDel(deviceId, height, loc, rackid) {
+
+            Swal.fire({
+        title: 'Are you sure you want to delete this item?',
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location = "/asset/forms/device/delete/" + deviceId + "/?height=" + height + "&loc=" + loc + "&rackid=" + rackid;
+        }
+        })  
+    }
+
+    $(document).ready(function () {
+        $('#all_datacenter').DataTable({
+            searching: false,
+            lengthChange: false,
+            ordering: false,
+            pageLength: 10,
+        });
+    });
+
+    function removeDisable() {
+        $("#myTemp").removeAttr('disabled');
+        $("#myDev").removeAttr('disabled');
+    }
+    function enableDisable() {
+        $("#myTemp").prop("disabled", true);
+        $("#myDev").prop("disabled", true);
+    }
+
+    // When the user clicks on div, open the popup
+    function showDatePicker(div) {
+        var popup = document.getElementById(div);
+        popup.classList.toggle("show");
+    }
+
+</script>
+
+<script>
+    function dayLeft(expirydate){
+        const edate = new Date(expirydate);
+        const curdate = new Date();
+        const diffTime = Math.abs(edate - curdate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        return diffDays;
+    }
+    function websiteSSL(){
+        $.get("/website/lms/",{}, function(data){
+            $("#websitelmstbl tbody").html("<tr><td colspan='3'>Loading...</td></tr>");
+            html = "";
+            count = 0;
+            for (var i in data){
+                if (data[i]["status"]){
+                    html += `<tr data-toggle="collapse" data-target="#${count}url"><td>${i}</td><td>${data[i]["data"]["notAfter"]}</td><td>${dayLeft(data[i]["data"]["notAfter"])} Days Left</td></tr>`;
+                    html += `<tr id="${count}url" class="collapse">
+                        <td colspan="3" style="padding:0px;border-color: green;border-width: 0.3rem;">
+                            <table class="table">
+                                <tr><th>Version</th><td>${data[i]["data"]["version"]}</td></tr>
+                                <tr><th>Issuer</th><td>${data[i]["data"]["issuer"][1][0][1]}</td></tr>
+                                <tr><th>Serial Number</th><td>${data[i]["data"]["serialNumber"]}</td></tr>
+                                <tr><th>Not Before</th><td>${data[i]["data"]["notBefore"]}</td></tr>
+                                <tr><th>Not After</th><td>${data[i]["data"]["notAfter"]}</td></tr>
+                            </table>
+                        </td>
+                    </tr>`;
+                }
+                else{
+                    html += `<tr><td>${i}</td><td>-</td><td>${data[i]["data"]}</td></tr>`;
+                }
+                count++;
+            }
+            $("#websitelmstbl tbody").html(html);
+        })
+    }
+    websiteSSL();
+
+    var TOTAL_RECORDS_IN_A_TABLE = {{ total_records_to_Show }};
+
+    function printTableOne(tableID, data) {
+        console.log(data);
+        $("#" + tableID + " tbody").empty();
+        var html = "";
+        for (var i = 0; i < data.length; i++) {
+            html += "<tr>";
+            html += "<td>" + data[i]["host"] + "</td><td>" + data[i]["status"] + "</td>";
+            if (data[i]["action"])
+                html += "<td><a><i data-host='"+data[i]["host"]+"' class='fa fa-plus addiptodc'></i></a></td>";
+            else
+                html += "<td><a disabled><i class='fa fa-plus' style='color:grey;'></i></a></td>";
+            html += "</tr>";
+        }
+
+        $("#" + tableID + " tbody").append(html);
+
+    }
+
+
+    function printTableTwo(tableID, data) {
+        console.log(data);
+        $("#" + tableID + " tbody").empty();
+        var html = "";
+        for (var i = 0; i < data.length; i++) {
+            html += "<tr><td>" + data[i]["name"] + "</td><td>" + data[i]["ip"] + "</td>";
+            if (data[i]["is_snmp"]) {
+                html += "<td><a href='/device/capability/test/" + data[i]["id"] + "/snmp/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+            }
+            else {
+                html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+            }
+            if (data[i]["is_netconf"]) {
+                html += "<td><a href='/device/capability/test/" + data[i]["id"] + "/net/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+            }
+            else {
+                html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+            }
+            if (data[i]["is_restconf"]) {
+                html += "<td><a href='/device/capability/test/" + data[i]["id"] + "/rest/'><i class='fa fa-check' style='color:blue'></i></a></td>";
+            }
+            else {
+                html += "<td><i class='fa fa-close' style='color:red'></i></td>";
+            }
+            html += "<td><i class='fa fa-circle' style='color:green'></td><td>" + data[i]["created"] + "</td><td>" + data[i]["updated"] + "</td><td><a class='openform' data-host=" + data[i]["ip"] + " data-name=" + data[i]["name"] + " data-port=80'><i class='fa fa-plus' style='color:blue'></i></a> <a><i data-id='" + data[i]["id"] + "' data-ip='" + data[i]["ip"] + "' data-name='" + data[i]["name"] + "' data-user='" + data[i]["user"] + "' data-pwd='" + data[i]["pwd"] + "' data-str='" + data[i]["commString"] + "' class='fa fa-edit editDeviceCap'></i></a> <a><i data-id='" + data[i]["id"] + "' class='fa fa-trash deleteDeviceCap'></i></a></td></tr>";
+        }
+
+        $("#" + tableID + " tbody").append(html);
+
+    }
+
+
+    var PAGE_HOLDER = {
+        "testTableID": {
+            "colspan": 3,
+            "url": "/device/ipdevices/",
+            "totalRows": {{ tempipdevicePage_count }},
+            "colors" : ["#0000ff", "#ff0000"], // [true , false]
+            "totalRecordsToShow" : TOTAL_RECORDS_IN_A_TABLE,
+            "pageNO" : 1,
+            "printTableFunction" : printTableOne
+        },
+
+    "capDeviceID" : {
+        "colspan" : 8,
+            "url" : "/device/cap/device/",
+                "totalRows" : {{ devicePage_count }},
+        "colors" : ["#0000ff", "#ff0000"], // [true , false]
+            "totalRecordsToShow" : TOTAL_RECORDS_IN_A_TABLE,
+                "pageNO" : 1,
+                    "printTableFunction" : printTableTwo
+
+    },
+
+    "deviceInformationTable" : {
+        "colspan" : 8,
+            "url" : "/device/lms/",
+                "totalRows" : {{ lmsDeviceCount }},
+        "colors" : ["#0000ff", "#ff0000"], // [true , false]
+            "totalRecordsToShow" : TOTAL_RECORDS_IN_A_TABLE,
+                "pageNO" : 1,
+                    "printTableFunction" : printLMSDeviceInfo
+
+    },
+
+
+    "archiveTable" : {
+        "colspan" : 6,
+            "url" : "/device/lmsarchieve/",
+                "totalRows" : {{ lmsArchieveDeviceCount }},
+        "colors" : ["#0000ff", "#ff0000"], // [true , false]
+            "totalRecordsToShow" : TOTAL_RECORDS_IN_A_TABLE,
+                "pageNO" : 1,
+                    "printTableFunction" : printLMSArchiveDevices
+    },
+
+    "decommissioningTable" : {
+        "colspan" : 6,
+            "url" : "/device/decommision/",
+                "totalRows" : {{ lmsDeviceCount }},
+        "colors" : ["#0000ff", "#ff0000"], // [true , false]
+            "totalRecordsToShow" : TOTAL_RECORDS_IN_A_TABLE,
+                "pageNO" : 1,
+                    "printTableFunction" : printDecommissioning
+
+    },
+
+    };
+
+    for (key in PAGE_HOLDER) {
+        createPagination(key);
+    }
+
+
+    function createPagination(tableID) {
+
+        var url = PAGE_HOLDER[key]["url"];
+        var totalRows = PAGE_HOLDER[key]["totalRows"];
+        var totalRecordsToShow = PAGE_HOLDER[key]["totalRecordsToShow"];
+        var footerColSpan = PAGE_HOLDER[key]["colspan"]
+        var page = 1;
+
+        var totalPages = Math.ceil(totalRows / totalRecordsToShow);
+        PAGE_HOLDER[tableID]["totalPages"] = totalPages;
+
+        var appendThis = "<tr><td colspan='" + footerColSpan + "'>";
+
+        appendThis += "<button data-tableid = '" + tableID + "' data-page='" + page + "' data-url='" + url + "' class='btn paginationButton' value='previous'> Previous </button>";
+        appendThis += "<button data-tableid = '" + tableID + "' data-page='" + page + "' data-url='" + url + "' class='btn paginationButton' value='1'> 1 </button>"
+
+        appendThis += "<input id='" + tableID + "-inputTag" + "' data-tableid = '" + tableID + "' data-page='" + page + "' data-url='" + url + "' class='' placeholder='Page No.' value='" + page + "' style='width:50px; padding:5px;'>"
+
+        if (totalPages >= 2) {
+            appendThis += "<button data-tableid = '" + tableID + "' data-page='" + page + "' data-url='" + url + "' class='btn paginationButton' value='" + totalPages + "'> " + totalPages + " </button>";
+        }
+        appendThis += "<button data-tableid = '" + tableID + "' data-page='" + page + "' data-url='" + url + "' class='btn paginationButton testingpagebutt' value='next'> Next </button>";
+        appendThis += "<button data-tableid = '" + tableID + "' data-page='" + page + "' data-url='" + url + "' class='btn paginationButtonSubmit' value='Submit'> Submit </button>";
+        appendThis += "</td></tr>";
+        
+        $("#" + tableID + " tfoot").append(appendThis);
+
+        if(tableID == "deviceInformationTable"){
+            try{
+                $("#deviceInformationTable .testingpagebutt").click();
+            }catch(err){
+                console.log(err);
+            }
+        }
+    }
+
+    $(".paginationButtonSubmit").on("click", function () {
+        var url = $(this).data("url");
+        var tableID = $(this).data("tableid");
+        var pageNO = $(this).val();
+
+        var inputData = $("#" + tableID + "-inputTag").val();
+
+        if (isNaN(inputData)) return
+
+
+        if (inputData > PAGE_HOLDER[tableID]["totalPages"] || inputData <= 0 || inputData == PAGE_HOLDER[tableID]["totalPages"]) {
+            return;
+        }
+
+
+        PAGE_HOLDER[tableID]["pageNO"] = parseInt(inputData);
+        console.log("page number " + PAGE_HOLDER[tableID]["pageNO"])
+        console.log(PAGE_HOLDER[tableID]);
+
+
+        setMainTableAjaxRequest(tableID, url);
+
+
+    });
+
+    $(".paginationButton").on("click", function () {
+        var url = $(this).data("url");
+        var tableID = $(this).data("tableid");
+        var pageNO = $(this).val();
+        var currentPage = PAGE_HOLDER[tableID]["pageNO"];
+        var totalPages = PAGE_HOLDER[tableID]["totalPages"]
+
+        if (pageNO == "next" && (currentPage + 1 <= totalPages))
+            pageNO = currentPage + 1;
+
+        else if (pageNO == "previous" && (currentPage - 1 > 0))
+            pageNO = currentPage - 1;
+
+        else {
+            if (isNaN(pageNO)) return
+            pageNO = parseInt(pageNO);
+        }
+
+
+        if (currentPage == pageNO) return;
+
+        $("#" + tableID + "-inputTag").val(pageNO);
+
+        PAGE_HOLDER[tableID]["pageNO"] = pageNO;
+        console.log("page number " + PAGE_HOLDER[tableID]["pageNO"])
+        console.log(PAGE_HOLDER[tableID]);
+
+        setMainTableAjaxRequest(tableID, url);
+
+    });
+
+
+    function setMainTableAjaxRequest(tableID, url) {
+        var pageNO = PAGE_HOLDER[tableID]["pageNO"];
+
+        $.get(url + "?page=" + pageNO + "&max=" + TOTAL_RECORDS_IN_A_TABLE, function (data, status) {
+            console.log(status);
+            console.log(data);
+            if (data["error"]) {
+                Swal.fire("Error " + data["error"]);
+                return;
+            }
+
+            PAGE_HOLDER[tableID]["printTableFunction"](tableID, data.user_li);
+
+        });
+    }
+
+
+</script>
+{% endblock %} 
+
+
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/assetsCSS.css' %}"> 
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/datatable.css' %}">
+{% endblock %}
+
+
+{% block title_header %}Assets{% endblock %}
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="removeDisable()" class="btn btn-default" data-dismiss="modal">OK</button>
+                <button type="button" onclick="enableDisable()" class="btn btn-default"
+                    data-dismiss="modal">Edit</button> <button type="button" id="ssbtn" onclick="takeScreeShot()"
+                    class="btn btn-default">Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--MODAL END-->
+<!-- Modal -->
+<div class="modal fade" id="editDevCap" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="removeDisable()" class="btn btn-default"
+                    data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--MODAL END-->
+<!-- Modal -->
+<div class="modal fade" id="showDCInfo" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--MODAL END-->
+
+
+
+<div class="row text-center">
+    <div class="alert" id="alertmsg" role="alert"></div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <div id="exTab3">
+        <ul class="nav nav-pills row">
+            <li class="color-blue col-lg-2">
+                <a href="#1b" data-toggle="tab"><i class="fa fa-tasks" style='color:white'></i>ASSETS</a>
+            </li>
+            <li class="color-green col-lg-2">
+                <a href="#2b" data-toggle="tab"><i class="fa fa-book" style='color:white'></i>MANAGEMENT</a>
+            </li>
+            <li class="color-red col-lg-2">
+                <a href="#3b" data-toggle="tab"><i class="fa fa-plug" style='color:white'></i>CABLES</a>
+            </li>
+            <li class="color-green col-lg-2">
+                <a href="#4b" data-toggle="tab"><i class="fa fa-sticky-note-o" style='color:white'></i>LMS</a>
+            </li>
+            <li class="color-blue col-lg-2">
+                <a href="#5b" data-toggle="tab"><i class="fa fa-desktop" style='color:white'></i>MISCELLANEOUS</a>
+            </li>
+        </ul>
+        <div class="tab-content clearfix">
+            <div class="tab-pane active" id="1b">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="table-responsive">
+                            <table class="table mx-auto w-auto" id="all_datacenter">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th colspan="7">Data Center</th>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Data Centers</th>
+                                        <th scope="col">Link</th>
+                                        <th scope="col">Top View</th>
+                                        <th scope="col">EMS</th>
+                                            <th scope="col">Delete</th>
+                                            <th scope="col">Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in datacenter %}
+                                        <tr>
+                                            <td scope="row">{{ forloop.counter }}</td>
+                                            <td>{{data.DataCenterName}}</td>
+                                            <td><a href="{% url 'datacenter' data.id %}">Link</a></td>
+                                            <td><a target="_blank" href="{% url 'top-view' data.id %}"> <i class="fa fa-arrow-up"></i></a></td>
+                                            <td><a href="{% url 'temp-view' %}">Link</a></td>
+                                                <td><a onclick="handleDelDC('{{data.id}}')"> <i class="fa fa-trash" style="color:red"></i></a></td>
+                                                <td><a href="{% url 'editDC' data.id %}"><i class="fa fa-edit"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div style="height:110%;width:100%" id="chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="2b">
+                
+                {% include 'dashboard/part_management.html' %}
+                
+            </div>
+            <div class="tab-pane" id="3b">
+                
+                {% include 'dashboard/part_cables.html' %}
+
+            </div>
+            <div class="tab-pane" id="4b">
+                
+                {% include 'dashboard/part_lms.html' %}
+
+            </div>
+            <div class="tab-pane" id="5b">
+                
+                {% include 'dashboard/part_deviceinfo.html' %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="{% static '/dashboard/js/d3.min.js' %}"></script>
+
+<script src="/static/dashboard/js/topo.js"></script>
+<script src="{% static '/dashboard/js/d3.geo.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts-liquidfill.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/html2canvas.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/canvas2image.js' %}"></script>
+<script src='/static/dashboard/js/turf.js'></script>
+
+<script>
+    function objectifyForm(formArray) {
+        var returnArray = {};
+        for (var i = 0; i < formArray.length; i++) {
+            returnArray[formArray[i].name] = formArray[i].value;
+        }
+        return returnArray;
+    }
+</script>
+
+
+
+{{allData | json_script:"map-data"}}
+
+<script type="text/javascript">
+    var w = 650;
+    var h = 700;
+    var proj = d3.geo.mercator();
+    var path = d3.geo.path().projection(proj);
+    var t = proj.translate(); // the projection's default translation
+    var s = proj.scale() // the projection's default scale
+
+    function replaceAllSpaces(inputStr) {
+        //console.log(inputStr)
+        var l = inputStr.length;
+        var output = "";
+        for (var j = 0; j < l; j++) {
+            if (inputStr[j] == " ") output += "_";
+            else output += inputStr[j];
+        }
+        return output;
+    }
+
+    var allData = JSON.parse(document.getElementById('map-data').textContent);
+
+    var allDataObj = {};
+    for(index in allData){
+        allDataObj[replaceAllSpaces(allData[index][0])] = allData[index];
+    }
+
+    var buckets = 9;
+    var colors = ["#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494", "#081d58", "#30fe4e", "#82835d", "#b73d39", "#dd1fbf", "#627811", "#eb2d04", "#3e73a9", "#58efed", "#f7b68a", "#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494", "#081d58", "#30fe4e", "#82835d", "#b73d39", "#dd1fbf", "#627811", "#eb2d04", "#3e73a9", "#58efed", "#f7b68a"]; // alternatively colorbrewer.YlGnBu[9]
+
+    var map = d3.select("#chart").append("svg:svg")
+        .attr("width", w)
+        .attr("height", h)
+        //.call(d3.behavior.zoom().on("zoom", redraw))
+        .call(initialize);
+
+    var india = map.append("svg:g")
+        .attr("id", "india");
+
+    var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+    var div2 = d3.select("body").append("div")
+        .attr("class", "tooltip2")
+        .style("opacity", 0);
+
+    var div3 = d3.select("body").append("div")
+        .attr("class", "tooltip3")
+        .style("opacity", 0);
+
+    var div4 = d3.select("body").append("div")
+        .attr("class", "tooltip4")
+        .style("opacity", 0);
+
+
+
+    d3.json('/static/{{mapView}}', function (json) {
+
+        var maxTotal = d3.max(json.features, function (d) { return 100; });
+
+        var colorScale = d3.scale.quantile()
+            .domain(d3.range(buckets).map(function (d) { return (d / buckets) * maxTotal }))
+            .range(colors);
+
+        //console.log("color scale is ");
+
+        var y = d3.scale.sqrt()
+            .domain([0, 28])
+            .range([0, 40]);
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .tickValues(colorScale.domain())
+            .orient("right");
+
+        //colors = ["#ff0000" , "#00ff00" , "#0000ff"]
+        india.selectAll("path")
+            .data(json.features)
+            .enter().append("path")
+            .attr("d", path)
+            .style("fill", colors)
+            .style("opacity", 1)
+
+            .on('click', function (d, i) {
+                d3.select(this).transition().duration(300).style("opacity", 1);
+                div.transition().duration(300)
+                    .style("opacity", 1)
+                //console.log("clicked on ")
+                //console.log(d.properties.state);
+                var xx = allDataObj[replaceAllSpaces(d.properties.state)];
+            
+            if(xx){
+                $("#showDCInfo .modal-title").html(xx[3]);
+                $("#showDCInfo .modal-body").html("State : " + xx[0] + "<br>" + "Datacenter Name : " + xx[3] + "<br>" + "Power output : " + xx[1] + "<br>" + "Area Covered Mtr Sq : " + xx[2]);
+                $("#showDCInfo").modal('show');
+            }
+
+            })
+
+            .on('mouseleave', function (d, i) {
+                d3.select(this).transition().duration(100)
+                    .style("opacity", 1);
+                div.transition().duration(100)
+                    .style("opacity", 1);
+            })
+            .on('mouseenter', function (d, i) {
+                d3.select(this).transition().duration(100)
+                    .style("opacity", 0.5);
+                div.transition().duration(100)
+                    .style("opacity", 1);
+
+            });
+        var ii = 0;
+        india.selectAll("path").transition().duration(100).style("fill", function (d) {
+            //console.log("Chekingn", d.properties.state)
+            //return d.properties.fill;
+            //return;
+            if(allDataObj[replaceAllSpaces(d.properties.state)]){
+                //console.log(colors[ii++]);
+                return d.properties.fill;;
+            }
+            else
+            return "#ffbf00";
+        });
+            india.selectAll("text")
+            .data(json.features)
+            .enter()
+            .append("text")
+            .attr("class", "fa")
+            .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
+            .attr("dx", function (d) { return "0"; })
+            .attr("dy", function (d) { return "0.35em"; })
+            .style("fill", "#4a0702")
+            .text(function (d) {
+                //console.log(xx)
+                if(allDataObj[replaceAllSpaces(d.properties.state)]){
+                    if (allDataObj[replaceAllSpaces(d.properties.state)][3])
+                //console.log(colors[ii++]);
+                    return `\uf276 ${allDataObj[replaceAllSpaces(d.properties.state)][3]}`;
+                    else
+                    return ''
+            }
+    });
+    });
+
+    function randomColor() {
+        return "#" + Math.floor(Math.random() * 16777215).toString(16);
+    }
+
+    function initialize() {
+        //proj.scale(7000);
+        //proj.translate([-1320, 720]);
+
+      proj.scale(6400);
+      proj.translate([-1120, 720]);
+    }
+
+
+</script>
+
+{% endblock %}
+
+
+{% block cablesJS %} {% endblock %}

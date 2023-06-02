@@ -1,0 +1,1105 @@
+{% extends 'dashboard/header_footer.html' %}{% load static %} {% block title %} Database {% endblock title %} {% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/datatable.css' %}">
+<style>
+    .card-counter {
+        box-shadow: 2px 2px 10px #DADADA;
+        margin: -13px;
+        padding: 20px 10px;
+        background-color: #fff;
+        height: 70px;
+        border-radius: 5px;
+        transition: .3s linear all;
+    }
+    
+    .card-counter:hover {
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+    }
+    
+    .card-counter.primary {
+        background-color: #007bff;
+        color: #FFF;
+    }
+    
+    .card-counter.danger {
+        background-color: #ef5350;
+        color: #FFF;
+    }
+    
+    .card-counter.success {
+        background-color: #66bb6a;
+        color: #FFF;
+    }
+    
+    .card-counter.info {
+        background-color: #26c6da;
+        color: #FFF;
+    }
+    
+    .card-counter i {
+        font-size: 5em;
+        opacity: 0.2;
+    }
+    
+    .card-counter .count-numbers {
+        position: relative;
+        text-align: center;
+        right: 2px;
+        top: -25px;
+        font-size: 32px;
+        display: block;
+    }
+    
+    .card-counter .count-name {
+        position: relative;
+        top: -25px;
+        text-transform: capitalize;
+        opacity: 0.5;
+        display: block;
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    fieldset.scheduler-border {
+        /* border: 1px groove #ddd !important; */
+        padding: 0 1.4em 1.4em 1.4em !important;
+        /* margin: 0 0 1.5em 0 !important; */
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+    }
+    
+    legend.scheduler-border {
+        font-size: 1em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width: auto;
+        padding: 0 10px;
+        border-bottom: none;
+    }
+    
+    .col-md-offset-1 {
+        margin-left: 2.333%;
+    }
+    
+    .container {
+        width: 100%;
+    }
+    
+    .headerCol {
+        width: 14.667%;
+    }
+    
+    .card {
+        background: #fff;
+        color: black;
+        box-shadow: 0 0 1px #232323;
+        text-align: left;
+        margin-bottom: 12px;
+    }
+    
+    .chartbtn {
+        position: relative;
+        background: none;
+        border: none;
+        font-size: 11px;
+        right: 0;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+    
+    .chartBtnSelection {
+        color: green;
+        font-weight: bolder;
+    }
+    
+    .indSmry {
+        background: #ffffff;
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    
+    .divIndSmry {
+        position: aboslute;
+        top: 50%;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %} {% block js %} {% endblock js %} {% block title_header %}Database{% endblock %} {% block content %}
+<div class="container">
+    <div class="row">
+        {% comment %} {% endcomment %}
+        <div class="card col-lg-12 indSmry">
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+                <p style="font-size: 11px;text-align: center; font-weight: 700;">Total Asset Devices</p>
+                <div style="position:absolute; right: 20px;"></div>
+                <p class="divIndSmry" id="totalDevices"></p>
+            </div>
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+                <p style="font-size: 11px;text-align: center; font-weight: 700;">Total Interface Devices</p>
+                <div style="position:absolute; right: 20px;"></div>
+                <p class="divIndSmry" id="totalInterfaceDevice"></p>
+            </div>
+            <div class="col-md-2" style="height: 70px; background-color: whitesmoke;">
+                <p style="font-size: 11px;text-align: center; font-weight: 700;">Total Inbound</p>
+                <div style="position:absolute; right: 20px;" id=""></div>
+                <p class="divIndSmry" id="totalInbound"></p>
+            </div>
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+                <p style="font-size: 11px;text-align: center; font-weight: 700;">Total Outbound</p>
+                <div style="position:absolute; right: 20px;" id=""></div>
+                <p class="divIndSmry" id="totalOutbound"></p>
+            </div>
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+                <p style="font-size: 11px;text-align: center; font-weight: 700;">Total Interfaces</p>
+                <div style="position:absolute; right: 20px;" id=""></div>
+                <p class="divIndSmry" id="totalInterfaces"></p>
+            </div>
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+                <p style="font-size: 11px;text-align: center; font-weight: 700;">Total Wattage</p>
+                <div style="position:absolute; right: 20px;" id=""></div>
+                <p class="divIndSmry" id="totalWattage"></p>
+            </div>
+        </div>
+
+        <div class="card col-lg-6">
+
+            <div class="card-body" data-type="">
+                <h5 style="font-weight: bold;">Top 5 CPU Usage</h5>
+                <p class="card-text">
+                    <table class="table" id="top5cpu">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-6">
+            <div class="card-body" data-type="">
+                <h5 style="font-weight: bold;">Top 5 Busy Devices</h5>
+                <p class="card-text">
+                    <table class="table" id="top5busy">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+
+                </p>
+            </div>
+        </div>
+
+        <!--  -->
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title" style="font-weight: bold;">WEEKLY STATS</h5>
+                <p class="card-text">
+                    <canvas id="tempGRAPH1"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title" style="font-weight: bold;">MEMORY STATS</h5>
+                <p class="card-text">
+                    <canvas id="storageSummaryGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title" style="font-weight: bold;">DEVICE STATS</h5>
+                <p class="card-text">
+                    <canvas id="tempGRAPH2"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title" style="font-weight: bold;">DATA STATS</h5>
+                <p class="card-text">
+                    <canvas id="tempGRAPH3"></canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title" style="font-weight: bold;">I/O STATS</h5>
+                <p class="card-text">
+                    <canvas id="ramSummaryGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title" style="font-weight: bold;">DATABASE SUMMARY</h5>
+                <p class="card-text">
+                    <canvas id="tempGRAPH4"></canvas>
+                </p>
+            </div>
+        </div>
+        <!--  -->
+        {% comment %} {% endcomment %}
+    </div>
+</div>
+
+
+
+<div class="form-group" style="padding-left:0px;margin-right:0px">
+    <label for="sel1">Select Device:</label>
+    <select class="form-control" id="allNetworkDevices">
+    <option disabled selected>Select Device</option>
+  </select>
+</div>
+<div id="favouritebtn"></div>
+<br>
+<div id="container" style="display:none">
+    <div class="row" style="margin-left:0px; margin-right:0px">
+
+        <div class="card col-lg-12">
+            <table class="table" id="sysinfoTable">
+                <tbody></tbody>
+            </table>
+        </div>
+
+        {% comment %} {% endcomment %}
+        <div class="card col-lg-12 indSmry">
+            <div class="col-md-2" style="height: 70px; background-color: whitesmoke;">
+                <p style="font-size: 10px;text-align: left;">UPTIME</p>
+                <div style="position:absolute; right: 20px;" id="myDiv9"></div>
+
+                <p class="divIndSmry" id="sysUptime"></p>
+            </div>
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Total Interfaces</p>
+                <div style="position:absolute; right: 20px;"></div>
+                <p class="divIndSmry" id="totalInterface"></p>
+
+            </div>
+            <div class="col-md-2" style="height: 70px; background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Admin Status</p>
+                <div style="position:absolute; right: 20px;" id="myDiv11"></div>
+                <p class="divIndSmry" id="totaladminUP"></p>
+
+            </div>
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Port Status</p>
+                <div style="position:absolute; right: 20px;" id="myDiv12"></div>
+                <p class="divIndSmry" id="totalPortUp"></p>
+
+            </div>
+
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Packet IN</p>
+                <div style="position:absolute; right: 20px;" id="myDiv13"></div>
+                <p class="divIndSmry" id="pktIn"></p>
+
+            </div>
+
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Packet Out</p>
+                <div style="position:absolute; right: 20px;" id="myDiv13"></div>
+                <p class="divIndSmry" id="pktOut"></p>
+
+            </div>
+        </div>
+        {% comment %} {% endcomment %}
+
+
+
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">No. of Queries</h5>
+                <p class="card-text">
+                    <canvas id="cpuTemp"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">No. of Users</h5>
+                <p class="card-text">
+                    <canvas id="storageGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">Executime Time</h5>
+                <p class="card-text">
+                    <canvas id="iowaitGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">Disk Throughput</h5>
+                <p class="card-text">
+                    <canvas id="cpuUtilGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">Avarage Wait Time</h5>
+                <p class="card-text">
+                    <canvas id="ramGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">Active Connection</h5>
+                <p class="card-text">
+                    <canvas id="virtualGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-6">
+
+            <div class="card-body" data-type="ramline">
+                <h5 class="card-title">RAM <button class="chartbtn chartBtnSelection">Live</button>
+                    <div class='averageSHOW' style="display:none"> Unit : Average </div> <button class="chartbtn">1D</button><button class="chartbtn">1W</button><button class="chartbtn">1M</button><button class="chartbtn">6M</button><button class="chartbtn">12M</button> </h5>
+                <p class="card-text">
+                    <canvas id="ramlineGRAPH"> </canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-6">
+            <div class="card-body" data-type="cpu">
+                <h5 class="card-title">CPU Core <button class="chartbtn chartBtnSelection">Live</button>
+                    <div class='averageSHOW' style="display:none"> Unit : Average </div> <button class="chartbtn">1D</button><button class="chartbtn">1W</button><button class="chartbtn">1M</button><button class="chartbtn">6M</button><button class="chartbtn">12M</button> </h5>
+                <p class="card-text">
+                    <canvas id="cpuGRAPH"> </canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <i class='fa fa-angle-double-down showmoredetails' style='font-size:30px;'></i>
+            <div class="card col-lg-12" style="display:none;margin-top:10px">
+                <div class="card-body" id="interfaces">
+                    <table class="table" id="interfaceTable">
+                        <thead>
+                            <th>NAME</th>
+                            <th>DESCRIPTION</th>
+                            <th>ADMIN</th>
+                            <th>PORT</th>
+                            <th>MTU</th>
+                            <th>SPEED</th>
+                            <th>IN OCTET</th>
+                            <th>OUT OCTET</th>
+                            <th>ERROR IN</th>
+                            <th>ERROR OUT</th>
+                            <th>MAC</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="{% static '/dashboard/js/plotly.js' %}"></script>
+<script src="{% static '/dashboard/js/Chart.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts-liquidfill.min.js' %}"></script>
+<script src="{% static '/graphs/bargraph.js' %}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'dashboard/js/datatable.js' %}"></script>
+
+{{ snmpdevices|json_script:"snmpdevices" }}
+<script>
+    $(document).on('click', '.showmoredetails', function() {
+        $(this).removeClass('showmoredetails');
+        $(this).addClass('hidemoredetails');
+        var me = $(this).next().css('display', 'block');
+    })
+    $(document).on('click', '.hidemoredetails', function() {
+        $(this).removeClass('hidemoredetails');
+        $(this).addClass('showmoredetails');
+        var me = $(this).next().css('display', 'none');
+    })
+    var GLOBAL_HOST = false;
+
+    function getSummary() {
+
+        $.ajax({
+            "type": "GET",
+            "url": "/serversummary/",
+            success: function(response) {
+                data = response["data"];
+                var top5cpu = "";
+                var top5busy = "";
+                $("#totalDevices").html(data["totalDevice"]);
+                $("#totalInterfaceDevice").html(data["totalInterfaceDevice"]);
+                $("#totalInbound").html((data["inbound"]).toFixed(2));
+                $("#totalOutbound").html((data["outbound"]).toFixed(2));
+                $("#totalInterfaces").html(data["interface"]);
+                $("#totalWattage").html((data["totalWatt"]).toFixed(2));
+                var topCpu = data["top5cpu"];
+                var topBusy = data["top5busy"];
+                for (var i in topCpu) {
+                    top5cpu += "<tr><td>" + topCpu[i]["ip"] + "</td>\
+                                <td>" + (topCpu[i]["cpu"]).toFixed(2) + "</td></tr>";
+                }
+                for (var i in topBusy) {
+                    top5busy += "<tr><td>" + topBusy[i]["ip"] + "</td>\
+                                <td>" + (topBusy[i]["busy"]).toFixed(2) + "</td></tr>";
+                }
+                $("#top5cpu tbody").html(top5cpu);
+                $("#top5busy tbody").html(top5busy);
+
+                // chart of ram & storage
+
+
+
+                // if (SUMMARY_CHART_HOLDER["ramSummary"]["destroyed"]) {
+                //     var obj = {
+                //         "y": [(data["inbound"]).toFixed(2), (data["outbound"]).toFixed(2)],
+                //         "labels": ["Inbound", "Outbound"],
+                //         "bgcolor": ["#bbffbb", "#bbbbbb"],
+                //     }
+                // }
+                // var chartdata = SUMMARY_CHART_HOLDER["ramSummary"]["chartfunction"](obj);
+                // SUMMARY_CHART_HOLDER["ramSummary"]["destroyed"] = false;
+                // SUMMARY_CHART_HOLDER["ramSummary"]["chart"] = new Chart($("#ramSummaryGRAPH"), chartdata);
+
+                // if (SUMMARY_CHART_HOLDER["storageSummary"]["destroyed"]) {
+                //     var obj = {
+                //         "y": [data["totalRam"], data["totalStorage"]],
+                //         "labels": ["Ram", "Storage"],
+                //         "bgcolor": ["#bbffbb", "#ffbbff"],
+                //     }
+                // }
+                // var chartdata = SUMMARY_CHART_HOLDER["storageSummary"]["chartfunction"](obj);
+                // SUMMARY_CHART_HOLDER["storageSummary"]["destroyed"] = false;
+                // SUMMARY_CHART_HOLDER["storageSummary"]["chart"] = new Chart($("#storageSummaryGRAPH"), chartdata);
+
+
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+    getSummary();
+    setInterval(function() {
+        getSummary();
+    }, 2000);
+
+
+
+
+    var interval;
+    console.log("pinting snmp devices data");
+    var snmpDevices = JSON.parse(document.getElementById("snmpdevices").textContent);
+    console.log(snmpDevices);
+
+    for (key in snmpDevices) {
+        $("#allNetworkDevices").append("<option data-tag=" + snmpDevices[key]["name"] + " value=" + snmpDevices[key]["ip"] + " >" + snmpDevices[key]["name"] + "</option>")
+    }
+</script>
+<script>
+    $('#allNetworkDevices').on('change', function() {
+        //var name = $(':selected', $(this)).data('tag')
+        //console.log(name);
+        var host = this.value;
+        GLOBAL_HOST = this.value;
+        //console.log("Triggered to change the dashboard")
+        $("#favouritebtn").html("<h2><span data-host='" + host + "' class='makefavourite'><i class='fa fa-star'></i></span> | <span data-host='" + host + "' class='threshold'><i class='fa fa-cog'></i></span></h2></h2>");
+        clearInterval(interval);
+        try {
+            Statistics(host);
+            //setInterval(function() {Statistics(host);}, 2000);
+            interval = setInterval(function() {
+                Statistics(host);
+            }, 2000);
+            $("#container").css("display", "block");
+        } catch {
+            $("#container").css("display", "none");
+        }
+    });
+</script>
+<script>
+    //ADD TRAILING 0 TO SINGLE DIGIT IN UPTIME
+    function AddZero(n) {
+        return (n < 10 ? '0' : '') + n;
+    }
+    // FUNCTION FOR SYSTEM UPTIME
+    function uptimeTOdays(sec) {
+        seconds = Number(sec);
+        var d = Math.floor(seconds / (3600 * 24));
+        var h = Math.floor(seconds % (3600 * 24) / 3600);
+        var m = Math.floor(seconds % 3600 / 60);
+        var s = Math.floor(seconds % 60);
+
+        var dDisplay = d > 0 ? d + (d == 1 ? "D " : "D ") : "";
+        var hDisplay = h > 0 ? h + (h == 1 ? "  " : " : ") : "";
+        var mDisplay = m > 0 ? m + (m == 1 ? " : " : " : ") : "";
+        var sDisplay = s > 0 ? s + (s == 1 ? "" : "") : "";
+        return (dDisplay + hDisplay + mDisplay + sDisplay).replace(/,\s*$/, "");
+    }
+    // bit to kb
+    function bitToKB(bit) {
+        return (bit / 1048576);
+    }
+</script>
+<script>
+    var TEST_ARRAY = []
+    var FIRST_RUN = 1;
+
+    var SUMMARY_CHART_HOLDER = {
+        "ramSummary": {
+            "chart": null,
+            "update": true,
+            "destroyed": true,
+            "chartfunction": bar,
+            "updatefunction": updateChart
+        },
+        "storageSummary": {
+            "chart": null,
+            "update": true,
+            "destroyed": true,
+            "chartfunction": bar,
+            "updatefunction": updateChart
+        },
+    }
+
+
+
+
+    var CHART_HOLDER = {
+        "cpu": {
+            "chart": null,
+            "update": true,
+            "destroyed": true,
+            "chartfunction": line,
+            "updatefunction": updateChart
+        },
+        "ramline": {
+            "chart": null,
+            "update": true,
+            "destroyed": true,
+            "chartfunction": line,
+            "updatefunction": updateChart
+        },
+    }
+    const CHARTJS_CONFIG = {
+
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    display: false
+                },
+                suggestedMin: 0,
+                suggestedMax: 100
+
+            },
+            x: {
+                grid: {
+                    display: false,
+                },
+            }
+        },
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+        }
+    }
+
+    var temp1 = document.getElementById("tempGRAPH1").getContext('2d');
+    var temp2 = document.getElementById("tempGRAPH2").getContext('2d');
+    var temp3 = document.getElementById("tempGRAPH3").getContext('2d');
+    var temp4 = document.getElementById("tempGRAPH4").getContext('2d');
+    var temp5 = document.getElementById("storageSummaryGRAPH").getContext('2d');
+    var temp6 = document.getElementById("ramSummaryGRAPH").getContext('2d');
+
+    var temp7 = document.getElementById("cpuUtilGRAPH").getContext('2d');
+    var temp8 = document.getElementById("iowaitGRAPH").getContext('2d');
+    var temp9 = document.getElementById("cpuTemp").getContext('2d');
+    var temp10 = document.getElementById("storageGRAPH").getContext('2d');
+    var temp11 = document.getElementById("ramGRAPH").getContext('2d');
+    var temp12 = document.getElementById("virtualGRAPH").getContext('2d');
+
+    var myChart = new Chart(temp10, {
+        type: 'line',
+        data: {
+            labels: ["Postgres", "MySQL", "Mongo", "SQLite"],
+            datasets: [{
+                label: 'Cpu Utilization', // Name the series
+                data: [45, 21, 43, 12], // Specify the data values array
+                fill: false,
+                borderColor: '#4411ff', // Add custom color border (Line)
+                backgroundColor: '#4411ff', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp11, {
+        type: 'line',
+        data: {
+            labels: [1, 2, 3, 4, 5, 6, 7, 89, 10],
+            datasets: [{
+                label: 'Wait Time', // Name the series
+                data: [12, 54, 23, 65, 45, 34, 57, 34, 76, 23], // Specify the data values array
+                fill: false,
+                borderColor: '#bbffbb', // Add custom color border (Line)
+                backgroundColor: '#bbffbb', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp12, {
+        type: 'line',
+        data: {
+            labels: ["Postgres", "MySQL", "Mongo", "SQLite"],
+            datasets: [{
+                label: 'Active Connection', // Name the series
+                data: [456, 500, 675, 767], // Specify the data values array
+                fill: false,
+                borderColor: '#ffbbff', // Add custom color border (Line)
+                backgroundColor: '#ffbbff', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp7, {
+        type: 'line',
+        data: {
+            labels: [1, 2, 3, 4],
+            datasets: [{
+                label: 'Throughput', // Name the series
+                data: [65, 23, 43, 21], // Specify the data values array
+                fill: false,
+                borderColor: '#bbbb33', // Add custom color border (Line)
+                backgroundColor: '#bbbb33', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp8, {
+        type: 'line',
+        data: {
+            labels: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            datasets: [{
+                label: 'Time', // Name the series
+                data: [1, 0.6, 0.9, 2, 0.3, 1, 0.4, 0.1, 1], // Specify the data values array
+                fill: false,
+                borderColor: '#00ff40', // Add custom color border (Line)
+                backgroundColor: '#00ff40', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp9, {
+        type: 'line',
+        data: {
+            labels: ["1", "2", "3", "4", "5", "6", "7"],
+            datasets: [{
+                label: 'Queries per sec', // Name the series
+                data: [12, 22, 23, 21, 11, 56, 12], // Specify the data values array
+                fill: false,
+                borderColor: '#00ff40', // Add custom color border (Line)
+                backgroundColor: '#00ff40', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+
+    var myChart = new Chart(temp1, {
+        type: 'bar',
+        data: {
+            labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            datasets: [{
+                label: 'Weekly Report', // Name the series
+                data: [45, 50, 32, 65, 23, 43, 21], // Specify the data values array
+                fill: false,
+                borderColor: '#00ff40', // Add custom color border (Line)
+                backgroundColor: '#00ff40', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp2, {
+        type: 'line',
+        data: {
+            labels: ["Device1", "Device2", "Device3", "Device4", "Device5"],
+            datasets: [{
+                label: 'Devices', // Name the series
+                data: [90, 50, 67, 43, 12], // Specify the data values array
+                fill: false,
+                borderColor: '#0000ff', // Add custom color border (Line)
+                backgroundColor: '#0000ff', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp3, {
+        type: 'line',
+        data: {
+            labels: ["Data 1", "Data 2", "Data 3", "Data 4", "Data 5", "Data 6"],
+            datasets: [{
+                label: 'Series', // Name the series
+                data: [60, 50, 32, 21, 43, 54], // Specify the data values array
+                fill: false,
+                borderColor: '#ff0080', // Add custom color border (Line)
+                backgroundColor: '#ff0080', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp4, {
+        type: 'line',
+        data: {
+            labels: ["Data 1", "Data 2", "Err In", "Err Out"],
+            datasets: [{
+                label: 'Summary', // Name the series
+                data: [40, 50, 43, 21], // Specify the data values array
+                fill: false,
+                borderColor: '#ff8000', // Add custom color border (Line)
+                backgroundColor: '#ff8000', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp5, {
+        type: 'line',
+        data: {
+            labels: ["Ram", "Swap"],
+            datasets: [{
+                label: 'Memory', // Name the series
+                data: [7.4, 2.7], // Specify the data values array
+                fill: false,
+                borderColor: '#00cccc', // Add custom color border (Line)
+                backgroundColor: '#00cccc', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var myChart = new Chart(temp6, {
+        type: 'bar',
+        data: {
+            labels: ["Input", "Output", "Inbound", "Outbound"],
+            datasets: [{
+                label: 'Series 1', // Name the series
+                data: [30, 20, 45, 32], // Specify the data values array
+                fill: false,
+                borderColor: '#e600e6', // Add custom color border (Line)
+                backgroundColor: '#e600e6', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    $(".chartbtn").on("click", function() {
+        var duration = $(this).text();
+        var type = $(this).parents(".card-body").data("type") // type == ip
+        console.log("Type & Duration", type, duration);
+        if (!type || !duration) {
+            console.log("Type / Duration is False");
+            return;
+        }
+        if (duration == "Live") {
+            CHART_HOLDER[type]["chart"].destroy();
+            CHART_HOLDER[type]["update"] = true;
+            CHART_HOLDER[type]["destroyed"] = true;
+            FIRST_RUN = 1;
+            $(".averageSHOW").css("display", "none");
+            return;
+        } else CHART_HOLDER[type]["update"] = false;
+        $(".averageSHOW").css("display", "block");
+        getData(duration, type)
+    });
+
+    for (var i = 0; i < (60 * 5) / 5; i++) {
+        TEST_ARRAY.push(i);
+    }
+
+    function getData(duration, type) {
+
+        $.ajax({
+            "type": "GET",
+            "url": "/serversummarychart/" + duration + "/" + GLOBAL_HOST + "/" + type,
+            success: function(response) {
+                console.log("Button Click Response", response["data"]);
+                tempArr = [];
+                for (var i = 0; i < response["data"][0].length; i++) {
+                    tempArr.push(i + "");
+                }
+                loadNewData(CHART_HOLDER[type]["chart"], "", {
+                    "labels": tempArr,
+                    "y": response["data"]
+                })
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    }
+
+    function Statistics(host) {
+        $.ajax({
+            type: 'GET',
+            url: "/serversummarychart/" + FIRST_RUN + "/" + host,
+            success: function(response) {
+                console.log("PRINTING DASHBOARD OF ", host, response);
+                FIRST_RUN = 0
+                mode = response["mode"];
+                if (mode == "single") {
+                    SYSINFO = JSON.parse(response["data"]["sysinfo"]);
+                    ASSETDEVICEINFP = JSON.parse(response["data"]["assetDevice"]);
+                    var html = "";
+
+                    for (var i in ASSETDEVICEINFP) {
+                        html += "<tr><th>ASSET TAG</th><td>" + ASSETDEVICEINFP[i]["fields"]["Device_Asset_Tag"] + "</td><tr>";
+                        html += "<tr><th>OWNER</th><td>" + ASSETDEVICEINFP[i]["fields"]["deviceOwner"] + "</td><tr>";
+                        html += "<tr><th>RACK LOCATION</th><td>" + ASSETDEVICEINFP[i]["fields"]["Unit_Location"] + "</td><tr>";
+                    }
+                    for (var i in SYSINFO) {
+                        html += "<tr><th>NAME</th><td>" + SYSINFO[i]["fields"]["name"] + "</td><tr>";
+                        html += "<tr><th>DESCRIPTION</th><td>" + SYSINFO[i]["fields"]["description"] + "</td><tr>";
+                        html += "<tr><th>TEMPERATURE</th><td>" + "0<sup>o</sup>C" + "</td><tr>";
+                        html += "<tr><th>LOCATION</th><td>" + SYSINFO[i]["fields"]["location"] + "</td><tr>";
+                        html += "<tr><th>CONTACT</th><td>" + SYSINFO[i]["fields"]["contact"] + "</td><tr>";
+                        $("#sysUptime").html(uptimeTOdays(SYSINFO[i]["fields"]["uptime"]));
+                    }
+                    $("#sysinfoTable tbody").html(html);
+                    //console.log("interfaces____________________________")
+
+                    interfaces = [];
+                    try {
+                        interfaces = JSON.parse(response["data"]["interfaces"]);
+                    } catch (ex) {
+                        interfaces = [];
+                    }
+
+                    var totalInterface = interfaces.length;
+                    var adminUp = 0;
+                    var adminDown = 0;
+                    var adminUnknown = 0;
+                    var portUp = 0;
+                    var portDown = 0;
+                    var portUnknown = 0;
+                    var pktIn = 0;
+                    var pktOut = 0;
+
+                    if (interfaces.length > 0) {
+
+
+                        var html = "";
+                        for (var i in interfaces) {
+                            if (interfaces[i]["fields"]["admin"] == "up") {
+                                adminUp += 1;
+                                interfaces[i]["fields"]["admin"] = "<i class='fa fa-circle text-success'></i>";
+                            } else if (interfaces[i]["fields"]["admin"] == "down") {
+                                adminDown += 1
+                                interfaces[i]["fields"]["admin"] = "<i class='fa fa-circle text-muted'></i>"
+                            } else {
+                                adminUnknown += 1
+                                interfaces[i]["fields"]["admin"] = "<i class='fa fa-circle text-danger'></i>"
+                            }
+                            if (interfaces[i]["fields"]["port"] == "up") {
+                                portUp += 1;
+                                interfaces[i]["fields"]["port"] = "<i class='fa fa-circle text-success'>"
+                            } else if (interfaces[i]["fields"]["port"] == "down") {
+                                portDown += 1
+                                interfaces[i]["fields"]["port"] = "<i class='fa fa-circle text-muted'>"
+                            } else {
+                                portUnknown += 1
+                                interfaces[i]["fields"]["port"] = "<i class='fa fa-circle text-danger'>"
+                            }
+
+                            html += "<tr>"
+                            html += "<td>" + interfaces[i]["fields"]["name"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["description"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["admin"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["port"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["mtu"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["speed"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["inbound"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["outbound"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["errorin"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["errorin"] + "</td>";
+                            html += "<td>" + interfaces[i]["fields"]["mac"] + "</td>";
+                            html += "</tr>"
+                            $("#interfaceTable tbody").html(html);
+                            pktIn += interfaces[i]["fields"]["inbound"];
+                            pktOut += interfaces[i]["fields"]["outbound"];
+                        }
+                    }
+
+                    $("#totalInterface").html(totalInterface);
+                    $("#totaladminUP").html("<i class='fa fa-arrow-up text-success'></i> " + adminUp + " <i class='fa fa-arrow-down text-muted'></i> " + adminDown + " <i class='fa fa-ban text-danger'></i> " + adminUnknown);
+                    $("#totalPortUp").html("<i class='fa fa-arrow-up text-success'></i> " + portUp + " <i class='fa fa-arrow-down text-muted'></i> " + portDown + " <i class='fa fa-ban text-danger'></i> " + portUnknown);
+                    $("#pktIn").html(pktIn.toFixed(2) + " mbps");
+                    $("#pktOut").html(pktOut.toFixed(2) + " mbps");
+
+                    for (var i in CHART_HOLDER) {
+                        if (CHART_HOLDER[i]["update"] && !CHART_HOLDER[i]["destroyed"]) {
+
+
+                            if (i == "ramline") {
+                                var total = 0;
+                                for (var j in response["data"][i]["data"][0]) {
+                                    // will run 60 times 
+                                    total = response["data"][i]["data"][0][j]
+                                    response["data"][i]["data"][0][j] = 100;
+                                    response["data"][i]["data"][1][j] = (response["data"][i]["data"][1][j] / total) * 100;
+                                    response["data"][i]["data"][2][j] = (response["data"][i]["data"][2][j] / total) * 100;
+                                }
+                            }
+
+                            CHART_HOLDER[i]["updatefunction"](
+                                CHART_HOLDER[i]["chart"],
+                                "",
+                                response["data"][i]["data"],
+                                true,
+                                TEST_ARRAY.length
+                            );
+
+                        }
+                    }
+                }
+                // bhai haahaha :) 
+                else {
+
+                    for (var i in CHART_HOLDER) {
+                        if (CHART_HOLDER[i]["destroyed"]) {
+                            if (response["data"][i]["data"].length == 0) {
+                                continue; // yelo ab nhi aaega error ok bhai
+                            }
+                            var obj = {
+                                "y": response["data"][i]["data"],
+                                "labels": response["data"][i]["labels"],
+                                "barlabel": response["data"][i]["labels"],
+                                "bgcolor": response["data"][i]["bgcolor"],
+                                "bordercolor": response["data"][i]["bgcolor"],
+                                "min": 0
+                            }
+
+                            if (i == "network" || i == "cpu" || i == "ramline") {
+                                obj["labels"] = TEST_ARRAY;
+                            }
+
+                            if (i == "ramline") {
+                                var total = 0;
+                                for (var j in obj["y"][0]) {
+                                    // will run 60 times 
+                                    total = obj["y"][0][j]
+                                    obj["y"][0][j] = 100;
+                                    obj["y"][1][j] = (obj["y"][1][j] / total) * 100;
+                                    obj["y"][2][j] = (obj["y"][2][j] / total) * 100;
+                                }
+                            }
+                            var chartdata = CHART_HOLDER[i]["chartfunction"](obj);
+                            CHART_HOLDER[i]["destroyed"] = false;
+                            CHART_HOLDER[i]["chart"] = new Chart($("#" + i + "GRAPH"), chartdata)
+
+                        }
+                    }
+                }
+                //AllEvents(response["cpuPercentage"], response["usedRam"], response["availRam"], response["totalRam"], response["usedStorage"], response["freeStorage"], response["totalStorage"],response["iowat"],response["availSMemory"],response["usedSMemory"],response["runningProcess"]);
+            },
+            error: function(xhr, status, error) {
+                console.log(status, error);
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    };
+
+    $(document).on("click", ".makefavourite", function() {
+        var host = $(this).data("host");
+        $.ajax({
+            type: 'POST',
+            url: "/makedevicefav/",
+            data: {
+                "host": host,
+            },
+            success: function(response) {
+                Swal.fire(response["data"]);
+            },
+            error: function(xhr, status, error) {
+                console.log(status, error);
+                var err = eval("(" + xhr.responseText + ")");
+                Swal.fire(err.Message);
+            }
+        });
+    })
+    $(document).on("click", ".threshold", function() {
+        var host = $(this).data("host");
+        window.open("/threshold?ip=" + host, "_self")
+    })
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Admin Settings {% endblock %} {% block js %}
+<script>
+    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+
+    function changeStatus(e) {
+        if (e.target.checked) {
+            $.get('/notification/settings/', {}, function(data, status) {
+                console.log(data["status"]);
+            })
+        } else {
+            $.get('/notification/settings/', {}, function(data, status) {
+                console.log(data["status"]);
+            })
+        }
+    }
+    toggleSwitch.addEventListener('change', changeStatus, false);
+
+    // Reboot System
+    function reboot() {
+        conf = confirm("Are you sure want to reboot the system?")
+        if (!conf) return;
+        $.get('/service/restart/', {}, function(data, status) {
+            Swal.fire(data["data"])
+        })
+        };
+
+    $(".resetBtn").on("click", function(e) {
+        e.preventDefault();
+        Swal.fire({
+        title: 'Are you sure want to reset your device? All Data will be erased.',
+        showCancelButton: true,
+        confirmButtonText: 'Reset Device',
+        }).then((result) => {
+        if (result.isConfirmed) {
+            $.get("/backupandrestore/reset/", function(data, status) {
+            console.log(data);
+            if (data["error"]) {
+                Swal.fire(data["message"] + "\n" + data["error"]);
+                return;
+            }
+            Swal.fire(data["message"]);
+        })
+        }
+        }) 
+    });
+
+
+    $(".footer-set").on("click", function() {
+        choice = $(this).data('choice');
+        $.get("/change/footer/?choice="+choice, {}, function(status, data){
+            location.reload();
+        })
+    });
+</script>
+{% endblock %} {% block css %}
+<style>
+    .col-lg-4 {
+        margin-bottom: 20px;
+    }
+    
+    .custom-btn {
+        font-size: xx-large;
+    }
+    /* Toogle Btn*/
+    /*Simple css to style it like a toggle switch*/
+    
+    .theme-switch-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .theme-switch {
+        display: inline-block;
+        height: 34px;
+        position: relative;
+        width: 60px;
+    }
+    
+    .theme-switch input {
+        display: none;
+    }
+    .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+    .slider {
+        background-color: #ccc;
+        bottom: 0;
+        cursor: pointer;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: .4s;
+    }
+    
+    .slider:before {
+        background-color: #fff;
+        bottom: 4px;
+        content: "";
+        height: 26px;
+        left: 4px;
+        position: absolute;
+        transition: .4s;
+        width: 26px;
+    }
+    
+    input:checked+.slider {
+        background-color: #66bb6a;
+    }
+    
+    input:checked+.slider:before {
+        transform: translateX(26px);
+    }
+    
+    .slider.round {
+        border-radius: 34px;
+    }
+    
+    .slider.round:before {
+        border-radius: 50%;
+    }
+    
+    .myheader {
+        text-align: left;
+        font-size: 25px;
+    }
+    
+    .column {
+        margin-bottom: 80px;
+    }
+</style>
+{% endblock %} {% block title_header %}Settings{% endblock %} {% block content %}
+<!--<div class="row d-flex justify-content-around">-->
+    <div class="col-md-12 bg-primary" style="margin-bottom:18px;padding: 20px;">
+        <div class="col-md-8 myheader">Change Notification Blink Status</div>
+        <div class="col-md-4">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input class="form-control" type="checkbox" id="checkbox" {% if is_blink %}checked{% endif %} />
+                    <div class="slider round"></div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 bg-primary" style="margin-bottom:18px;padding: 20px;">
+        <div class="col-md-8 myheader">System Reboot</div>
+        <div class="col-md-4">
+            <div class="theme-switch-wrapper">
+                <i class="fa fa-refresh" onclick="reboot();" style="font-size: 3rem;"></i>
+                            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 bg-primary" style="margin-bottom:18px;padding: 20px;">
+        <div class="col-md-8 myheader">Factory Reset</div>
+        <div class="col-md-4">
+            <div class="theme-switch-wrapper">
+                <i class="fa fa-undo resetBtn" style="font-size: 3rem;"></i>
+                            </div>
+        </div>    
+   	</div>
+	</div>
+	<div class="col-md-12 bg-primary" style="margin-bottom:18px;padding: 20px;">
+        <div class="col-md-8 myheader">Footer Text</div>
+        <div class="col-md-4">
+                <div class="theme-switch-wrapper">
+                    <div class="dropdown">
+                        <span style="font-size:2rem">Select</span>
+                        <div class="dropdown-content">
+                            <p class='footer-set' data-choice="1" style="color:black;cursor:pointer">Made with <img src='/static/dashboard/images/heart.png'> in <img src='/static/dashboard/images/india.png'></p>
+                            <br>
+                            <p class='footer-set' data-choice="2" style="color:black;cursor:pointer">Made in India</p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </div>
+	</div>
+{% endblock %}

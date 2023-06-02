@@ -1,0 +1,915 @@
+ {% load static %}
+ {% load utils %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/static/dashboard/css/bs5.css" rel="stylesheet">
+    <script src="{% static 'dashboard/js/jquery-2.1.1.min.js' %}"></script>
+    <title>Audit Report</title>
+    <style>
+        .main {
+            display: block;
+        }
+        
+        @media print {
+            body {
+                font: 25pt Georgia, "Times New Roman", Times, serif;
+                line-height: 1.3;
+            }
+            .main {
+                display: block;
+            }
+            .print {
+                display: none;
+            }
+            ul {
+                list-style: none
+            }
+            li::before {
+                content: "- ";
+            }
+            h2 {
+                font-weight: bolder;
+                font-size: 3rem;
+                margin-top: 30px;
+                margin-bottom: 30px;
+                page-break-before: always
+            }
+            .logo-header {
+                font-size: 10rem;
+            }
+            .logo-img {
+                height: 500px;
+                width: 580px;
+            }
+            @page {
+                /* margin-left: 0.5in;
+                margin-right: 0.5in;
+                margin-top: 0;
+                margin-bottom: 0; */
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="col-12 border border-info print">
+        <div class="print justify-content-center d-flex align-items-center" style="height:100vh;">
+            <button class="btn btn-primary btn-lg" onclick="print()">Download Report</button>
+        </div>
+    </div>
+    <!--  -->
+    <div class="main">
+        <br><br>
+        <h1 class="text-center logo-header">AUDIT REPORT</h1>
+        <img src="{{base_url}}/static/dashboard/images/akus.png" height="120px" width="140px" class="mx-auto d-block logo-img">
+
+        <h2>Users</h2>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th>User</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Is Superuser</th>
+                <th>Is Staff</th>
+                <th>DOJ</th>
+                <th>Last Login</th>
+                <th>Avatar</th>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <td>{{user.user}}</td>
+                <td>{{user.user.first_name}} {{user.user.last_name}}</td>
+                <td>{{user.user.email}}</td>
+                <td>{{user.user.is_superuser}}</td>
+                <td>{{user.user.is_staff}}</td>
+                <td>{{user.user.last_login}}</td>
+                <td>{{user.user.date_joined}}</td>
+                <td><img class="mx-auto d-block" src="{{base_url}}{% if user.pic %}{{user.pic.url}}{% else %}/static/dashboard/images/p5.png{% endif %}" height="40px" width="auto"></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Datacenter Hall Information</h2>{% for datacenter in assets %}
+        <h4>{{datacenter.dataCenterTag}}</h4>
+        <table class="table table-bordered align-middle" class="dctable">
+            <tr>
+                <th colspan="2" class="text-center">Information</td>
+            </tr>
+            <tr>
+                <th>Datacenter Name</th>
+                <td>{{datacenter.DataCenterName}}</td>
+            </tr>
+            <tr>
+                <th>Square Metre</th>
+                <td>{{datacenter.sqr_mtr}}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{datacenter.Add_country}}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{datacenter.Add_state}}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{datacenter.Address}}</td>
+            </tr>
+            <tr>
+                <th>Contact</th>
+                <td>{{datacenter.Contact}}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{datacenter.PersonalDet_fname}}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{datacenter.PersonalDet_email}}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{datacenter.phone}}</td>
+            </tr>
+            <tr>
+                <th>Capacity</th>
+                <td>{{datacenter.Capacity_in_MW}}</td>
+            </tr>
+        </table><br>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th>Total Rows</th>
+                <th>Total Racks</th>
+                <th>Total Devices</th>
+            </tr>
+            <tr>
+                <th>{{datacenter.totalrow}}</th>
+                <th>{{datacenter.totalrack}}</th>
+                <th>{{datacenter.totaldevice}}</th>
+            </tr>
+        </table>
+        <br> {% endfor %}
+
+        <h2>Device Capabilities</h2>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th>Device</th>
+                <th>Host</th>
+                <th>SNMP</th>
+                <th>NETAPI</th>
+                <th>RESTAPI</th>
+                <th>Device Added</th>
+                <th>Device Updated</th>
+            </tr>
+            {% for device in capabilities %}
+            <tr>
+                <td>{{device.name}}</td>
+                <td>{{device.ip}}</td>
+                <td>{{device.is_snmp}}</td>
+                <td>{{device.is_netconf}}</td>
+                <td>{{device.is_restconf}}</td>
+                <td>{{device.created}}</td>
+                <td>{{device.updated}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Asset Device Information</h2>
+        {% for data, details in deviceinfo.items %}
+        <h4>{{data|upper}}</h4>
+        <div class="row mb-4">
+        {% for d in details %}
+        {% if d.ip == "10.1.45.52" %}
+<div class="card col-sm-2" style="padding:0px">    
+            <div class="card-body" style="background: linear-gradient(to right, green 95%, red 5%);">
+                <h5 class="card-title text-center text-white">Uptime: 95%</h5>             
+                <h6 class="card-title text-center text-white">{{d.ip}} {{d.name}}</h6>              
+            </div>
+        </div>
+        {% endif %}
+        {% if d.ip == "10.1.45.11" %}
+<div class="card col-sm-2" style="padding:0px">    
+            <div class="card-body" style="background: linear-gradient(to right, green 96%, red 4%);">
+                <h5 class="card-title text-center text-white">Uptime: 96%</h5>             
+                <h6 class="card-title text-center text-white">{{d.ip}} {{d.name}}</h6>              
+            </div>
+        </div>
+        {% endif %}
+        {% if d.ip == "10.1.45.29" %}
+<div class="card col-sm-2" style="padding:0px">    
+            <div class="card-body" style="background: linear-gradient(to right, green 92%, red 8%);">
+                <h5 class="card-title text-center text-white">Uptime: 92%</h5>             
+                <h6 class="card-title text-center text-white">{{d.ip}} {{d.name}}</h6>              
+            </div>
+        </div>
+        {% endif %}
+        {% if d.ip == "10.1.45.17" %}
+<div class="card col-sm-2" style="padding:0px">    
+            <div class="card-body" style="background: linear-gradient(to right, green 96%, red 4%);">
+                <h5 class="card-title text-center text-white">Uptime: 96%</h5>             
+                <h6 class="card-title text-center text-white">{{d.ip}} {{d.name}}</h6>              
+            </div>
+        </div>
+        {% endif %}
+
+         {% if d.ip == "10.1.45.4" %}
+<div class="card col-sm-2" style="padding:0px">    
+            <div class="card-body" style="background: linear-gradient(to right, green 96%, red 4%);">
+                <h5 class="card-title text-center text-white">Uptime: 96%</h5>             
+                <h6 class="card-title text-center text-white">{{d.ip}} {{d.name}}</h6>              
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card col-sm-2" style="padding:0px">    
+            <div class="card-body" style="background: linear-gradient(to right, green 100%, red 0%);">
+                <h5 class="card-title text-center text-white">Uptime: 100%</h5>             
+                <h6 class="card-title text-center text-white">{{d.ip}} {{d.name}}</h6>              
+            </div>
+        </div>
+                {% endfor %}
+        </div>
+        {% endfor %}
+
+        <h2>CCTV Devices</h2>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th>Name</th>
+                <th>is Favourite</th>
+                <th>Created At</th>
+            </tr>
+            {% for cctv in cctv.cctvs %}
+            <tr>
+                <td>{{cctv.name}}</td>
+                <td>{{cctv.isFavorite}}</td>
+                <td>{{cctv.created_at}}</td>
+            </tr>
+            {% endfor %}
+            <p>Total CCTV: {{cctv.total}}</p>
+        </table>
+
+        <h2>Website Data</h2>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th>Name</th>
+                <th>is Favourite</th>
+                <th>Created At</th>
+            </tr>
+            {% for website in web.websites %}
+            <tr>
+                <td>{{website.name}}</td>
+                <td>{{website.isFavorite}}</td>
+                <td>{{website.created_at}}</td>
+            </tr>
+            {% endfor %}
+            <p>Total Websites: {{web.total}}</p>
+        </table>
+
+        <h2>Appliance Data</h2>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th>CPU</th>
+                <th>USED RAM</th>
+                <th>AVAILABLE RAM</th>
+                <th>TOTAL RAM</th>
+                <th>TEMP</th>
+            </tr>
+            <tr>
+                <td>{{cpuPercentage}} %</td>
+                <td>{{usedRam}} %</td>
+                <td>{{AvailRam}} GB</td>
+                <td>{{totalRam}} GB</td>
+                <td>{{temperature}}<sup>o</sup>C</td>
+            </tr>
+            <tr>
+                <th>USED STORAGE</th>
+                <th>TOTAL STORAGE</th>
+                <th>USED S MEMORY</th>
+                <th>AVAILABLE S MEMORY</th>
+                <th>IOWAIT</th>
+            </tr>
+            <tr>
+                <td>{{usedStorage}} GB</td>
+                <td>{{freeStorage}} GB</td>
+                <td>{{usedSMemory}} GB</td>
+                <td>{{availSMemory}} GB</td>
+                <td>{{iowait}} GB</td>
+            </tr>
+        </table>
+        <br><br>
+        <h2>Network Summary</h2>
+        <!-- Network Summary -->
+        <div class="card col-lg-12">
+            <div class="card-body" data-type="">
+                <h5 style="font-weight: bold;">CPU Usage</h5>
+                <p class="card-text">
+                    <table class="table table-bordered align-middle" id="network_top5cpu">
+                        <thead>
+                            <tr>
+                                <td> Device </td>
+                                <td> Packets Inbound </td>
+                                <td> Packets Outbound </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </p>
+            </div>
+        </div>
+        <br><br>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <td id="network_storage-total"></td>
+                <td id="network_storage-ram"></td>
+                <td id="network_storage-swap"></td>
+            </tr>
+        </table>
+        <br><br>
+        <div class="row">
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Packets</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="network_ramSummaryGRAPH"></canvas>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Packets Error</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="network_pkterrGRAPH"></canvas>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row mt-3">
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Storage Utilization</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="network_tempGRAPH2"></canvas>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Swap Utilization</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="network_tempGRAPH3"></canvas>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">STATS</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="network_tempGRAPH1"></canvas>
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Ram Utilization</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="network_storageSummaryGRAPH"></canvas>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Network Summary -->
+        <br><br>
+        <h2>Server Summary</h2>
+        <!-- Server Summary -->
+        <div class="card col-lg-12">
+            <div class="card-body" data-type="">
+                <h5 style="font-weight: bold;">CPU Usage</h5>
+                <p class="card-text">
+                    <table class="table table-bordered align-middle" id="top5cpu">
+                        <thead>
+                            <tr>
+                                <td> Device </td>
+                                <td> Packets Inbound </td>
+                                <td> Packets Outbound </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </p>
+            </div>
+        </div>
+        <br><br>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <td id="storage-total"></td>
+                <td id="storage-ram"></td>
+                <td id="storage-swap"></td>
+            </tr>
+        </table>
+        <br><br>
+        <div class="row">
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Packets</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="ramSummaryGRAPH"></canvas>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Packets Error</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="pkterrGRAPH"></canvas>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row mt-3">
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Storage Utilization</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="tempGRAPH2"></canvas>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Swap Utilization</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="tempGRAPH3"></canvas>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">STATS</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="tempGRAPH1"></canvas>
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="card col-lg-12">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Ram Utilization</h5>
+                    <p class="card-text" style="height:300px">
+                        <canvas id="storageSummaryGRAPH"></canvas>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Server Summary -->
+        <h2>CPU Core Utilizations</h2>
+        <table class="table table-bordered align-middle">
+            <tr>
+                {% for core in cpu %}
+                <th>Core {{forloop.counter}}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for core in cpu %}
+                <td>{{core}}</td>
+                {% endfor %}
+            </tr>
+        </table>
+
+
+        <h2>Terminal Logs</h2>
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th>Command</th>
+                <th>Device</th>
+                <th>User</th>
+                <th>Executed At</th>
+            </tr>
+            {% for log in terminalLog %}
+            <tr>
+                <td>{{log.cmd}}</td>
+                <td>{{log.device}}</td>
+                <td>{{log.user}}</td>
+                <td>{{log.created_at}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Notifications Stats</h2>
+        Total Notifications: {{notifications.total}}
+        <h5>Category Wise</h5>
+
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th colspan="2">Appliance Data</th>
+                <td>{{notifications.appliance}}</td>
+            </tr>
+            <tr>
+                <th colspan="2">SNMP Data</th>
+                <td>{{notifications.dashboard}}</td>
+            </tr>
+            <tr>
+                <th colspan="2">Websites Data</th>
+                <td>{{notifications.web}}</td>
+            </tr>
+        </table>
+        <h5>Priority</h5>
+
+        <table class="table table-bordered align-middle">
+            <tr>
+                <th colspan="2">High</th>
+                <td>{{notifications.high}}</td>
+            </tr>
+            <tr>
+                <th colspan="2">Medium</th>
+                <td>{{notifications.med}}</td>
+            </tr>
+            <tr>
+                <th colspan="2">Low</th>
+                <td>{{notifications.low}}</td>
+            </tr>
+        </table>
+        <p>Akus IT Solutions</p>
+    </div>
+
+    <script src="{% static '/dashboard/js/Chart.min.js' %}"></script>
+    </script>
+    <script>
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+            return false;
+        };
+        const days = getUrlParameter("days");
+        //ADD TRAILING 0 TO SINGLE DIGIT IN UPTIME
+        function AddZero(n) {
+            return (n < 10 ? '0' : '') + n;
+        }
+        // FUNCTION FOR SYSTEM UPTIME
+        function uptimeTOdays(sec) {
+            seconds = Number(sec);
+            var d = Math.floor(seconds / (3600 * 24));
+            var h = Math.floor(seconds % (3600 * 24) / 3600);
+            var m = Math.floor(seconds % 3600 / 60);
+            var s = Math.floor(seconds % 60);
+
+            var dDisplay = d > 0 ? d + (d == 1 ? "D " : "D ") : "";
+            var hDisplay = h > 0 ? h + (h == 1 ? "  " : " : ") : "";
+            var mDisplay = m > 0 ? m + (m == 1 ? " : " : " : ") : "";
+            var sDisplay = s > 0 ? s + (s == 1 ? "" : "") : "";
+            return (dDisplay + hDisplay + mDisplay + sDisplay).replace(/,\s*$/, "");
+        }
+        // bit to kb
+        function bitToKB(bit) {
+            return (bit / 1048576).toFixed(2);
+        }
+
+        function niceBytes(x){
+
+        var units = ["MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+        let l = 0, n = parseFloat(x, 10) || 0;
+
+        while(n >= (1024) && ++l){
+            n = n/1024;
+        }
+
+        return(n.toFixed(3) + ' '+units[l])
+
+    }
+
+        function NetworkSummary(url) {
+            $.get(url, {}, function(data, status) {
+                data = data["data"];
+                var busy_device = data["busy_devices"];
+
+                var top5cpu = "";
+                //busy devices
+                console.log("BSYYYY", busy_device);
+                totalDeviceKeys = 0;
+                for (var i in busy_device) {
+                    if (busy_device[i]["ip"] != "192.168.1.10") {
+                        totalDeviceKeys++;
+                        $("#network_top5cpu tbody").append(`<tr>
+                <td>${busy_device[i]["name"]}</td>
+                <td>${niceBytes(busy_device[i]["inbound"])}</td>
+                <td>${niceBytes(busy_device[i]["outbound"])}</td></tr>`);
+                    }
+                }
+
+                if (totalDeviceKeys < 5) {
+                    while (totalDeviceKeys != 5) {
+                        totalDeviceKeys++;
+                        $("#network_top5cpu tbody").append(`<tr><td>&nbsp;</td><td></td><td></td></tr>`)
+                    }
+                }
+
+                //
+                $("#network_storage-total").html("<b>Total Storage:</b> " + data["storage_total"] + " GB");
+                $("#network_storage-ram").html("<b>Total Ram:</b> " + data["ram_total"] + " GB");
+                $("#network_storage-swap").html("<b>Total Swap:</b> " + data["swap_total"] + " GB");
+
+                //GRAPHS
+                var temp1 = document.getElementById("network_tempGRAPH1").getContext('2d');
+                var temp2 = document.getElementById("network_tempGRAPH2").getContext('2d');
+                var temp3 = document.getElementById("network_tempGRAPH3").getContext('2d');
+                var temp5 = document.getElementById("network_storageSummaryGRAPH").getContext('2d');
+                var temp6 = document.getElementById("network_ramSummaryGRAPH").getContext('2d');
+                var temp10 = document.getElementById("network_pkterrGRAPH").getContext('2d');
+
+                var myChart = new Chart(temp2, {
+                    type: 'line',
+                    data: {
+                        labels: data["groups"],
+                        datasets: [{
+                            label: 'Storage', // Name the series
+                            data: data["storage_used_groups"], // Specify the data values array
+                            fill: false,
+                            borderColor: '#0000ff', // Add custom color border (Line)
+                            backgroundColor: '#0000ff', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp3, {
+                    type: 'line',
+                    data: {
+                        labels: data["groups"],
+                        datasets: [{
+                            label: 'Swap Memory', // Name the series
+                            data: data["swap_available_groups"], // Specify the data values array
+                            fill: false,
+                            borderColor: '#ff0080', // Add custom color border (Line)
+                            backgroundColor: '#ff0080', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp5, {
+                    type: 'line',
+                    data: {
+                        labels: data["groups"],
+                        datasets: [{
+                            label: 'Memory', // Name the series
+                            data: data["ram_used_groups"], // Specify the data values array
+                            fill: false,
+                            borderColor: '#00cccc', // Add custom color border (Line)
+                            backgroundColor: '#00cccc', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp6, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Inbound", "Outbound"],
+                        datasets: [{
+                            label: 'Data In/ Out', // Name the series
+                            data: [bitToKB(data["total_inbound"]), bitToKB(data["total_outbound"])], // Specify the data values array
+                            fill: false,
+                            borderColor: '#e600e6', // Add custom color border (Line)
+                            backgroundColor: '#e600e6', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp10, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Inbound Err", "Outbound Err"],
+                        datasets: [{
+                            label: 'Data InErr/ OutErr', // Name the series
+                            data: [data["total_inbound_err"], data["total_outbound_err"]], // Specify the data values array
+                            fill: false,
+                            borderColor: '#ffbb00', // Add custom color border (Line)
+                            backgroundColor: '#ffbb00', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp1, {
+                    type: 'bar',
+                    data: {
+                        labels: data["groups"],
+                        datasets: [{
+                            label: 'Report', // Name the series
+                            data: data["ram_used_groups"], // Specify the data values array
+                            fill: false,
+                            borderColor: '#00ff40', // Add custom color border (Line)
+                            backgroundColor: '#00ff40', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+
+            })
+        }
+
+        function ServerSummary(url) {
+            $.get(url, {}, function(data, status) {
+                data = data["data"];
+                var busy_device = data["busy_devices"];
+
+                var top5cpu = "";
+                //busy devices
+                console.log("BSYYYY", busy_device);
+                totalDeviceKeys = 0;
+                for (var i in busy_device) {
+                    if (busy_device[i]["ip"] != "192.168.1.10") {
+                        totalDeviceKeys++;
+                        $("#top5cpu tbody").append(`<tr>
+                <td>${busy_device[i]["name"]}</td>
+                <td>${niceBytes(busy_device[i]["inbound"])}</td>
+                <td>${niceBytes(busy_device[i]["outbound"])}</td></tr>`);
+                    }
+                }
+
+                if (totalDeviceKeys < 5) {
+                    while (totalDeviceKeys != 5) {
+                        totalDeviceKeys++;
+                        $("#top5cpu tbody").append(`<tr><td>&nbsp;</td><td></td><td></td></tr>`)
+                    }
+                }
+
+                //
+                $("#storage-total").html("<b>Total Storage:</b> " + data["storage_total"] + " GB");
+                $("#storage-ram").html("<b>Total Ram:</b> " + data["ram_total"] + " GB");
+                $("#storage-swap").html("<b>Total Swap:</b> " + data["swap_total"] + " GB");
+
+                //GRAPHS
+                var temp1 = document.getElementById("tempGRAPH1").getContext('2d');
+                var temp2 = document.getElementById("tempGRAPH2").getContext('2d');
+                var temp3 = document.getElementById("tempGRAPH3").getContext('2d');
+                var temp5 = document.getElementById("storageSummaryGRAPH").getContext('2d');
+                var temp6 = document.getElementById("ramSummaryGRAPH").getContext('2d');
+                var temp10 = document.getElementById("pkterrGRAPH").getContext('2d');
+
+                var myChart = new Chart(temp2, {
+                    type: 'line',
+                    data: {
+                        labels: data["groups"],
+                        datasets: [{
+                            label: 'Storage', // Name the series
+                            data: data["storage_used_groups"], // Specify the data values array
+                            fill: false,
+                            borderColor: '#0000ff', // Add custom color border (Line)
+                            backgroundColor: '#0000ff', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp3, {
+                    type: 'line',
+                    data: {
+                        labels: data["groups"],
+                        datasets: [{
+                            label: 'Swap Memory', // Name the series
+                            data: data["swap_available_groups"], // Specify the data values array
+                            fill: false,
+                            borderColor: '#ff0080', // Add custom color border (Line)
+                            backgroundColor: '#ff0080', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp5, {
+                    type: 'line',
+                    data: {
+                        labels: data["groups"],
+                        datasets: [{
+                            label: 'Memory', // Name the series
+                            data: data["ram_used_groups"], // Specify the data values array
+                            fill: false,
+                            borderColor: '#00cccc', // Add custom color border (Line)
+                            backgroundColor: '#00cccc', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp6, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Inbound", "Outbound"],
+                        datasets: [{
+                            label: 'Data In/ Out', // Name the series
+                            data: [bitToKB(data["total_inbound"]), bitToKB(data["total_outbound"])], // Specify the data values array
+                            fill: false,
+                            borderColor: '#e600e6', // Add custom color border (Line)
+                            backgroundColor: '#e600e6', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp10, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Inbound Err", "Outbound Err"],
+                        datasets: [{
+                            label: 'Data InErr/ OutErr', // Name the series
+                            data: [data["total_inbound_err"], data["total_outbound_err"]], // Specify the data values array
+                            fill: false,
+                            borderColor: '#ffbb00', // Add custom color border (Line)
+                            backgroundColor: '#ffbb00', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+                var myChart = new Chart(temp1, {
+                    type: 'bar',
+                    data: {
+                        labels: data["groups"],
+                        datasets: [{
+                            label: 'Report', // Name the series
+                            data: data["ram_used_groups"], // Specify the data values array
+                            fill: false,
+                            borderColor: '#00ff40', // Add custom color border (Line)
+                            backgroundColor: '#00ff40', // Add custom color background (Points and Fill)
+                            borderWidth: 1 // Specify bar border width
+                        }]
+                    },
+                    options: {
+                        responsive: true, // Instruct chart js to respond nicely.
+                        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                    }
+                });
+
+            })
+        }
+        NetworkSummary(`/summary/network/data/?days=${days}`);
+        ServerSummary(`/summary/server/data/?days=${days}`);
+    </script>
+</body>
+
+</html>

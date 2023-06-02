@@ -1,0 +1,243 @@
+{
+    "sysdescr": "Cisco IOS Software, C3900e Software (C3900e-UNIVERSALK9-M), Version 15.1(4)M4, RELEASE SOFTWARE (fc1)\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2012 by Cisco Systems, Inc.\r\nCompiled Tue 20-Mar-12 22:07 by prod_rel_team",
+    "sysobjectid": "1.3.6.1.4.1.9.1.1144",
+    "sysuptime": "15918129",
+    "syscontact": "hawk",
+    "sysname": "cisco.cisco.local",
+    "syslocation": "delhi",
+    "interfaces": {
+        "1": {
+            "ifindex": "1",
+            "inOctect": 4935380,
+            "outOctect": 2542801,
+            "inErr": 0,
+            "name": "GigabitEthernet0/0",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "0"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": "",
+            "ipv4": [
+                {
+                    "address": "192.168.1.30",
+                    "netmask": "255.255.255.0"
+                }
+            ]
+        },
+        "2": {
+            "ifindex": "2",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "GigabitEthernet0/1",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "1"
+            ],
+            "adminstatus": "down",
+            "operstatus": "down",
+            "description": ""
+        },
+        "3": {
+            "ifindex": "3",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "GigabitEthernet0/2",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "2"
+            ],
+            "adminstatus": "down",
+            "operstatus": "down",
+            "description": ""
+        },
+        "4": {
+            "ifindex": "4",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "GigabitEthernet0/3",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "3"
+            ],
+            "adminstatus": "down",
+            "operstatus": "down",
+            "description": ""
+        },
+        "5": {
+            "ifindex": "5",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Backplane-GigabitEthernet0/4",
+            "outErr": 0,
+            "mtu": "9600",
+            "speed": "1000000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "4"
+            ],
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "6": {
+            "ifindex": "6",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/0/0",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "0",
+                "36",
+                "196",
+                "225",
+                "156",
+                "86"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "7": {
+            "ifindex": "7",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/0/1",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "0",
+                "36",
+                "196",
+                "225",
+                "156",
+                "87"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "8": {
+            "ifindex": "8",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/0/2",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "0",
+                "36",
+                "196",
+                "225",
+                "156",
+                "88"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "9": {
+            "ifindex": "9",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "FastEthernet0/0/3",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "0",
+                "36",
+                "196",
+                "225",
+                "156",
+                "89"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        },
+        "10": {
+            "ifindex": "10",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Null0",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "4294967295",
+            "mac": "",
+            "adminstatus": "up",
+            "operstatus": "up",
+            "description": ""
+        },
+        "11": {
+            "ifindex": "11",
+            "inOctect": 0,
+            "outOctect": 0,
+            "inErr": 0,
+            "name": "Vlan1",
+            "outErr": 0,
+            "mtu": "1500",
+            "speed": "100000000",
+            "mac": [
+                "224",
+                "47",
+                "109",
+                "59",
+                "18",
+                "4"
+            ],
+            "adminstatus": "up",
+            "operstatus": "down",
+            "description": ""
+        }
+    },
+    "all_ipv4_addresses": [
+        "192.168.1.30"
+    ]
+}

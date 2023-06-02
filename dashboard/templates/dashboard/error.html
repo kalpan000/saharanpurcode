@@ -1,0 +1,185 @@
+{% extends 'dashboard/header_footer.html' %}{% load static %} {% block title %} Server {% endblock title %} {% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/datatable.css' %}">
+<style>
+    .card-counter {
+        box-shadow: 2px 2px 10px #DADADA;
+        margin: -13px;
+        padding: 20px 10px;
+        background-color: #fff;
+        height: 70px;
+        border-radius: 5px;
+        transition: .3s linear all;
+    }
+    
+    .card-counter:hover {
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+    }
+    
+    .card-counter.primary {
+        background-color: #007bff;
+        color: #FFF;
+    }
+    
+    .card-counter.danger {
+        background-color: #ef5350;
+        color: #FFF;
+    }
+    
+    .card-counter.success {
+        background-color: #66bb6a;
+        color: #FFF;
+    }
+    
+    .card-counter.info {
+        background-color: #26c6da;
+        color: #FFF;
+    }
+    
+    .card-counter i {
+        font-size: 5em;
+        opacity: 0.2;
+    }
+    
+    .card-counter .count-numbers {
+        position: relative;
+        text-align: center;
+        right: 2px;
+        top: -25px;
+        font-size: 32px;
+        display: block;
+    }
+    
+    .card-counter .count-name {
+        position: relative;
+        top: -25px;
+        text-transform: capitalize;
+        opacity: 0.5;
+        display: block;
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    fieldset.scheduler-border {
+        /* border: 1px groove #ddd !important; */
+        padding: 0 1.4em 1.4em 1.4em !important;
+        /* margin: 0 0 1.5em 0 !important; */
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+    }
+    
+    legend.scheduler-border {
+        font-size: 1em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width: auto;
+        padding: 0 10px;
+        border-bottom: none;
+    }
+    
+    .col-md-offset-1 {
+        margin-left: 2.333%;
+    }
+    
+    .container {
+        width: 100%;
+    }
+    
+    .headerCol {
+        width: 14.667%;
+    }
+    
+    .card {
+        background: #fff;
+        color: black;
+        box-shadow: 0 0 1px #232323;
+        text-align: left;
+        margin-bottom: 12px;
+    }
+    
+    .chartbtn {
+        position: relative;
+        background: none;
+        border: none;
+        font-size: 11px;
+        right: 0;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+    
+    .chartBtnSelection {
+        color: green;
+        font-weight: bolder;
+    }
+    
+    .indSmry {
+        background: #ffffff;
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    
+    .divIndSmry {
+        position: aboslute;
+        top: 50%;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+    }
+    
+    .myterminal {
+        padding: 20px;
+        height: auto;
+        width: 100%;
+    }
+    
+    .cmdoutput {
+        text-align: left;
+        margin-top: 10px;
+        margin-left: 4%;
+    }
+    
+    .runcmd {
+        padding: 5px;
+        width: 100%;
+    }
+    
+    .terminal .cmd {
+        width: 96%;
+        float: right;
+    }
+    
+    .terminal .cmdexe {
+        width: 3%;
+        float: left;
+    }
+    
+    .addnewterminal {
+        border: 0px;
+        outline: none;
+        background: transparent;
+        margin-bottom: 25px;
+        margin-left: 10px;
+    }
+    
+    .removeterminal {
+        border: 0px;
+        font-size: 20px;
+        outline: none;
+        background: transparent;
+        margin-bottom: 5px;
+        margin-left: 99%;
+    }
+    
+    .closeterminal {
+        position: relative;
+        top: -17px;
+    }
+</style>
+{% endblock css %}
+{% block title_header %}Server{% endblock %} {% block content %}
+
+<h1> You are not authorised to use this function.<br><a href="/">Click to Redirect to home</a></h1>
+
+
+
+{% endblock %}

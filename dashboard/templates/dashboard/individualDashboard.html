@@ -1,0 +1,844 @@
+{% extends 'dashboard/header_footer.html' %}{% load static %} {% block title %} Network {% endblock title %}{% block title_header %}MyDashboard{% endblock %} {% block css %}
+<style>
+    .card-counter {
+        box-shadow: 2px 2px 10px #DADADA;
+        margin: -13px;
+        padding: 20px 10px;
+        background-color: #fff;
+        height: 70px;
+        border-radius: 5px;
+        transition: .3s linear all;
+    }
+    
+    .card-counter:hover {
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+    }
+    
+    .card-counter.primary {
+        background-color: #007bff;
+        color: #FFF;
+    }
+    
+    .card-counter.danger {
+        background-color: #ef5350;
+        color: #FFF;
+    }
+    
+    .card-counter.success {
+        background-color: #66bb6a;
+        color: #FFF;
+    }
+    
+    .card-counter.info {
+        background-color: #26c6da;
+        color: #FFF;
+    }
+    
+    .card-counter i {
+        font-size: 5em;
+        opacity: 0.2;
+    }
+    
+    .card-counter .count-numbers {
+        position: relative;
+        text-align: center;
+        right: 2px;
+        top: -25px;
+        font-size: 32px;
+        display: block;
+    }
+    
+    .card-counter .count-name {
+        position: relative;
+        top: -25px;
+        text-transform: capitalize;
+        opacity: 0.5;
+        display: block;
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    fieldset.scheduler-border {
+        /* border: 1px groove #ddd !important; */
+        padding: 0 1.4em 1.4em 1.4em !important;
+        /* margin: 0 0 1.5em 0 !important; */
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+    }
+    
+    legend.scheduler-border {
+        font-size: 1em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width: auto;
+        padding: 0 10px;
+        border-bottom: none;
+    }
+    
+    .col-md-offset-1 {
+        margin-left: 2.333%;
+    }
+    
+    .container {
+        width: 100%;
+    }
+    
+    .headerCol {
+        width: 14.667%;
+    }
+    
+    .card {
+        background: #fff;
+        color: black;
+        box-shadow: 0 0 1px #232323;
+        text-align: left;
+        margin-bottom: 12px;
+    }
+    
+    .chartbtn {
+        position: relative;
+        background: none;
+        border: none;
+        font-size: 11px;
+        right: 0;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+    
+    .chartBtnSelection {
+        color: green;
+        font-weight: bolder;
+    }
+    
+    .indSmry {
+        background: #ffffff;
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    
+    .divIndSmry {
+        position: aboslute;
+        top: 50%;
+        text-align: left;
+        font-size: 22px;
+        font-weight: bold;
+    }
+</style>
+
+{% endblock %}{% block js %}
+<script src="{% static '/dashboard/js/plotly.js' %}"></script>
+<script src="{% static '/dashboard/js/Chart.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts-liquidfill.min.js' %}"></script>
+<script src="{% static '/graphs/bargraph.js' %}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'dashboard/js/datatable.js' %}"></script>
+<script>
+    //ADD TRAILING 0 TO SINGLE DIGIT IN UPTIME
+    function AddZero(n) {
+        return (n < 10 ? '0' : '') + n;
+    }
+    // FUNCTION FOR SYSTEM UPTIME
+    function uptimeTOdays(sec) {
+        time = Number(sec) / 100;
+        var d = Math.floor(time / (3600 * 24));
+        time = Math.floor(time % (3600 * 24))
+        var h = Math.floor(time / 3600);
+        time = Math.floor(time % 3600)
+        var m = Math.floor(time / 60);
+        time = Math.floor(time % 60)
+        var s = time
+
+        var dDisplay = d > 0 ? d + (d == 1 ? "D " : "D ") : "";
+        var hDisplay = h > 0 ? h + (h == 1 ? "H  " : "H : ") : "";
+        var mDisplay = m > 0 ? m + (m == 1 ? "M : " : "M : ") : "";
+        var sDisplay = s > 0 ? s + (s == 1 ? "S" : "S") : "";
+        return (dDisplay + hDisplay + mDisplay + sDisplay).replace(/,\s*$/, "");
+    }
+    // bit to kb
+    function bitToKB(bit) {
+        return (bit / 1048576);
+    }
+
+    var temp7 = document.getElementById("cpuUtilGRAPH").getContext('2d');
+    var temp8 = document.getElementById("virtualGRAPH").getContext('2d');
+    var temp9 = document.getElementById("cpuTemp").getContext('2d');
+
+    var temp15 = document.getElementById("storageGRAPH").getContext('2d');
+    var temp16 = document.getElementById("iowaitGRAPH").getContext('2d');
+    var temp17 = document.getElementById("ramGRAPH").getContext('2d');
+
+
+    var temp19 = document.getElementById("ramlineGRAPH").getContext('2d');
+    var temp20 = document.getElementById("cpuGRAPH").getContext('2d');
+
+
+    var cpuutilChart = new Chart(temp7, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Cpu Utilization', // Name the series
+                data: [], // Specify the data values array
+                fill: false,
+                borderColor: ["#129900", "#e21212"], // Add custom color border (Line)
+                backgroundColor: ["#129900", "#e21212"], // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var virtualChart = new Chart(temp8, {
+        type: 'pie',
+        data: {
+            labels: ["Total", "Used"],
+            datasets: [{
+                label: 'Swap Memory', // Name the series
+                data: [0, 0], // Specify the data values array
+                fill: false,
+                borderColor: ["#129900", "#e21212"], // Add custom color border (Line)
+                backgroundColor: ["#129900", "#e21212"], // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    var cputempChart = new Chart(temp9, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'CPU Temp', // Name the series
+                data: [], // Specify the data values array
+                fill: false,
+                borderColor: '#00ff40', // Add custom color border (Line)
+                backgroundColor: '#00ff40', // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+
+    var storageChart = new Chart(temp15, {
+        type: 'pie',
+        data: {
+            labels: ["Storage Used"],
+            datasets: [{
+                label: 'Storage', // Name the series
+                data: [0], // Specify the data values array
+                fill: false,
+                borderColor: ["#129900", "#e21212"], // Add custom color border (Line)
+                backgroundColor: ["#129900", "#e21212"], // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+
+    var iowaitChart = new Chart(temp16, {
+        type: 'pie',
+        data: {
+            labels: ["Total", "Used"],
+            datasets: [{
+                label: 'IOWAIT', // Name the series
+                data: [0, 0], // Specify the data values array
+                fill: false,
+                borderColor: ["#129900", "#e21212"], // Add custom color border (Line)
+                backgroundColor: ["#129900", "#e21212"], // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+
+    var ramChart = new Chart(temp17, {
+        type: 'pie',
+        data: {
+            labels: ["Total", "Used"],
+            datasets: [{
+                label: 'RAM', // Name the series
+                data: [0, 0], // Specify the data values array
+                fill: false,
+                borderColor: ["#129900", "#e21212"], // Add custom color border (Line)
+                backgroundColor: ["#129900", "#e21212"], // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+
+    var ramutilChart = new Chart(temp19, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Ram Utilization', // Name the series
+                data: [], // Specify the data values array
+                fill: false,
+                borderColor: ["#e21212"], // Add custom color border (Line)
+                backgroundColor: ["#e21212"], // Add custom color background (Points and Fill)
+                borderWidth: 1 // Specify bar border width
+            }]
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+    $(document).on('click', '.showmoredetails', function() {
+        $(this).removeClass('showmoredetails');
+        $(this).addClass('hidemoredetails');
+        var me = $(this).parent().next().css('display', 'block');
+    })
+    $(document).on('click', '.hidemoredetails', function() {
+        $(this).removeClass('hidemoredetails');
+        $(this).addClass('showmoredetails');
+        var me = $(this).parent().next().css('display', 'none');
+    })
+    var cpu_utilChart = new Chart(temp20, {
+        type: 'bar',
+        data: {
+            labels: ["Core Utilization"],
+            datasets: []
+        },
+        options: {
+            responsive: true, // Instruct chart js to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        }
+    });
+
+    function removeData(chart) {
+        chart.data.labels.shift();
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.shift();
+        });
+        chart.update();
+    }
+
+    function addData(chart, label, data) {
+        chart.data.labels.push(label);
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.push(data);
+        });
+        if (chart.data.labels.length >= 10) {
+            removeData(chart);
+            return;
+        }
+        chart.update();
+    }
+
+    function Statistics(host, cstr) {
+        var datas = {
+            "host": host,
+            "cstr": cstr,
+        }
+        console.log(datas)
+        $.post("/getsnmp/", datas, function(data, status) {
+            data = data["data"]
+            if (data == undefined) {
+                $("#sysinfoTable tbody").html("No Response Before Time Out.");
+                return false;
+            }
+            console.log(data)
+            //assets = data["assets"];
+            //cpu = data["cpu"];
+            //cpulabel = data["cpuLables"];
+            var html = "";
+            html += "<tr><th>IP ADDRESS</th><td>" + host + "</td><tr>";
+            //html += "<tr><th>ASSET TAG</th><td>" + assets["Device_Asset_Tag"] + "</td><tr>";
+            //html += "<tr><th>OWNER</th><td>" + assets["deviceOwner"] + "</td><tr>";
+            //html += "<tr><th>RACK LOCATION</th><td>" + assets["Unit_Location"] + "</td><tr>";
+            html += "<tr><th>NAME</th><td>" + data["sysname"] + "</td><tr>";
+            html += "<tr><th>DESCRIPTION</th><td>" + data["sysdescr"] + "</td><tr>";
+            html += "<tr><th>LOCATION</th><td>" + data["syslocation"] + "</td><tr>";
+            html += "<tr><th>CONTACT</th><td>" + data["syscontact"] + "</td><tr>";
+            $("#sysUptime").html(uptimeTOdays(data["sysuptime"]));
+            $("#sysinfoTable tbody").html(html);
+
+
+            storage = data["hrstorage"] // all storage
+            //if (Object.keys(storage).length > 0 || storage != undefined) {
+            if (storage != undefined) {
+                for (var i in storage) {
+                    total = 0
+                    used = 0
+                    temp = storage[i]
+                    type = "";
+                    if (temp["hrtoragedescr"] == "Virtual Memory") {
+                        type = "virtual"
+                    } else if (temp["hrtoragedescr"] == "Physical Memory") {
+                        type = "physical"
+                    } else {
+                        type = "storage"
+                    }
+                    total = (temp["hrstoragesize"] * temp["hrtoragealloc"]) / 1073741824
+                    used = (temp["hrstorageused"] * temp["hrtoragealloc"]) / 1073741824
+
+                    if (type == "storage") {
+                        storageChart.data.datasets[0].data[0] = total;
+                        storageChart.data.datasets[0].data[1] = used;
+                    } else if (type == "virtual") {
+                        virtualChart.data.datasets[0].data[0] = total;
+                        virtualChart.data.datasets[0].data[1] = used;
+                    } else {
+                        ramChart.data.datasets[0].data[0] = total;
+                        ramChart.data.datasets[0].data[1] = used;
+                        addData(ramutilChart, "1", used);
+                    }
+                }
+            }
+
+            cpu_utils = data["cpuutil"]
+                // console.log(cpu_utils)
+
+            // iowaitChart.data.datasets[0].data[0] = 40;
+            // iowaitChart.data.datasets[0].data[1] = 100;
+
+
+            //addData(cpu_utilChart, "1", cpu_utils)
+            //     //addData(cpu_utilChart,cpulabel,cpu);
+            datasets = []
+                //cpu_utilChart.data.labels.push(cpulabel);  
+            var core = 0;
+            for (var i in cpu_utils) {
+                datasets.push({
+                    label: 'Core ' + core, // Name the series
+                    data: [cpu_utils[i]["cpuUtilization"]], // Specify the data values array
+                    fill: false,
+                    borderColor: '#00ff40', // Add custom color border (Line)
+                    backgroundColor: '#00ff40', // Add custom color background (Points and Fill)
+                    borderWidth: 1 // Specify bar border width
+                })
+                core++;
+            }
+            //console.log(datasets)
+            cpu_utilChart.data.datasets = datasets;
+
+            ramChart.update();
+            //iowaitChart.update();
+            storageChart.update();
+            virtualChart.update();
+            // addData(ramutilChart, cpulabel, data["ram_used"]);
+            cpu_utilChart.update();
+
+            interfaces = data["interfaces"]
+            var AP1 = data["sbn"];
+            console.log(AP1)
+            var AP = data["AP"];
+            var ipAddress = data["all_ipv4_addresses"];
+            var totalInterface = Object.keys(interfaces).length;
+            var adminUp = 0;
+            var adminDown = 0;
+            var adminUnknown = 0;
+            var portUp = 0;
+            var portDown = 0;
+            var portUnknown = 0;
+            var pktIn = 0;
+            var pktOut = 0;
+
+            var devHTML = "";
+            var ipHTML = "";
+            var apHTML = "";
+            var apHTML1 = "";
+
+            if (totalInterface > 0) {
+
+                var html = "";
+                for (var i in interfaces) {
+                    console.log(interfaces[i]["adminstatus"])
+                    if (interfaces[i]["adminstatus"] == "up") {
+                        adminUp += 1;
+                        interfaces[i]["adminstatus"] = "<i class='fa fa-circle text-success'></i>";
+                    } else if (interfaces[i]["adminstatus"] == "down") {
+                        adminDown += 1
+                        interfaces[i]["adminstatus"] = "<i class='fa fa-circle text-danger'></i>"
+                    } else {
+                        adminUnknown += 1
+                        interfaces[i]["adminstatus"] = "<i class='fa fa-circle text-danger'></i>"
+                    }
+                    if (interfaces[i]["operstatus"] = "up") {
+                        portUp += 1;
+                        interfaces[i]["operstatus"] = "<i class='fa fa-circle text-success'>"
+                    } else if (interfaces[i]["operstatus"] == "down") {
+                        portDown += 1
+                        interfaces[i]["operstatus"] = "<i class='fa fa-circle text-muted'>"
+                    } else {
+                        portUnknown += 1
+                        interfaces[i]["operstatus"] = "<i class='fa fa-circle text-danger'>"
+                    }
+
+                    if(interfaces[i]["mtu"] == undefined){
+                        interfaces[i]["mtu"] = 0;
+                    }
+                    if(interfaces[i]["speed"] == undefined){
+                        interfaces[i]["speed"] = 0;
+                    }
+                    if(interfaces[i]["inOctect"] == undefined){
+                        interfaces[i]["inOctect"] = 0;
+                    }
+                    if(interfaces[i]["outOctect"] == undefined){
+                        interfaces[i]["outOctect"] = 0;
+                    }
+                    if(interfaces[i]["inErr"] == undefined){
+                        interfaces[i]["inErr"] = 0;
+                    }
+                    if(interfaces[i]["outErr"] == undefined){
+                        interfaces[i]["outErr"] = 0;
+                    }
+
+                    html += "<tr>"
+                    html += "<td>" + interfaces[i]["name"] + "</td>";
+                    html += "<td>" + interfaces[i]["description"] + "</td>";
+                    html += "<td>" + interfaces[i]["adminstatus"] + "</td>";
+                    html += "<td>" + interfaces[i]["operstatus"] + "</td>";
+                    html += "<td>" + interfaces[i]["mtu"] + "</td>";
+                    html += "<td>" + interfaces[i]["speed"] + "</td>";
+                    html += "<td>" + interfaces[i]["inOctect"] + "</td>";
+                    html += "<td>" + interfaces[i]["outOctect"] + "</td>";
+                    html += "<td>" + interfaces[i]["inErr"] + "</td>";
+                    html += "<td>" + interfaces[i]["outErr"] + "</td>";
+                    html += "<td>" + interfaces[i]["mac"] + "</td>";
+                    html += "</tr>"
+                    $("#interfaceTable tbody").html(html);
+                    pktIn += interfaces[i]["inOctect"];
+                    pktOut += interfaces[i]["outOctect"];
+                }
+            }
+
+            $("#systemInterfaceTbl tbody").html(devHTML);
+
+            if (ipAddress != undefined) {
+                for (var index in ipAddress) {
+                    ipHTML += "<tr>\
+                    <td>" + index + "</td>\
+                    <td>" + ipAddress[index] + "</td>\
+                    </tr>";
+                }
+                $("#systemIPAdrTbl tbody").html(ipHTML);
+            }
+            if (AP != undefined) {
+                for (var index in AP) {
+                    apHTML += "<tr>\
+                <td>" + AP[index]["profileNames"] + "</td>\
+                <td>" + AP[index]["row_status"] + "</td>\
+                <td>" + AP[index]["ssid"] + "</td>\
+                <td>" + AP[index]["wired"] + "</td>\
+                </tr>";
+                }
+                $("#APTbl tbody").html(apHTML);
+            }
+            if (AP1 != undefined) {
+                for (var index in AP1) {
+                    apHTML1 += "<tr>\
+                <td>" + AP1[index]["bsnAPName"] + "</td>\
+                <td>" + AP1[index]["bsnAPLocation"] + "</td>\
+                <td>" + AP1[index]["bsnAPMonitorOnlyMode"] + "</td>\
+                <td>" + AP1[index]["bsnAPOperationStatus"] + "</td>\
+                <td>" + AP1[index]["bsnAPSoftwareVersion"] + "</td>\
+                <td>" + AP1[index]["bsnAPBootVersion"] + "</td>\
+                <td>" + AP1[index]["bsnAPPrimaryMwarName"] + "</td>\
+                <td>" + AP1[index]["bsnAPReset"] + "</td>\
+                <td>" + AP1[index]["bsnAPStatsTimer"] + "</td>\
+                <td>" + AP1[index]["bsnAPPortNumber"] + "</td>\
+                <td>" + AP1[index]["bsnAPModel"] + "</td>\
+                <td>" + AP1[index]["bsnAPSerialNumber"] + "</td>\
+                <td>" + AP1[index]["bsnAPClearConfig"] + "</td>\
+                <td>" + AP1[index]["bsnApIpAddress"] + "</td>\
+                <td>" + AP1[index]["bsnAPType"] + "</td>\
+                <td>" + AP1[index]["bsnAPIsStaticIP"] + "</td>\
+                <td>" + AP1[index]["bsnAPNetmask"] + "</td>\
+                <td>" + AP1[index]["bsnAPGateway"] + "</td>\
+                <td>" + AP1[index]["bsnAPStaticIPAddress"] + "</td>\
+                <td>" + AP1[index]["bsnAPBridgingSupport"] + "</td>\
+                <td>" + AP1[index]["bsnAPGroupVlanName"] + "</td>\
+                <td>" + AP1[index]["bsnAPIOSVersion"] + "</td>\
+                <td>" + AP1[index]["bsnAPCertificateType"] + "</td>\
+                <td>" + AP1[index]["bsnAPEthernetMacAddress"] + "</td>\
+                <td>" + AP1[index]["bsnAPAdminStatus"] + "</td>\
+                </tr>";
+                }
+                $("#APTbl1 tbody").html(apHTML1);
+            }
+            $("#totalInterface").html(totalInterface);
+            $("#totaladminUP").html("<i class='fa fa-arrow-up text-success'></i> " + adminUp + " <i class='fa fa-arrow-down text-muted'></i> " + adminDown + " <i class='fa fa-ban text-danger'></i> " + adminUnknown);
+            $("#totalPortUp").html("<i class='fa fa-arrow-up text-success'></i> " + portUp + " <i class='fa fa-arrow-down text-muted'></i> " + portDown + " <i class='fa fa-ban text-danger'></i> " + portUnknown);
+            $("#pktIn").html(pktIn);
+            $("#pktOut").html(pktOut);
+
+
+            $("#APStat tbody").html("<tr><td>"+data["apCpu"]+"</td><td>"+data["apJoint"]+"</td><td>"+data["apClient"]+"</td></tr>")
+
+
+
+        })
+    }
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+
+    var interval;
+    clearInterval(interval);
+    try {
+        Statistics(window.location.pathname.split("/")[3], window.location.pathname.split("/")[4]);
+        //setInterval(function() {Statistics(host);}, 2000);
+        interval = setInterval(function() {
+            Statistics(window.location.pathname.split("/")[3], window.location.pathname.split("/")[4]);
+        }, 2000);
+        $("#container").css("display", "block");
+    } catch {
+        $("#container").css("display", "none");
+    }
+</script>
+{% endblock js %} {% block content %}
+<div id="container">
+    <div class="row" style="margin-left:0px; margin-right:0px">
+
+        <div class="card col-lg-12">
+            <table class="table" id="sysinfoTable">
+                <tbody></tbody>
+            </table>
+        </div>
+
+        {% comment %} {% endcomment %}
+        <div class="card col-lg-12 indSmry">
+            <div class="col-md-2" style="height: 70px; background-color: whitesmoke;">
+                <p style="font-size: 10px;text-align: left;">UPTIME</p>
+                <div style="position:absolute; right: 20px;" id="myDiv9"></div>
+
+                <p class="divIndSmry" id="sysUptime"></p>
+            </div>
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Total Interfaces</p>
+                <div style="position:absolute; right: 20px;"></div>
+                <p class="divIndSmry" id="totalInterface"></p>
+
+            </div>
+            <div class="col-md-2" style="height: 70px; background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Admin Status</p>
+                <div style="position:absolute; right: 20px;" id="myDiv11"></div>
+                <p class="divIndSmry" id="totaladminUP"></p>
+
+            </div>
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Port Status</p>
+                <div style="position:absolute; right: 20px;" id="myDiv12"></div>
+                <p class="divIndSmry" id="totalPortUp"></p>
+
+            </div>
+
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Packet IN</p>
+                <div style="position:absolute; right: 20px;" id="myDiv13"></div>
+                <p class="divIndSmry" id="pktIn"></p>
+
+            </div>
+
+            <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+                <p style="font-size: 10px;text-align: left;">Packet Out</p>
+                <div style="position:absolute; right: 20px;" id="myDiv13"></div>
+                <p class="divIndSmry" id="pktOut"></p>
+
+            </div>
+        </div>
+        {% comment %} {% endcomment %}
+
+
+
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">Temp</h5>
+                <p class="card-text" style="height:198px">
+                    <canvas id="cpuTemp"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">STORAGE</h5>
+                <p class="card-text" style="height:198px">
+                    <canvas id="storageGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">IOWAT</h5>
+                <p class="card-text" style="height:198px">
+                    <canvas id="iowaitGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">CPU %</h5>
+                <p class="card-text" style="height:198px">
+                    <canvas id="cpuUtilGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">RAM</h5>
+                <p class="card-text" style="height:198px">
+                    <canvas id="ramGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-2">
+            <div class="card-body">
+                <h5 class="card-title">SWAP MEMORY</h5>
+                <p class="card-text" style="height:198px">
+                    <canvas id="virtualGRAPH"></canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="card col-lg-6">
+
+            <div class="card-body" data-type="ramline">
+                <h5 class="card-title">RAM</h5>
+                <p class="card-text">
+                    <canvas id="ramlineGRAPH"> </canvas>
+                </p>
+            </div>
+        </div>
+        <div class="card col-lg-6">
+            <div class="card-body" data-type="cpu">
+                <h5 class="card-title">CPU Core</h5>
+                <p class="card-text">
+                    <canvas id="cpuGRAPH"> </canvas>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-12" style="text-align: center;">
+            <i class='fa fa-angle-double-down showmoredetails' style='font-size:30px;'></i>
+        </div>
+        <div class="card col-lg-12" style="display:none;margin-top:10px;padding: 0px;">
+            <div class="card-body" id="interfaces">
+                <table class="table" id="interfaceTable">
+                    <thead>
+                        <th>NAME</th>
+                        <th>DESCRIPTION</th>
+                        <th>ADMIN</th>
+                        <th>PORT</th>
+                        <th>MTU</th>
+                        <th>SPEED</th>
+                        <th>IN OCTET</th>
+                        <th>OUT OCTET</th>
+                        <th>ERROR IN</th>
+                        <th>ERROR OUT</th>
+                        <th>MAC</th>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <table border='1' class='table' id='APStat'  style="display:none">
+                        <thead>
+                            <tr><td>CPU Usage</td><td>No. of Joint AP</td><td>Total No. of Client</td></tr>
+                        </thead>
+
+                        <tbody>
+                        <tbody>
+
+                </table>
+                <div class="table-responsive" style="display:none">
+                    <table border='1' class='table' id='APTbl1'>
+                        <thead>
+                            <tr>
+                                <th>bsnAPName</th>
+                                <th>bsnAPLocation</th>
+                                <th>bsnAPMonitorOnlyMode</th>
+                                <th>bsnAPOperationStatus</th>
+                                <th>bsnAPSoftwareVersion</th>
+                                <th>bsnAPBootVersion</th>
+                                <th>bsnAPPrimaryMwarName</th>
+                                <th>bsnAPReset</th>
+                                <th>bsnAPStatsTimer</th>
+                                <th>bsnAPPortNumber</th>
+                                <th>bsnAPModel</th>
+                                <th>bsnAPSerialNumber</th>
+                                <th>bsnAPClearConfig</th>
+                                <th>bsnApIpAddress</th>
+                                <th>bsnAPType</th>
+                                <th>bsnAPIsStaticIP</th>
+                                <th>bsnAPNetmask</th>
+                                <th>bsnAPGateway</th>
+                                <th>bsnAPStaticIPAddress</th>
+                                <th>bsnAPBridgingSupport</th>
+                                <th>bsnAPGroupVlanName</th>
+                                <th>bsnAPIOSVersion</th>
+                                <th>bsnAPCertificateType</th>
+                                <th>bsnAPEthernetMacAddress</th>
+                                <th>bsnAPAdminStatus</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <table border='1' class='table' id='APTbl'  style="display:none">
+                    <thead>
+                        <tr>
+                            <th>Profile Namwe</th>
+                            <th>Row Status</th>
+                            <th>SSID</th>
+                            <th>Wires</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <table border='1' class='table' id='systemIPAdrTbl'>
+                    <thead>
+                        <tr>
+                            <th>INDEX</th>
+                            <th>IP ADDRESS</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html>
+
+{% extends 'dashboard/header_footer.html' %} {% load static %}{% block title %} Server Summary {% endblock title %} {% block css %}
+<style>
+    .col-md-2 {
+        width: 18%;
+        max-width: 34.667%;
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+    }
+    
+    .col-md-6 {
+        padding: 0px;
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 2px 2px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .15), 0 8px 8px rgba(0, 0, 0, .15);
+    }
+    
+    .inner-block {
+        background-color: #eee;
+    }
+    
+    .col-md-offset-1 {
+        margin-left: 1.333%;
+    }
+</style>
+{% endblock %} {% block title_header %}Server{% endblock %} {% block content %}
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal1" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">User Messages</h4>
+        </div>
+        <div class="modal-body" id="graphBody1">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal2" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Conversions</h4>
+        </div>
+        <div class="modal-body" id="graphBody2">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal3" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body" id="graphBody3">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal4" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Orders</h4>
+        </div>
+        <div class="modal-body" id="graphBody4">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal5" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">User Registrations</h4>
+        </div>
+        <div class="modal-body" id="graphBody5">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal6" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body" id="graphBody6">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal7" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">CPU Utilization</h4>
+        </div>
+        <div class="modal-body" id="graphBody7">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal8" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Memory Utilization</h4>
+        </div>
+        <div class="modal-body" id="graphBody8">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal9" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Error Rate</h4>
+        </div>
+        <div class="modal-body" id="graphBody9"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal10" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Network Monitoring</h4>
+        </div>
+        <div class="modal-body" id="graphBody10">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal11" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Storage Utilization</h4>
+        </div>
+        <div class="modal-body" id="graphBody11">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal12" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">System Load</h4>
+        </div>
+        <div class="modal-body" id="graphBody12">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="topologyModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">System Load</h4>
+        </div>
+        <div class="modal-body topologyBody">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<div class="container" style="margin:0px;">
+
+    <div class="row" style="width:95vw">
+        <div class="col-md-2" style="height: 70px; background-color: whitesmoke;">
+            <p style="font-size: 10px;text-align: left;">Total Server(s)</p>
+            <div style="position:absolute; right: 20px;" id="myDiv9"></div>
+
+            <p style="position: aboslute; top:50%; text-align: left; font-size: 22px;"><b> 12,456</b></p>
+        </div>
+        <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+            <p style="font-size: 10px;text-align: left;">Projects Engaged</p>
+            <div style="position:absolute; right: 20px;" id="myDiv10"></div>
+            <p style="position: aboslute; top:50%; text-align: left; font-size: 22px;"><b>$142,384</b></p>
+
+        </div>
+        <div class="col-md-2" style="height: 70px; background-color: whitesmoke;">
+
+            <p style="font-size: 10px;text-align: left;">Notifications</p>
+            <div style="position:absolute; right: 20px;" id="myDiv11"></div>
+            <p style="position: aboslute; top:50%; text-align: left; font-size: 22px;"><b>64%</b></p>
+
+        </div>
+        <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+            <p style="font-size: 10px;text-align: left;">Total Blade Chassis</p>
+            <div style="position:absolute; right: 20px;" id="myDiv12"></div>
+            <p style="position: aboslute; top:50%; text-align: left; font-size: 22px;"><b>82</b></p>
+
+        </div>
+
+        <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+            <p style="font-size: 10px;text-align: left;">Total VM</p>
+            <div style="position:absolute; right: 20px;" id="myDiv13"></div>
+            <p style="position: aboslute; top:50%; text-align: left; font-size: 22px;"><b>82</b></p>
+
+        </div>
+
+        <div class="col-md-2" style="height: 70px;  background-color: whitesmoke;">
+
+            <p style="font-size: 10px;text-align: left;">OS (Windows / Linux)</p>
+            <div style="position:absolute; right: 20px;" id="myDiv13"></div>
+            <p style="position: aboslute; top:50%; text-align: left; font-size: 22px;"><b>50</b></p>
+
+        </div>
+
+
+    </div>
+    <br>
+    <div class="row" style='width:95vw'>
+        <div class="col-md-2" style="">
+            <div class="row" style="height: 120px; background-color: #f8f9fa; padding: 13px;">
+                <div id="myDiv1" style="margin-left: 10px;" type="button" data-toggle="modal" data-target="#GraphModal1"></div>
+            </div>
+            <div class="row" style="height: 30px; background-color: #e9ecef; font-size: 15px; font-weight: bold;">User Messages</div>
+        </div>
+        <div class="col-md-2 col-md-offset-1" style="">
+            <div class="row" style="height: 120px;  background-color: #f8f9fa; padding: 13px;">
+                <div id="myDiv2" style="margin-left: 10px;" type="button" data-toggle="modal" data-target="#GraphModal2"></div>
+            </div>
+            <div class="row" style="height: 30px; background-color: #e9ecef; font-size: 15px; font-weight: bold;">Top 5 Slow Servers</div>
+        </div>
+        <div class="col-md-2 col-md-offset-1" style="">
+            <div class="row" style="height: 120px; background-color: #f8f9fa; padding: 13px;">
+                <div id="myDiv3" style="margin-left: 10px;text-align: left;">
+                    <h5>Event List</h5>
+                    <p>Event One <button class="btn btn-primary">Add</button></p>
+                </div>
+            </div>
+            <div class="row" style="height: 30px; background-color: #e9ecef; font-size: 15px; font-weight: bold;">Enabled Services</div>
+        </div>
+        <div class="col-md-2 col-md-offset-1" style="">
+            <div class="row" style="height: 120px; background-color: #f8f9fa; padding: 13px;">
+                <div id="myDiv4" style="margin-left: 10px;" type="button" data-toggle="modal" data-target="#GraphModal4"></div>
+            </div>
+            <div class="row" style="height: 30px; background-color: #e9ecef; font-size: 15px; font-weight: bold;">Total Servers Bandwidth Utilization</div>
+        </div>
+        <div class="col-md-2 col-md-offset-1" style="">
+            <div class="row" style="height: 120px; background-color: #f8f9fa; padding: 13px;">
+                <div id="myDiv5" style="margin-left: 10px;" type="button" data-toggle="modal" data-target="#GraphModal5"></div>
+            </div>
+            <div class="row" style="height: 30px; background-color: #e9ecef; font-size: 15px; font-weight: bold;">Total VM Bandwidth Utilization</div>
+        </div>
+    </div>
+    <br>
+    <div class="row" style='width:95vw'>
+        <div class="col-md-6" style="height: 275px;width: 44%;">
+            <table class="table table-striped" style="background-color: #fff;">
+                <thead>
+                    <tr>
+                        <th colspan="4" scope="col" style="text-align: center;">Top 5 Slow Servers</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Task</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Progress</th>
+                        <th scope="col">Due Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">ALTR-231</th>
+                        <td>
+                            <span style="background-color: hotpink; ">In progress</span>
+                        </td>
+                        <td>Otto</td>
+                        <td>24.11.2015</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ALTR-232</th>
+                        <td><span style="background-color: rgb(105, 255, 125);">open</span></td>
+                        <td>Thornton</td>
+                        <td>25.11.2015</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ALTR-233</th>
+                        <td><span style="background-color: rgb(105, 115, 255);">none</span></td>
+                        <td>the Bird</td>
+                        <td>26.11.2015</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ALTR-234</th>
+                        <td><span style="background-color: rgb(255, 105, 175);">none</span></td>
+                        <td>the Bird</td>
+                        <td>27.11.2015</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ALTR-235</th>
+                        <td><span style="background-color: rgb(238, 105, 255);">none</span></td>
+                        <td>the Bird</td>
+                        <td>28.11.2015</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ALTR-236</th>
+                        <td><span style="background-color: rgb(253, 255, 105);">none</span></td>
+                        <td>the Bird</td>
+                        <td>30.11.2015</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-md-6 col-md-offset-1" style="height: 275px;" type="button" data-toggle="modal" data-target="#topologyModal">
+            <div style="background-color: #fff;">
+                <p style="text-align: left;"><b>Simple Server Topology</b></p>
+                <div class="topologyBody"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .card-item {
+        background-color: white;
+        border: 1px solid black;
+        min-height: 100px;
+        max-height: 200px;
+        margin: 10px;
+        box-shadow: 0px 0px 10px black;
+    }
+
+</style>
+
+
+<section class="col-md-12" style=" margin-top: 100px; margin-bottom: 100px; background-color: white; padding-top: 20px; padding-bottom: 20px;">
+
+
+    <select style="padding: 10px;">
+        <option selected> -- Select A Server -- </option>
+        <option> Server One </option>
+        <option> Server Two </option>
+        <option> Server Three </option>
+    </select>
+
+    <div class="accordion col-md-12" id="accordionExample">
+        <div class="card col-md-12">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <button class="btn " type="button" style="padding: 10px; margin: 30px; background-color: cyan;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Server One
+              </button>
+            </h5>
+          </div>
+      
+          <div id="collapseOne" class="collapse show col-md-12" aria-labelledby="headingOne" data-parent="#accordionExample" style="overflow: hidden;">
+            <div class="card-body">
+                <div class="card card-item col-md-2 ">
+                    <div class="card-body" style="font-size: 40px;">
+                      <h5 class="card-title">Uptime</h5>
+                      <p class="card-text">10D 03:54:23</p>
+                    </div>
+                </div>
+            
+                <div class="card card-item col-md-2">
+                    <h5 class="card-title">Temperature</h5>
+                    <img class="card-img-top" src="http://pngimg.com/uploads/thermometer/thermometer_PNG2.png" alt="Card image cap" height="100" width="100">
+                </div>
+
+                <div class="card card-item col-md-1" style="width: auto;">
+                    <div class="card-body">
+                      <h5 class="card-title">CPU Utilization</h5>
+                      <div class="card-text" id="cpu" style=" position: relative; width:140px; height: 150px; text-align:center; align-items: center; align-content: center;"  type="button" data-toggle="modal" data-target="#GraphModal7"></div>
+                    </div>
+                </div>
+
+           
+                <div class="card card-item col-md-5">
+                    <div class="card-body">
+                      <h5 class="card-title">Enabled Services</h5>
+                      <p class="card-text" style="text-align: left;">Service One <br> Service Two <br> Service Three</p>
+                    </div>
+                </div>
+
+
+                
+                <h1 style="margin: 5px;" class="col-md-12" >  </h1>
+
+                <div class="card card-item col-md-1" style="width: auto;">
+                    <div class="card-body">
+                      <h5 class="card-title">Memory Utilization</h5>
+                      <div class="card-text" id="memory" style=" position: relative; width:140px; height: 150px;"  type="button" data-toggle="modal" data-target="#GraphModal8"></div>
+                    </div>
+                </div>
+
+
+                <div class="card card-item col-md-5">
+                    <div class="card-body col-md-12 ">
+                        <h5 class="card-title">Error Rate</h5>
+                        <div class="card-text col-md-12" id="errorRate" style=" position: relative; height: 150px;"  type="button" data-toggle="modal" data-target="#GraphModal9"></div>
+                    </div>
+                </div>
+
+                <div class="card card-item col-md-2" style="width: auto;">
+                    <div class="card-body">
+                      <h5 class="card-title">System Load</h5>
+                      <div class="card-text" id="systemload" style=" position: relative; width:140px; height: 150px;"  type="button" data-toggle="modal" data-target="#GraphModal12"></div>
+                    </div>
+                </div>
+              
+
+                <div class="card card-item col-md-2" style="width: auto;">
+                    <div class="card-body">
+                      <h5 class="card-title">Processes</h5>
+                      <div class="card-text" id="processes" style=" position: relative; width:140px; height: 150px;"  ></div>
+                    </div>
+                </div>
+
+            
+               
+                <div class="card card-item col-md-7">
+                    <div class="card-body col-md-12 ">
+                        <h5 class="card-title">Network Monitoring</h5>
+                        <div class="card-text col-md-12" id="networkmonitoring" style=" position: relative; height: 150px;"  type="button" data-toggle="modal" data-target="#GraphModal10"></div>
+                    </div>
+                </div>
+
+                
+                <div class="card card-item col-md-2">
+                    <div class="card-body" style="font-size: 40px;">
+                      <h5 class="card-title">Active users</h5>
+                      <p class="card-text">50</p>
+                    </div>
+                </div>
+                <div class="card card-item col-md-2" style="width: auto;">
+                    <div class="card-body">
+                      <h5 class="card-title">Storage Utilization</h5>
+                      <div class="card-text" id="storage2" style=" position: relative; width:140px; height: 150px;"  type="button" data-toggle="modal" data-target="#GraphModal11"></div>
+                    </div>
+                </div>
+
+ 
+
+                
+                <h1 style="margin: 5px;" class="col-md-12" >  </h1>
+
+              
+                <div class="card card-item col-md-12">
+                    <div class="card-body col-md-12">
+                      <h5 class="card-title">Events </h5>
+                        <div class="card card-item col-md-2">
+                            <div class="card-body">
+                            <h5 class="card-title">Events </h5>
+                            <p class="card-text" style="text-align: left;">Event 1 </p>
+                            </div>
+                        </div>
+                        <div class="card card-item col-md-2">
+                            <div class="card-body">
+                            <h5 class="card-title">Events </h5>
+                            <p class="card-text" style="text-align: left;">Event 1 </p>
+                            </div>
+                        </div>
+                        <div class="card card-item col-md-2">
+                            <div class="card-body">
+                            <h5 class="card-title">Events </h5>
+                            <p class="card-text" style="text-align: left;">Event 1 </p>
+                            </div>
+                        </div>
+                        <div class="card card-item col-md-2">
+                            <div class="card-body">
+                            <h5 class="card-title">Events </h5>
+                            <p class="card-text" style="text-align: left;">Event 1 </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+          </div>
+        </div>
+
+</section>
+
+<script src="{% static '/dashboard/js/plotly.js' %}"></script>
+<script src="{% static '/dashboard/js/d3.v4.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts-liquidfill.min.js' %}"></script>
+
+
+<script>
+
+    //FUNCTION FOR PLOTING POLO WATER GRAPGH
+    function processes(id , total) {
+        var chart_cc4a4f568fe9438fb27ad6a66bcff34c = echarts.init(
+            document.getElementById(id), 'white', {
+                renderer: 'canvas'
+            });
+        var option_cc4a4f568fe9438fb27ad6a66bcff34c = {
+            "animation": true,
+            "animationThreshold": 2000,
+            "animationDuration": 1000,
+            "animationEasing": "cubicOut",
+            "animationDelay": 0,
+            "animationDurationUpdate": 300,
+            "animationEasingUpdate": "cubicOut",
+            "animationDelayUpdate": 0,
+            "margin": 20,
+            "color": ["#c23531","#2f4554","#61a0a8","#d48265","#749f83","#ca8622","#bda29a","#6e7074","#546570","#c4ccd3","#f05b72","#ef5b9c","#f47920","#905a3d","#fab27b","#2a5caa","#444693","#726930","#b2d235","#6d8346","#ac6767","#1d953f","#6950a1","#918597"],
+            "series": [{
+                "type": "liquidFill",
+                "name": "Process",
+                "data": [{
+                    name: total,
+                }],
+                "waveAnimation": true,
+                "animationDuration": 2000,
+                "animationDurationUpdate": 1000,
+                "color": [
+                    "#294D99",
+                    "#156ACF",
+                    "#1598ED",
+                    "#45BDFF"
+                ],
+                "shape": "circle",
+                "backgroundStyle": {
+                    color: '#ffbf00',
+                    opacity:0.9
+                },
+                "outline": {
+                    "show": true,
+                    "borderDistance": 8
+                },
+                "label": {
+                    "show": true,
+                    "position": "inside",
+                    "margin": 0,
+                    "fontSize": 10
+                }
+            }],
+            "tooltip": {
+                "show": true,
+                "trigger": "item",
+                "triggerOn": "mousemove|click",
+                "axisPointer": {
+                    "type": "line"
+                },
+                "showContent": true,
+                "alwaysShowContent": false,
+                "showDelay": 0,
+                "hideDelay": 100,
+                "textStyle": {
+                    "fontSize": 14
+                },
+                "borderWidth": 0,
+                "padding": 0
+            }
+        };
+        chart_cc4a4f568fe9438fb27ad6a66bcff34c.setOption(option_cc4a4f568fe9438fb27ad6a66bcff34c);
+    }
+    //FUNCTION FOR PLOTING STORAGE INFORMATION GRAPGH
+    function storageInfo(id , used , avail) {
+        var data = [{
+            values: [used, avail],
+            text: 'Swap Memory',
+            textposition: 'inside',textinfo:'value',
+            domain: {
+                column: 1
+            },
+            name: 'Swap Memory',
+            hoverinfo: 'label+name',
+            hole: .7,
+            type: 'pie'
+        }];
+
+        var layout = {
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+            margin: {
+                l: 0,
+                r: 0,
+                b: 0,
+                t: 0,
+                pad: 0
+            },
+            legend: {
+                x: 0,
+                y: 1,
+                traceorder: 'normal',
+                font: {
+                size: 10,
+                },
+                "orientation": "h"
+            },
+            
+            showlegend: false,
+            //legend: {"orientation": "h"},
+            //legend: {"orientation": "h"},
+            grid: {
+                rows: 1,
+                columns: 1
+            },
+        }
+
+        
+        var config = {responsive: true,displayModeBar: false};
+        
+        Plotly.newPlot(id, data, layout, config, {
+            displayModeBar: false
+        });
+    }
+
+
+    //FUNCTION FOR PLOTING STORAGE INFORMATION GRAPGH
+    function cpuAndMemory(id , used = 50 , avail = 100 , labelData = ["Download" , "Upload"]) {
+        var data = [{
+            values: [used, avail],
+            labels: labelData,
+            text: 'Swap Memory',
+            textposition: 'inside',
+            textinfo:'value',
+            domain: {
+                column: 1
+            },
+            name: 'Swap Memory',
+            hoverinfo: 'label+name',
+            hole: .7,
+            type: 'pie'
+        }];
+
+        var layout = {
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+            margin: {
+                l: 0,
+                r: 0,
+                b: 0,
+                t: 0,
+                pad: 0
+            },
+            legend: {
+                x: 0,
+                y: 1,
+                traceorder: 'normal',
+                font: {
+                size: 10,
+                },
+                "orientation": "h"
+            },
+
+            
+            showlegend: false,
+            grid: {
+                rows: 1,
+                columns: 1
+            },   
+        };
+
+        var config = {responsive: true,displayModeBar: false};
+        Plotly.newPlot(id, data, layout, config, {
+            displayModeBar: false
+        });
+    }
+    function networkMonitoring(id , download = [1,10,2,3,43,6,8,4,54,100 ,34,23,0] ,upload = [1,10,34,3,43,454,8,4,54,21 ,34,23,0], time = [1,2,3,4,5,6,7,8,9,10]) {
+        var layout = {
+			  title: "Basic Time Series",
+			  legend: { orientation: "h" },
+			  margin: {
+				  l: 0,
+				  r: 0,
+				  b: 0,
+				  t: 0,
+				  pad: 0
+			  }
+		  };
+
+
+        var trace1 = {
+            y : download,
+            type: 'lines',
+            name: 'Download'
+        };
+
+        var data = [];
+        data.push(trace1);
+        if(upload){
+            var trace2 = {
+                y: upload,
+                type: 'lines',
+                name: 'Upload'
+            };
+            data.push(trace2);
+        }
+        //var data = [trace1 , trace2];
+
+        
+        var config = {responsive: true,displayModeBar: false};
+
+        Plotly.newPlot(id, data, layout, config, {
+            displayModeBar: false
+        });
+            
+    }
+    
+    
+    window.setTimeout(function(){
+        networkMonitoring("networkmonitoring" ,  [10,203,70,150,120,0, 190]);
+        networkMonitoring("graphBody10" ,  [10,203,70,150,120,0, 190]);
+        networkMonitoring("errorRate" , [10,20,50,100,40,20,90,150,100] , false , ["ERROR RATES"]);
+        networkMonitoring("graphBody9" , [10,20,50,100,40,20,90,150,100] , false , ["ERROR RATES"]);
+        cpuAndMemory("cpu");
+        cpuAndMemory("graphBody7");
+        cpuAndMemory("memory" , 90 , 100);
+        cpuAndMemory("graphBody8" , 90 , 100);
+        storageInfo("storage2" , 10 , 100);
+        storageInfo("graphBody11" , 10 , 100);
+        storageInfo("systemload" , 10 , 100);
+        storageInfo("graphBody12" , 10 , 100);
+        processes("processes" , 40);
+    } , 2000);
+
+</script>
+
+<script>
+    var ultimateColors = [
+        ['rgb(51,153,255)', 'rgb(255,255,255)'],
+        ['rgb(0,255,128)', 'rgb(255,255,255)'],
+        ['rgb(192, 192, 192)', 'rgb(255,255,255)']
+    ];
+    var trace1 = {
+        x: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6'],
+        y: [20, 14, 23, 45, 43, 67],
+        name: 'SF Zoo',
+        type: 'bar',
+        marker: {
+            color: 'rgb(128, 0, 0)',
+        }
+    };
+
+    var data = [trace1];
+
+    var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        height: 30,
+        width: 30,
+    };
+
+    Plotly.newPlot('myDiv9', data, layout);
+    var data = [{
+        values: [90, 10],
+        labels: ['90', '10'],
+        text: 'Text',
+        textposition: 'none',
+        textinfo: 'value',
+        domain: {
+            column: 1
+        },
+        name: 'Data',
+        hoverinfo: 'label+name',
+        hole: .9,
+        marker: {
+            colors: ultimateColors[0]
+        },
+        type: 'pie'
+    }];
+
+    var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 100,
+        width: 180,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        annotations: [{
+            font: {
+                size: 15
+            },
+            showarrow: false,
+            text: '90%',
+            x: 0.50,
+            y: 0.5
+        }],
+    };
+
+    var config = {
+        responsive: true
+    }
+
+    Plotly.newPlot('myDiv1', data, layout);
+    Plotly.newPlot('graphBody1', data, {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 80,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 500,
+        width: 500,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        annotations: [{
+            font: {
+                size: 15
+            },
+            showarrow: false,
+            text: '90%',
+            x: 0.50,
+            y: 0.5
+        }],
+    });
+    var trace1 = {
+        x: [1, 2, 3, 4],
+        y: [10, 15, 13, 17],
+        type: 'scatter'
+    };
+
+    var data = [trace1];
+    var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 30,
+        width: 40,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+    };
+    Plotly.newPlot('myDiv10', data, layout);
+
+    var data = [{
+        values: [90, 10],
+        labels: ['90', '10'],
+        text: 'Text',
+        textposition: 'none',
+        textinfo: 'value',
+        domain: {
+            column: 1
+        },
+        name: 'Data',
+        hoverinfo: 'label+name',
+        hole: .6,
+        marker: {
+            colors: ultimateColors[0]
+        },
+        type: 'pie'
+    }];
+
+    var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 20,
+        width: 20,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+    };
+
+    var config = {
+        responsive: true
+    }
+
+    Plotly.newPlot('myDiv11', data, layout);
+
+    var trace1 = {
+        type: "scatter",
+        mode: "lines",
+        x: [1, 2, 3, 4],
+        y: [12, 10, 14, 8],
+        line: {
+            color: '#17BECF'
+        }
+    }
+    var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 30,
+        width: 40,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+    };
+
+    var data = [trace1];
+
+    Plotly.newPlot('myDiv12', data, layout);
+
+
+    var trace1 = {
+        x: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6'],
+        y: [20, 14, 23, 45, 43, 67],
+        name: 'SF Zoo',
+        type: 'bar',
+        marker: {
+            color: 'rgb(128, 0, 0)',
+        }
+    };
+
+    var data = [trace1];
+
+    var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        height: 100,
+        width: 180,
+    };
+
+    Plotly.newPlot('myDiv2', data, layout);
+    Plotly.newPlot('graphBody2', data, {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 80,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        height: 500,
+        width: 500,
+    });
+
+
+    var data = [{
+        values: [53, 47],
+        labels: ['53', '47'],
+        text: 'Text',
+        textposition: 'none',
+        textinfo: 'value',
+        domain: {
+            column: 1
+        },
+        name: 'Data',
+        hoverinfo: 'label+name',
+        hole: .9,
+        marker: {
+            colors: ultimateColors[1]
+        },
+        type: 'pie'
+    }];
+
+    var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 100,
+        width: 180,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        annotations: [{
+            font: {
+                size: 15
+            },
+            showarrow: false,
+            text: '53%',
+            x: 0.50,
+            y: 0.5
+        }],
+    };
+
+    var config = {
+        responsive: true
+    }
+
+    Plotly.newPlot('myDiv4', data, layout);
+    Plotly.newPlot('graphBody4', data, {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 80,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 500,
+        width: 500,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        annotations: [{
+            font: {
+                size: 15
+            },
+            showarrow: false,
+            text: '53%',
+            x: 0.50,
+            y: 0.5
+        }],
+    });
+
+    var data = [{
+        values: [67, 33],
+        labels: ['67', '33'],
+        text: 'Text',
+        textposition: 'none',
+        textinfo: 'value',
+        domain: {
+            column: 1
+        },
+        name: 'Data',
+        hoverinfo: 'label+name',
+        hole: .9,
+        marker: {
+            colors: ultimateColors[2]
+        },
+        type: 'pie'
+    }];
+
+    var layout = {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 0,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 100,
+        width: 180,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        annotations: [{
+            font: {
+                size: 15
+            },
+            showarrow: false,
+            text: '67',
+            x: 0.50,
+            y: 0.5
+        }],
+    };
+
+    var config = {
+        responsive: true
+    }
+
+    Plotly.newPlot('myDiv5', data, layout);
+    Plotly.newPlot('graphBody5', data, {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: {
+            l: 80,
+            r: 0,
+            b: 0,
+            t: 0,
+            pad: 0
+        },
+        legend: {
+            x: 0,
+            y: 1,
+            traceorder: 'normal',
+            font: {
+                size: 10,
+            },
+            "orientation": "h"
+        },
+
+        showlegend: false,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        height: 500,
+        width: 500,
+        grid: {
+            rows: 1,
+            columns: 1
+        },
+        annotations: [{
+            font: {
+                size: 15
+            },
+            showarrow: false,
+            text: '67',
+            x: 0.50,
+            y: 0.5
+        }],
+    });
+</script>
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 40},
+  width = 350 - margin.left - margin.right,
+  height = 250 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.selectAll(".topologyBody")
+.append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+.append("g")
+  .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_network.json", function( data) {
+
+  // Initialize the links
+  var link = svg
+    .selectAll("line")
+    .data(data.links)
+    .enter()
+    .append("line")
+      .style("stroke", "#aaa")
+
+  // Initialize the nodes
+  var node = svg
+    .selectAll("circle")
+    .data(data.nodes)
+    .enter()
+    .append("circle")
+      .attr("r", 20)
+      .style("fill", "#69b3a2")
+
+  // Let's list the force we wanna apply on the network
+  var simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
+      .force("link", d3.forceLink()                               // This force provides links between nodes
+            .id(function(d) { return d.id; })                     // This provide  the id of a node
+            .links(data.links)                                    // and this the list of links
+      )
+      .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
+      .on("end", ticked);
+
+  // This function is run at each iteration of the force algorithm, updating the nodes position.
+  function ticked() {
+    link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node
+         .attr("cx", function (d) { return d.x+6; })
+         .attr("cy", function(d) { return d.y-6; });
+  }
+
+});
+
+
+
+</script>
+{% endblock %}

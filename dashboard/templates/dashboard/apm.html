@@ -1,0 +1,588 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} APM {% endblock %}{% block title_header %} APM {% endblock %} {% block js %} 
+
+{{ snmpdevices|json_script:"snmpdevices" }}
+<script>
+var snmpDevices = JSON.parse(document.getElementById("snmpdevices").textContent);
+    console.log(snmpDevices);
+
+    for (key in snmpDevices) {
+        $("#allNetworkDevices").append("<option data-user='"+snmpDevices[key]["user"]+"' data-pwd='"+snmpDevices[key]["pwd"]+"' data-tag="+snmpDevices[key]["name"]+" value=" + snmpDevices[key]["ip"] + " >" + snmpDevices[key]["ip"] + "</option>")
+    }
+</script>
+{% endblock %}
+	
+   {% block css %} {% endblock %}  {% block content %} 
+   <style>
+   :root {
+    --primary-color: #9A97F3;
+    --secondary-color: #818cab;
+    --font-color: white;
+    --bg-color: #fff;
+    --heading-color: #818cab;
+    --tablebg:#00ff89;
+    --tblshadow: 0px -21px 23px #fbfbfb inset;
+}
+	   .cont{
+		   width: 100%;
+	   }
+     h1{
+       margin: 20px;
+     }
+     .applicationstatus.div{
+       text-transform: uppercase;
+     }
+     td{
+       text-align:left;
+     }
+         
+    .indSmry {
+        background: #2b7d2b;
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    
+    .divIndSmry {
+        background: transparent;
+        position: aboslute;
+        top: 50%;
+        text-align: left;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    table, tbody, tr, th, td{
+    background: rgba(0, 0, 0, 0.0) !important;
+    border-top: none !important;
+    border-bottom: none !important;
+}
+.mytable, tbody, tr, th, td{
+    padding: 10px;
+}
+.infodiv{
+    color: var(--font-color);
+    box-shadow: var(--tblshadow);
+}
+.infodiv:hover{
+    background: #004fff;
+    color: #ffffff;
+    cursor: pointer;
+}
+.darktext{
+    color: var(--font-color);
+    margin-left:10px;
+}
+.interfaceDetails{
+    background: whitesmoke;
+    height:70px;
+    /*box-shadow: -4px 52px 59px #888888 inset;*/
+    box-shadow: 11px -35px 55px #89df2a8a inset;
+}
+.interfaceheader{
+    font-size: 10px;text-align: left;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+
+/* Toogle Btn*/
+/*Simple css to style it like a toggle switch*/
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+
+  em {
+    margin-left: 10px;
+    font-size: 1rem;
+  }
+}
+.theme-switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.theme-switch input {
+  display:none;
+}
+
+.myslider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+}
+
+.myslider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 26px;
+}
+
+input:checked + .myslider {
+  background-color: #66bb6a;
+}
+
+input:checked + .myslider:before {
+  transform: translateX(26px);
+}
+
+.myslider.round {
+  border-radius: 34px;
+}
+
+.myslider.round:before {
+  border-radius: 50%;
+}
+    
+    .card-counter {
+        box-shadow: 2px 2px 10px #DADADA;
+        margin: 5px;
+        background-color: #fff;
+        height: 100px;
+        border-radius: 5px;
+        transition: .3s linear all;
+    }
+    
+    .card-counter:hover {
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+    }
+    
+    .card-counter.primary {
+        background-color: #007bff;
+        color: #FFF;
+    }
+    
+    .card-counter.danger {
+        background-color: #ef5350;
+        color: #FFF;
+    }
+    
+    .card-counter.success {
+        background-color: #66bb6a;
+        color: #FFF;
+    }
+    
+    .card-counter.info {
+        background-color: #26c6da;
+        color: #FFF;
+    }
+    
+    .card-counter i {
+        font-size: 5em;
+        opacity: 0.2;
+    }
+    
+    .card-counter .count-numbers {
+        /* position: absolute; */
+        /* right: 35px; */
+        top: 20px;
+        font-size: 32px;
+        display: block;
+    }
+    
+    .card-counter .count-name {
+        /* position: absolute; */
+        /* right: 35px; */
+        top: 65px;
+        text-transform: capitalize;
+        display: block;
+        font-size: 18px;
+    }
+   </style>
+
+<!-- Modal -->
+<div class="modal fade" id="appdata" role="dialog">
+    <div class="modal-dialog" style='width:70%'>
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--MODAL END-->
+<!-- Counters -->
+<div class="row">
+      <div class="col-md-4"> 
+          <div class="card-counter primary">
+              <span class="count-numbers" id="activeser">0</span>
+              <span class="count-name">Running Services</span>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <div class="card-counter info">
+              <span class="count-numbers" id="downser">0</span>
+              <span class="count-name">Stopped Services</span>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <div class="card-counter danger">
+              <span class="count-numbers" id="warningser">0</span>
+              <span class="count-name">Failed Services</span>
+          </div>
+      </div>
+</div>
+        <br><br>
+
+<!-- Counters -->
+<section class="col-md-4" style="padding: 20px; left: 50%; transform: translate(-50% , 0);">
+
+	<form>
+		{% csrf_token %}
+    <fieldset>
+      <legend> Establish Connection </legend>
+      <div class="mb-3">
+        <label for="username" class="form-label" style="text-align: left; width: 100%;" >Select Device</label>
+        <select class="form-control" id="allNetworkDevices">
+          <option disabled selected>Select Device</option>
+        </select>
+      </div>
+      <br>
+        <div class="mb-3">
+        <label for="packages" class="form-label" style="text-align: left; width: 100%;" >Packages</label>
+        <input type="text" class="form-control col-md-2" id="packages" name="packages" aria-describedby="emailHelp" placeholder="">
+        </div><br><br>
+      <input type="button" onclick="sendSSH()" class="btn btn-primary" value="Connect">
+  </fieldset>
+	  </form>
+
+</section>
+<!--
+<br><br><br>
+
+<div class="wrapper hidemeplease col-md-12">
+    <div class="page col-md-12 " id="page">
+      <section class="col-md-12">
+        <div style="padding: 15px 15px 15px 35px;">
+            <table style="width: 100%; ">
+            <tbody>
+            <tr>
+                <td style="width: 30%; vertical-align: middle">
+                    <i class="" id="left-button" style="font-size:48px"></i>
+                    <i class="" id="up-button" style="font-size:48px"></i>
+                    <i class="" id="down-button" style="font-size:48px"></i>
+                    <i class="" id="right-button" style="font-size:48px"></i>
+                </td>
+                <td style="width: 30%; padding-left: 15px; padding-right: 15px;font-size: 15px;">
+                <div class="slidecontainer" id="slidecontainer">
+                    <input type="range" min="100" max="3000" class="slider" id="scale_slider"><br>
+                    <div  align="middle">Scale range:<br><span id="scale_indicator"></span></div>
+                </div>
+            </td>
+            <td style="width: 30%; padding-left: 15px; padding-right: 15px;font-size: 15px;">
+                <div class="slidecontainer" id="slidecontainer">
+                    <input type="range" min="1" max="200" value="50" class="slider" id="force_slider"><br>
+                    <div  align="middle">Vertical force:<br><span id="force_indicator"></span></div>
+                </div>
+            </td>
+
+            </tr>
+            </tbody>
+            </table>
+        </div>
+      </section>
+
+        <div align="middle" class="middle col-md-12" id="middle" style="width: 100%; height: 500px; padding: 0; border: 1px solid black; overflow: hidden;">
+
+            <div class="container col-md-12" style="padding: 0;">
+                <main class="content col-md-12">
+                    <div id="container" class="svg-container col-md-12"></div>
+
+                </main>
+            </div>
+
+        </div>
+
+    
+     
+    </div>
+
+    <section style="display: none;" align="middle" class=" col-md-12" id="left-sidebar">
+
+      <div align="middle" class="col-md-12" >
+      </div>
+      <br>
+      <div align="middle" style="font-size: 18px; padding: 0px 0px 0px 0px;" class="infobox " id="infobox_header" >
+      </div>
+      <div align="middle" style="font-size: 18px;" class="infobox" id="infobox">
+      </div>
+
+
+</section> 
+
+</div>
+
+	-->
+<section class="col-md-12" >
+
+<!--<div class="theme-switch-wrapper container">
+    <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="myslider round"></div>
+  </label>
+  <em class="darktext">Dark Mode</em>
+</div>-->
+
+  <div class="cont2 applicationstatus col-md-12" style="height: auto;">
+    <br>
+    <h1> Application Status </h1><br><br>
+    <div class="appinfo">   
+     
+    </div>
+  </div>
+
+  <div class="cont2 graphholder2 col-md-12" style="height: auto; display:none;">
+    <br><br><br>
+    <h1> Device Monitoring </h1>
+  </div>
+
+  <div class="cont2 graphholder col-md-12" style="height: auto; display:none;">
+    <br><br><br>
+    <h1>Local Device Monitoring</h1>
+  </div>
+</section>
+
+ 
+ 
+<script src="{% static '/dashboard/js/plotly.js' %}"></script>
+<script src="{% static '/dashboard/js/d3.v4.js' %}"></script>
+<script src="{% static '/dashboard/js/plotly.js' %}"></script>
+<script src="{% static 'dashboard/js/topology_scripts.js' %}"></script>
+<script>
+
+var enableSSH = false;
+
+
+var GLO_HOST;
+var GLO_USERNAME;
+var GLO_PASSWORD;
+
+
+function setCookie(cname, cvalue, exdays) {
+  document.cookie = cname + "=" + cvalue + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+
+$("#allNetworkDevices").on("change" , function(){
+	
+	var device = $("#allNetworkDevices");
+	var host = device.val();	
+
+	var val = getCookie(host);
+	
+	console.log("Selected" , device.val() , val)
+
+	var packages= $("#packages").val(val);
+})
+
+function sendSSH(){
+  var device = $("#allNetworkDevices");
+	var host = device.val();
+  var username = device.find(':selected').data("user");
+  var password = device.find(':selected').data("pwd");
+	var packages= $("#packages").val();
+	var sendData = {
+		"host" : host,
+		"username" : username,
+		"password" : password,
+		"packages" : packages
+	}
+
+	try{
+		setCookie(host , packages);
+	}catch(ex){
+		console.log("cookies" , ex);
+	}
+
+   GLO_HOST = host;
+  GLO_USERNAME = username;
+  GLO_PASSWORD = password;
+    showloader();
+	$.post("getEverything/ssh/", sendData , function(data, status){
+    console.log("Get Everything SSH" , data)
+		//data = JSON.parse(data);
+    
+
+    Swal.fire(data["message"])
+
+
+    if(!data["error"]){
+
+      //print("no error")
+      packagesInfo = "";
+
+      $(".hidemeplease").css("display" , "block");
+      enableSSH = true;
+      
+      graphData = {"nodes" : []};
+      dd = data["data"]["packages"];
+
+      var i = 1;
+      var MAXI = 4;
+
+      for (var key in dd){
+        if(dd[key]){
+          
+          packagesInfo += key + ": Installed\n";
+
+          graphData["nodes"].push({
+            "group" : i + "", 
+            "id" : key , 
+            "image" : 
+            "default.png" , 
+            "data" : {
+              "status" : dd[key]["status"],
+              "name" : dd[key]["name"],
+              "is_active" : dd[key]["is_active"],
+              "load" : dd[key]["load"],
+              "pid" : dd[key]["pid"],
+              "task" : dd[key]["task"],
+              "memory" : dd[key]["memory"],
+            }
+          });
+
+          if(i < MAXI){
+            i++;
+          }
+        }
+        // false value
+      }
+      Swal.fire("Packages Information\n" + packagesInfo);
+      //console.log("Printing Graph DATA");
+      //console.log(graphData);
+      //PRINT_APM_GRAPH(graphData);
+      EXPORT_TO_DIV(graphData);
+    }
+    else {
+      //print("disabled ssh for no reason")
+      enableSSH = false;
+    }
+hideloader();
+  	})
+
+}
+function EXPORT_TO_DIV(graph){
+  $(".applicationstatus .appinfo").append("<div class='row'>");
+  var color = "black";
+  node = graph.nodes;
+ 
+ var RUNNINGSER = 0 // Running Services
+ var STOPPEDSER = 0 // Stopped Services
+ var FAILEDSER = 0 // Failed Services
+var TERMINAL = "<div class='row'><h2><a href='/ssh/host/"+GLO_HOST+"'><i class='fa fa-bar-chart'></i></a> <a href='/syslogs/?ip="+GLO_HOST+"'><i class='fa fa fa-history'></i></a></h2></div>"
+$(".applicationstatus .appinfo").append(TERMINAL);
+  for (var i in node){
+    var color;
+    var packages = node[i].id;
+    var status = node[i].data.status;
+    var name = node[i].data.name;
+    var load = node[i].data.load;
+    var active = node[i].data.is_active;
+    var pid = node[i].data.pid;
+    if (status == "RUNNING"){
+      color = "green";
+      RUNNINGSER += 1;
+    }
+    else if (status == "STOPPED") {
+      color = "orange";
+      STOPPEDSER += 1;
+    }
+    else {
+      color="red";
+      FAILEDSER += 1;
+    }
+  var HTML = "";
+    HTML += "<div class='col-md-6' style='margin-bottom:18px'>\
+        <div class='card col-lg-12 infodiv' style='background:"+color+";'>\
+        <table class='table'>\
+          <tbody>\
+          <tr><th>IP</th><td>"+GLO_HOST+"</td></tr>\
+          <tr><th>Service</th><td>"+packages+"</td></tr>\
+          <tr><th>Status</th><td>"+status+"</td></tr>\
+          </tbody>\
+        </table>\
+            <i class='fa fa-close closethis' style='position: absolute;top: 4px;left: 96%;font-size:20px'></i>\
+        </div>\
+        <i class='fa fa-angle-double-down showmoredetails' style='font-size:30px'></i>\
+        <div class='extradetails' style='display:none'>\
+          <table clsas='table'>\
+          <tr><th>"+name+"</th></tr>\
+          <tr><th>"+load+"</th></tr>\
+          <tr><th>"+active+"</th></tr>\
+          <tr><th>"+pid+"</th></tr>\
+          </table>\
+        </div>\
+        </div>";
+  $(".applicationstatus .appinfo").append(HTML);
+  }
+  $(".applicationstatus .appinfo").append("</div>");
+  $("#activeser").html(RUNNINGSER)
+  $("#downser").html(STOPPEDSER)
+  $("#warningser").html(FAILEDSER)
+}
+
+$(document).on('click','.closethis', function(){
+    var me = $(this).parent().parent();   
+
+    Swal.fire({
+        title: 'Are you sure want to close?',
+        showCancelButton: true,
+        confirmButtonText: 'Close',
+        }).then((result) => {
+        if (result.isConfirmed) {
+            me.remove();
+        }
+        })  
+
+
+
+})
+$(document).on('click','.showmoredetails', function(){
+    $(this).removeClass('showmoredetails');
+    $(this).addClass('hidemoredetails');
+    var me = $(this).next().css('display','block');
+})
+$(document).on('click','.hidemoredetails', function(){
+    $(this).removeClass('hidemoredetails');
+    $(this).addClass('showmoredetails');
+    var me = $(this).next().css('display','none');
+})
+</script>
+
+
+{% endblock %}

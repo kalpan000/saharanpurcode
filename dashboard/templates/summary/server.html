@@ -1,0 +1,29 @@
+{% extends 'dashboard/header_footer.html' %}{% load static %} {% block title %} Server {% endblock title %} {% block css %} {% endblock %} {% block js %}
+<script>
+    function statistics(host) {
+        $.post("/summary/server/data/", {
+            "host": host,
+            function(data, status) {
+                console.log("Hello", data)
+            }
+        })
+    }
+    $('#allNetworkDevices').on('change', function() {
+        var host = this.value;
+        statistics(host);
+    });
+</script>
+{% endblock js %} {% block title_header %}Server{% endblock %} {% block content %}
+
+<select id="allNetworkDevices">
+<option selected disabled>Select Server</option>
+</select> {{ snmpdevices|json_script:"snmpdevices" }}
+<script>
+    var snmpDevices = JSON.parse(document.getElementById("snmpdevices").textContent);
+
+    for (key in snmpDevices) {
+        $("#allNetworkDevices").append("<option data-user='" + snmpDevices[key]["user"] + "' data-pwd='" + snmpDevices[key]["pwd"] + "' data-tag=" + snmpDevices[key]["name"] + " value=" + snmpDevices[key]["ip"] + " >" + snmpDevices[key]["name"] + "</option>")
+    }
+</script>
+
+{% endblock %}

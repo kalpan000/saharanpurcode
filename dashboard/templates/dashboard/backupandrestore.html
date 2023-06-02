@@ -1,0 +1,144 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} DB Magmt {% endblock %} {% block title_header %} DB Magmt. {% endblock %} {% block css %} {% endblock %} {% block content %}
+<style>
+    .cont {
+        width: 100%;
+    }
+    
+    h1 {
+        margin: 20px;
+    }
+    
+    form {
+        border: 1px solid black;
+        padding: 10px;
+        margin: 10px;
+    }
+    
+    form input,
+    form select,
+    .restoreBtn,
+    .backupBtn {
+        padding: 5px;
+    }
+</style>
+
+
+<section class="col-md-4" style="padding: 20px; left: 50%; transform: translate(-50% , 0);">
+
+    <form class="col-12">
+        <h1> Backup </h1>
+        <span style="text-align: left;" class="col-lg-12"> Spaces are not allowed </span>
+        <input class="input-field col-lg-12" type="text" id="backupName" placeholder="Backup filename"> {% csrf_token %}
+        <br><br><br>
+        <input type="button" class="backupBtn btn btn-primary" value="Backup"> </input>
+
+        <!-- <input type="button" class="backuptoNetworkBtn btn btn-primary" value="Backup To Network"> </input> -->
+    </form>
+
+    <form class="col-12">
+        <h1> Restore </h1>
+        <input type="checkbox" name="cleanReset" class="cleanReset" value="Perform Clean Restore"> Perform Clean Restore
+        <select class="col-lg-12 restoreName">
+            {% for file in files %}
+                <option value="{{file}}"> {{file}} </option>
+            {% endfor %}
+        </select> {% csrf_token %}
+        <br><br><br>
+        <input type="button" class="restoreBtn btn btn-primary" value="Restore"> </input>
+    </form>
+</section>
+
+<!-- D3 graphs -->
+<script src="{% static '/dashboard/js/d3.min.js' %}"></script>
+
+
+<script>
+    $("#backupName").on("keypress", function(e) {
+        var key = e.keyCode;
+        if (key == 32) {
+            e.preventDefault();
+        }
+    });
+
+
+    $(".backupBtn").on("click", function(e) {
+        e.preventDefault();
+
+        var name = $("#backupName").val();
+
+        if (name.length < 5) {
+            Swal.fire("Backup name should be more than 5 character long");
+            return;
+        }
+
+        $.get("/backupandrestore/backup/" + name, function(data, status) {
+            console.log(data);
+            if (data["error"]) {
+                Swal.fire(data["message"] + "\n" + data["error"]);
+                return;
+            }
+            Swal.fire(data["message"]);
+        });
+        // upload to network storage
+        $.get("/backupandrestore/backup/network/" + name, function(data, status) {
+            console.log(data);
+            if (data["error"]) {
+                Swal.fire(data["message"] + "\n" + data["error"]);
+                return;
+            }
+            Swal.fire(data["message"]);
+        });
+        //backupandrestore/backup/<str:name>/
+    });
+
+    $(".backuptoNetworkBtn").on("click", function(e) {
+        e.preventDefault();
+        Swal.fire("Soon this function will be ready...")
+        return false;
+        var name = $("#backupName").val();
+
+        if (name.length < 5) {
+            Swal.fire("Backup name should be more than 5 character long");
+            return;
+        }
+
+        $.get("/backupandrestore/backup/network/" + name, function(data, status) {
+                console.log(data);
+                if (data["error"]) {
+                    Swal.fire(data["message"] + "\n" + data["error"]);
+                    return;
+                }
+
+                Swal.fire(data["message"]);
+
+            })
+            //backupandrestore/backup/<str:name>/
+    });
+
+
+
+    $(".restoreBtn").on("click", function(e) {
+        e.preventDefault();
+
+        var name = $(".restoreName").val();
+
+        var checked = $(".cleanReset").prop('checked') == true;
+
+        console.log(checked);
+        Swal.fire("Restoring Database\nThis action could take up to 10 minutes\n");
+        $.get("/backupandrestore/restore/" + name + "?checked=" + checked, function(data, status) {
+            console.log(data);
+            if (data["error"]) {
+                Swal.fire(data["message"] + "\n" + data["error"]);
+                return;
+            }
+
+            Swal.fire(data["message"]);
+
+        })
+
+    });
+</script>
+
+
+{% endblock %}

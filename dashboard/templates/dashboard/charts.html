@@ -1,0 +1,835 @@
+{% extends 'dashboard/header_footer.html' %}{% load static %} {% block title %} Dashboard {% endblock title %} {% block css %}
+<style>
+    .card-counter {
+        box-shadow: 2px 2px 10px #DADADA;
+        padding: 20px 10px;
+        background-color: #fff;
+        height: 75px;
+        border-radius: 5px;
+        transition: .3s linear all;
+    }
+    
+    .card-counter:hover {
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+    }
+    
+    .card-counter.primary {
+        background-color: #007bff;
+        color: #FFF;
+    }
+    
+    .card-counter.danger {
+        background-color: #ef5350;
+        color: #FFF;
+    }
+    
+    .card-counter.success {
+        background-color: #66bb6a;
+        color: #FFF;
+    }
+    
+    .card-counter.info {
+        background-color: #26c6da;
+        color: #FFF;
+    }
+    
+    .card-counter i {
+        font-size: 5em;
+        opacity: 0.2;
+    }
+    
+    .card-counter .count-numbers {
+        position: relative;
+text-align: center;
+right: 2px;
+top: -20px;
+font-size: 32px;
+display: block;
+    }
+    
+    .card-counter .count-name {
+        position: relative;
+top: -25px;
+text-transform: capitalize;
+opacity: 0.5;
+display: block; 
+font-size: 18px;
+text-align: center;
+font-weight: 600;
+    }
+    
+    fieldset.scheduler-border {
+        /* border: 1px groove #ddd !important;  */
+        padding: 0 1.4em 1.4em 1.4em !important;
+        /* margin: 0 0 1.5em 0 !important; */
+        /* -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.15),0 2px 2px rgba(0,0,0,.15),0 4px 4px rgba(0,0,0,.15),0 8px 8px rgba(0,0,0,.15); */
+        box-shadow: 0 1px 1px rgba(0,0,0,.15),0 2px 2px rgba(0,0,0,.15),0 4px 4px rgba(0,0,0,.15),0 8px 8px rgba(0,0,0,.15);
+        border: 1.5px solid #343232;
+        border-radius: 5px;
+    }
+    
+    legend.scheduler-border {
+        font-size: 18px !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width: auto;
+        padding: 0 10px;
+        border-bottom: none;
+    }
+    .col-md-offset-1 {
+    margin-left: 2.333%;
+}
+.container{
+    width:100%;
+}
+.headSumry{
+    font-size: 11px;
+    text-align: center;
+    font-weight:bold;
+    padding-top: 6px;
+}
+.Totalsumry{
+    text-align: center;
+    font-size: 22px;
+    font-weight:bold;
+}
+.network-div .database-div .storage-div .server-div{
+    background-color: none;
+    border: 1.5px solid rgb(170, 165, 165);
+    box-shadow: 0 1px 1px rgba(15, 15, 15, 0.15),0 2px 2px rgba(0,0,0,.15),0 4px 4px rgba(0,0,0,.15),0 8px 8px rgba(0,0,0,.15);
+}
+.heading-server, .heading-storage, .heading-database, .heading-network{
+    font-size: 16px;
+    font-weight: bold;
+}
+</style>
+{% endblock %} 
+{% block js %}
+{% endblock js %}
+{% block title_header %}Dashboard{% endblock %}
+{% block content %}
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal7" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Engine Cores</h4>
+        </div>
+        <div class="modal-body" id="graphBody7">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal8" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Processes</h4>
+        </div>
+        <div class="modal-body" id="graphBody8" style="height:600px">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal9" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Usage Analytics</h4>
+        </div>
+        <div class="modal-body" id="graphBody9">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal10" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Notification Heatmap</h4>
+        </div>
+        <div class="modal-body" id="graphBody10">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal11" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body" id="graphBody11">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="GraphModal12" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body" id="graphBody12">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<div class="container" style="margin-bottom:30px;">
+
+    <div class="row col-md-12" style="overflow: hidden;">
+        <div class="col-md-2 headerCol">
+            <div class="card-counter primary">
+                <span class="count-numbers">{{device}}</span>
+                <span class="count-name ">Total Devices</span>
+            </div>
+        </div>
+
+        <div class="col-md-2 headerCol ">
+            <div class="card-counter danger">
+
+                <span class="count-numbers">{{notification}}</span>
+                <span class="count-name">Notifications</span>
+            </div>
+        </div>
+
+        <div class="col-md-2 headerCol ">
+            <div class="card-counter success">
+                <span class="count-numbers">{{datacenter}}</span>
+                <span class="count-name">Data Centers</span>
+            </div>
+        </div>
+
+        <div class="col-md-2 headerCol ">
+            <div class="card-counter info">
+
+                <span class="count-numbers">{{total_users}}</span>
+                <span class="count-name">Users</span>
+            </div>
+        </div>
+        <div class="col-md-2 headerCol ">
+            <div class="card-counter" style="background-color:#ff0083;color:#fff;">
+
+                <span class="count-numbers">0</span>
+                <span class="count-name">Applications</span>
+            </div>
+        </div>
+        <div class="col-md-2 headerCol ">
+            <div class="card-counter" style="background-color:#167985;color:#fff;">
+
+                <span class="count-numbers">{{web_websites}}</span>
+                <span class="count-name">Websites</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="container">
+<!-- Summary -->
+<div class="row network-row-div" style="margin-bottom: 30px;">
+    <!---- network div start ---->
+    <div class="col-md-6">
+        <fieldset class="network-div scheduler-border">
+        <legend class="heading-network">NETWORK</legend>
+        <div class="col-md-3" style="height: 70px;">
+            <p class="headSumry"> Total Devices </p>
+            <p class="Totalsumry" id="NTotalDevice"></p>
+        </div>
+        <div class="col-md-3" style="height: 70px; ">
+            <p class="headSumry"> Total Inbound </p> 
+            <p class="Totalsumry" id="NTotalInbound"></p>
+
+        </div>
+        <div class="col-md-3" style="height: 70px;">
+            <p class="headSumry"> Total Outbound </p>
+            <p class="Totalsumry" id="NTotalOutbound"></p>
+
+        </div>
+        <div class="col-md-3" style="height: 70px; ">
+            <p class="headSumry"> Total Interface</p>
+            <p class="Totalsumry" id="nTotalInterface"></p>
+        </div> 
+    </fieldset>
+</div>
+    <!---- network div end ---->
+
+    <div class="col-md-6">
+        <!---- server div start ---->
+        <fieldset class="server-div scheduler-border">
+        <legend class="heading-server">SERVER</legend>
+        <div class="col-md-3" style="height: 70px;">
+            <p class="headSumry"> Total Servers </p>
+            <p class="Totalsumry" id="sTotalDevice"></p>
+        </div>
+        <div class="col-md-3" style="height: 70px; ">
+            <p class="headSumry"> Project Engaged </p> 
+            <p class="Totalsumry" id="sTotalInbound"></p>
+
+        </div>
+        <div class="col-md-3" style="height: 70px;">
+            <p class="headSumry"> Total Blade Chasis </p>
+            <p class="Totalsumry" id="sTotalOutbound"></p>
+
+        </div>
+        <div class="col-md-3" style="height: 70px; ">
+            <p class="headSumry"> Total VM </p>
+            <p class="Totalsumry" id="sTotalInterface"></p>
+        </div>   
+        </fieldset>
+</div>
+    <!---- server div end ---->
+    </div>
+
+    <div class="row">
+    <div class="col-md-6">
+        <!---- storage div start ---->
+        <fieldset class="storage-div scheduler-border">
+        <legend class="heading-storage">STORAGE</legend>
+        <div class="col-md-3" style="height: 70px;">
+            <p class="headSumry"> Total Capacity </p>
+            <p class="Totalsumry">0 GB</p>
+        </div>
+        <div class="col-md-3" style="height: 70px; ">
+            <p class="headSumry"> Total Devices </p> 
+            <p class="Totalsumry" id="totalstorage">0</p>
+
+        </div>
+        <div class="col-md-3" style="height: 70px;">
+            <p class="headSumry"> Total No. of Blocks </p>
+            <p class="Totalsumry">0</p>
+
+        </div>
+        <div class="col-md-3" style="height: 70px; ">
+            <p class="headSumry"> Total No. Of File </p>
+            <p class="Totalsumry">0</p>
+        </div>   
+        </fieldset>
+</div>
+    <!---- storage div end ---->
+    <div class="col-md-6 scheduler-border">
+        <!---- database div start ---->
+        <fieldset class="database-div scheduler-border">
+        <legend class="heading-database">DATABASE</legend>
+        <div class="col-md-3" style="height: 70px;">
+            <p class="headSumry"> Total Database </p>
+            <p class="Totalsumry inserted">0</p>
+        </div>
+        <div class="col-md-3" style="height: 70px; ">
+            <p class="headSumry"> Record Updated </p> 
+            <p class="Totalsumry updated">0</p>
+
+        </div>
+        <div class="col-md-3" style="height: 70px;">
+            <p class="headSumry"> Active Connections </p>
+            <p class="Totalsumry deleted">-</p>
+
+        </div>
+        <div class="col-md-3" style="height: 70px; ">
+            <p class="headSumry"> Record Fetched </p>
+            <p class="Totalsumry fetched">0</p>
+        </div>   
+        </fieldset>
+</div>
+    <!---- database div end ---->
+</div>
+
+<br>
+           <div class="row">
+           <div class="col-md-4">
+            <fieldset id="zoom10" class="scheduler-border" style="height: 280px;" type="button" data-toggle="modal" onclick="showModalpls()">
+                <legend class="scheduler-border">Devices</legend>
+                <div id="myDiv10" style="height:200px"></div>
+            </fieldset>
+            </div>
+            <div class="col-md-8">
+            <fieldset id="zoom2" class="scheduler-border" style="height: 280px;" type="button" data-toggle="modal" data-target="#GraphModal9">
+                <legend class="scheduler-border">Usage Analytics</legend>
+                <div id="myDiv2" style="height:250px;"></div>
+            </fieldset>
+            </div>
+        </div>
+        
+        <br>
+<div class="row">
+    <div class="col-md-5" style="">
+        <fieldset id="zoom3" class="scheduler-border" style="height: 330px;" type="button" data-toggle="modal" data-target="#GraphModal7">
+            <legend class="scheduler-border">Engine Cores</legend>
+            <div id="myDiv3" style="height:300px"></div>
+        </fieldset>
+    </div>
+    <div class="col-md-7">
+        <fieldset id="zoom14" class="scheduler-border" style="height: 330px;" type="button" data-toggle="modal" data-target="#GraphModal10">
+            <legend class="scheduler-border">Notification Heatmap</legend>
+            <div id='myDiv14'>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<script src="{% static '/dashboard/js/plotly.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/dashboard/js/echarts-liquidfill.min.js' %}"></script>
+
+<script>
+
+    var config = {responsive: true,displayModeBar: false};
+    //FUNCTION FOR PLOTING 2nd GRAPGH
+    function Graph(user,datacenter, website, device, camera) {
+        var trace1 = {
+            x: ['User', 'DC', 'Website', 'Device','Camera'],
+            y: [user, datacenter, website, device, camera],
+            name: 'Details',
+            type: 'bar'
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+            margin: {
+                l: 20,
+                r: 0,
+                b: 60,
+                t: 0,
+                pad: 0
+            },
+            //width: 300,
+            autosize:true,
+            //height: 250,
+            barmode: 'group',
+        };
+        
+        Plotly.newPlot('myDiv2', data, layout, config, {
+            displayModeBar: false
+        });
+        Plotly.newPlot('graphBody9', data,{
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+            margin: {
+                l: 80,
+                r: 0,
+                b: 60,
+                t: 0,
+                pad: 0
+            },
+            width: 500,
+            height: 500,
+            barmode: 'group',
+        },
+        {
+            displayModeBar: false
+        });
+    }
+    //FUNCTION FOR PLOTING PROCESS GRAPGH
+    function processMonitoring(snmp, netconf, restconf,total) {
+        var trace1 = {
+            y: snmp,
+            x: total,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'CORE S',
+            text: ['CORE S'],
+            marker: {
+                size: 12
+            }
+        };
+
+        var trace2 = {
+            y: netconf,
+            x: total,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'CORE N',
+            text: ['CORE N'],
+            marker: {
+                size: 12
+            }
+        };
+
+        var trace3 = {
+            y: restconf,
+            x: total,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'CORE R',
+            text: ['CORE R'],
+            marker: {
+                size: 12
+            }
+        };
+
+        var data = [trace1, trace2, trace3];
+
+        var layout = {
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+            margin: {
+                l: 20,
+                r: 0,
+                b: 40,
+                t: 0,
+                pad: 0
+            },
+            autosize: true,
+            
+            xaxis: {
+                autorange: true,
+            },
+            yaxis: {
+                autorange: true,
+            },
+        };
+        
+        Plotly.newPlot('myDiv3', data, layout, config, {
+            displayModeBar: false
+        });
+        Plotly.newPlot('graphBody7', data, {
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+            margin: {
+                l: 80,
+                r: 0,
+                b: 40,
+                t: 0,
+                pad: 0
+            },
+            width:500,
+            height:500,
+            
+            xaxis: {
+                autorange: true,
+            },
+            yaxis: {
+                autorange: true,
+            },
+        }, {
+            displayModeBar: false
+        });
+    }
+    //FUNCTION FOR PLOTING SUNBUSRT GRAPGH
+    function sunburst1(websites, servers, networks, storage, id){
+        // Initialize the echarts instance based on the prepared dom
+      var myChart = echarts.init(document.getElementById(id));
+      //var myChart1 = echarts.init(document.getElementById('graphBody8'));
+
+      // Specify the configuration items and data for the chart
+      var data = [
+  {
+    name: 'Data',
+    itemStyle: {
+          color: '#fc5603'
+        },
+    children: [
+      {
+        name: 'Websites',
+        value: 25,
+        children: websites,
+        itemStyle: {
+          color: '#1403fc'
+        }
+      },
+      {
+        name: 'Storages',
+        value: 25,
+        children: storage,
+        itemStyle: {
+          color: '#1403fc'
+        }
+      },
+      {
+        name: 'Server',
+        value: 25,
+        children: servers,
+        itemStyle: {
+          color: '#1403fc'
+        }
+      },
+      {
+        name: 'Network',
+        value: 25,
+        children: networks,
+        itemStyle: {
+          color: '#1403fc'
+        }
+      }
+    ]
+  }
+];
+option = {
+  series: {
+    type: 'sunburst',
+    emphasis: {
+      focus: 'ancestor'
+    },
+    data: data,
+    radius: [0, '90%'],
+    label: {
+      rotate: 'radial'
+    }
+  }
+};
+
+      // Display the chart using the configuration items and data just specified.
+      myChart.setOption(option);
+      //myChart1.setOption(option);
+    }
+    sunburst1({{allweb|safe}}, {{allserver|safe}}, {{allnetwork|safe}}, {{allstor|safe}}, "myDiv10");
+
+    function showModalpls(){
+    $('#GraphModal8').modal();
+}
+$('#GraphModal8').on('shown.bs.modal', function(e) {
+    //Swal.fire("Alert");
+        sunburst1({{allweb|safe}}, {{allserver|safe}}, {{allnetwork|safe}}, {{allstor|safe}},"graphBody8");
+    });
+</script>
+<script src="/static/dashboard/js/echarts.js">
+<script>
+    function Statistics() {
+        $.ajax({
+            type: 'GET',
+            url: "/appliance/",
+            success: function(response) {
+                Graph(response["total_users"], response["datacenter"], response["web_websites"], response["device"], response["camera"]);
+                processMonitoring(response["snmp"],response["netconf"],response["restconf"],response["DeviceID"]);
+                //sunburst(response["usedStorage"],response["freeStorage"],response["totalStorage"]);
+                NotifHeatmap(response["notifTime"],response["low"],response["mid"],response["high"]);
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+            }
+        });
+    };
+</script>
+<script>
+function NotifHeatmap(time, applianceHM, webHM, snmpHM){
+    //console.log(time, low, mid, high);
+var data = [
+  {
+    z: [applianceHM, webHM, snmpHM],
+    x: time,
+    y: ['Appliance', 'SNMP', 'WEB','Network', 'Server','Application'],
+    type: 'heatmap',
+    hoverongaps: false
+  }
+];
+var layout = {
+  //width: 500,
+  height: 270,
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+            margin: {
+                l: 80,
+                r: 0,
+                b: 75,
+                t: 0,
+                pad: 0
+            },
+            autosize: true,
+        };
+Plotly.newPlot('myDiv14', data, layout, config, {
+    displayModeBar: false
+});
+Plotly.newPlot('graphBody10', data, {
+  width: 500,
+  height: 500,
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)",
+            margin: {
+                l: 80,
+                r: 0,
+                b: 75,
+                t: 0,
+                pad: 0
+            },
+        }, {
+    displayModeBar: false
+});
+}
+</script>
+<script>
+function updateDatabaseStat(data) {
+        var database = data["databases"]["postgres"];
+        //$(".inserted").html(database.records.inserted)
+        $(".updated").html(database.records.updated)
+        //$(".deleted").html(database.records.deleted)
+        $(".fetched").html(database.records.fetched)
+}
+
+
+function dbFetch(){
+    $.post("/database/testing/ajax", {"username" : "postgres","host" : "127.0.0.1","password" : "akus@123","port" : "5432"}, function (data, status) {
+    if (!data["error"]) {
+
+        $(".inserted").text(data["databaseCount"]);
+            $(".deleted").text(data["active_connections"]);
+        updateDatabaseStat(data);
+        //$(".mainContent").css("display", "block");
+
+    }
+    else {
+        //Swal.fire("Incorrect Credentials");
+        //$(".mainContent").css("display", "none");
+        //startUpdate = false;
+    }
+    })
+}
+dbFetch();
+
+window.setInterval(function(){
+    dbFetch()
+}, 10000);
+
+
+function niceBytes(x){
+
+        var units = ["MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+        let l = 0, n = parseFloat(x, 10) || 0;
+
+        while(n >= (1024) && ++l){
+            n = n/1024;
+        }
+
+        return(n.toFixed(3) + ' '+units[l])
+
+    }
+
+
+function NetSummary() {
+        $.ajax({
+            type: 'GET',
+            url: "/summary/network/data/",
+            success: function(response) {
+                data = response["data"];
+            $("#NTotalDevice").html(data["total_dev"]);
+
+            if (data["total_dev"] == 0){
+                data["total_int"] = 0
+            }
+                $("#nTotalInterface").html(data["total_int"]);
+                var busy_device = data["busy_devices"];
+
+                var top5cpu = "";
+                //busy devices
+                console.log("BSYYYY", busy_device);
+                totalDeviceKeys = 0;
+                TOT_IN = 0;
+                TOT_OUT = 0;
+                for (var i in busy_device) {
+                    totalDeviceKeys++;
+                    inb = busy_device[i]["inbound"]
+                    out = busy_device[i]["outbound"]
+                    TOT_IN += inb;
+                    TOT_OUT += out;
+                    $("#top5cpu tbody").append(`<tr><td>
+                        ${busy_device[i]["name"]}</td><td>${inb.toFixed(2)}</td><td>${out.toFixed(2)}
+                        </td></tr>`);
+                }
+
+                if (totalDeviceKeys > 0){
+                $("#NTotalInbound").html(niceBytes(TOT_IN / totalDeviceKeys));
+                $("#NTotalOutbound").html(niceBytes(TOT_OUT / totalDeviceKeys));
+                }
+                else{
+                    $("#NTotalInbound").html(0);
+                    $("#NTotalOutbound").html(0);
+                }
+
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+            }
+        });
+    };
+    function ServerSumary() {
+        $.ajax({
+            type: 'GET',
+            url: "/serversummary/",
+            success: function(response) {
+                data = response["data"];
+                $("#sTotalDevice").html(data["totalDevice"]);
+                $("#sTotalInbound").html("0");
+                $("#sTotalOutbound").html(data["totalBladeChasis"]);
+                $("#sTotalInterface").html(data["totalVMs"]);
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+            }
+        });
+    };
+    function StorageSumary() {
+        $.ajax({
+            type: 'GET',
+            url: "/storagesummary/",
+            success: function(response) {
+                data = response["data"];
+                $("#totalstorage").html(data["totalDevice"]);
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+            }
+        });
+    };
+    NetSummary();
+    ServerSumary();
+    StorageSumary();
+    Graph({{total_users}}, {{datacenter}}, {{web_websites}}, {{device}}, {{camera}});
+    NotifHeatmap({{notifTime|safe}},{{applianceHM|safe}},{{webHM|safe}}, {{snmpHM|safe}});
+    processMonitoring({{snmp|safe}},{{netconf|safe}},{{restconf|safe}},{{DeviceID|safe}});
+</script>
+
+{% endblock %}

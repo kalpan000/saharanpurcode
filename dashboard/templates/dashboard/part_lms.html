@@ -1,0 +1,230 @@
+{% load static %}
+<div class="col-md-12 boxStyle" style="border:1px solid black;overflow-x:auto;margin-bottom:12px;">
+    <table id="deviceInformationTable" class="table" style="line-height:3">
+
+        <thead>
+            <tr>
+                <th colspan="6"> Device Information</th>
+            </tr>
+
+            <tr>
+                {% comment %} <th> S.No </th> {% endcomment %}
+                <th> Device Tag</th>
+                <th> Renew </th>
+                <th> Decommission </th>
+                <th> Owner </th>
+                <th> Installation Date </th>
+                <th> Expiry Date </th>
+                <th> Contact Details </th>
+                <th> Days Left </th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for device in all_device|dictsort:'remaining_days'|slice:":20" %}
+            {% if device.is_delete %}{% else %}
+            <tr>
+                {% comment %} <th> {{forloop.counter}} </th> {% endcomment %}
+                <th> {{device}} </th>
+                <th> <i class="fa fa-refresh popup" onclick="showDatePicker('my_dp_{{device.id}}')"><span
+                            class="popuptext" id="my_dp_{{device.id}}">
+                            <form action="" method="POST">{% csrf_token %}<input type="hidden" name="form_type"
+                                    value="datepick"><input type="hidden" name="deviceinfo" value="{{device.id}}"><input
+                                    type="date" id="datepick" name="datepick" required /><input type="submit"
+                                    value="Renew"></form>
+                        </span></i> </th>
+                <th> <a onclick="deleteMelms('{{device.id}}')"><i
+                            class="fa fa-trash"></i></a> </th>
+                <th> {{device.deviceOwner|capfirst}} </th>
+                <th> {{device.installDate}} </th>
+                <th> {{device.expiryDate}} </th>
+                <th> Contact </th>
+                <th> {% if device.remaining_days <= 0 %}Expired {% else %} {{device.remaining_days}} {% endif %} </th>
+            </tr>
+            {% endif %}
+            {% empty %}
+            <tr>
+                <th colspan="8">No Device</th>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+        <tfoot></tfoot>
+    </table>
+</div>
+
+<div class="col-md-12 boxStyle" style="border:1px solid black;overflow-x:auto;margin-bottom:12px;">
+    <table id="archiveTable" class="table" style="line-height:3">
+
+        <thead>
+            <tr>
+                <th colspan="6"> Archive devices </th>
+            </tr>
+
+            <tr>
+                {% comment %} <th> S.No </th> {% endcomment %}
+                <th> Device Tag</th>
+                <th> Owner </th>
+                <th> Conatct Details </th>
+                <th> Installation Date </th>
+                <th> Expiry Date </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% comment %} {% for device in all_devices|dictsort:'remaining_days'|slice:":10" %} {% endcomment %}
+            {% for device in all_device %}
+            {% if device.is_delete %}
+            <tr>
+                {% comment %} <th> {{forloop.counter}} </th> {% endcomment %}
+                <th> {{device}} </th>
+                <th> {{device.deviceOwner|capfirst}} </th>
+                <th> Contact </th>
+                <th> {{device.installDate}} </th>
+                <th> {{device.expiryDate}} </th>
+            </tr>
+
+            {% endif %}
+            {% endfor %}
+
+        </tbody>
+
+        <tfoot></tfoot>
+
+    </table>
+</div>
+
+<style>
+#websitelmstbl tr{
+    text-align:left;
+}
+</style>
+<div class="col-md-12 boxStyle" style="border:1px solid black;overflow-x:auto;">
+    <table id="websitelmstbl" class="table" style="line-height:3">
+
+        <thead>
+            <tr>
+                <th colspan="6"> Website SSL Information</th>
+            </tr>
+
+            <tr>
+                <th> Website </th>
+                <th> Expiry Date </th>
+                <th> Days Left </th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        </tbody>
+
+        <tfoot></tfoot>
+    </table>
+</div>
+
+<script>
+function parseDate(input) {
+  var parts = input.split('-');
+  // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+  return new Date(parts[0], parts[1]-1, parts[2]); // Note: months are 0-based
+}
+
+var daysLeft = function(input) {    
+    var inputDate = parseDate(input);
+    var today = new Date();
+    var timeDiff = inputDate.getTime() - today.getTime();
+    return Math.ceil(timeDiff / (1000*3600*24));
+};
+</script>
+<script>
+
+    function deleteMelms(id){
+        Swal.fire({
+        title: 'Are you sure want to delete?',
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location = `/asset/forms/device/decocom/${id}/`;
+        }
+        })  
+    }
+    function printLMSDeviceInfo(tableID, data) {
+        console.log(data);
+        $("#" + tableID + " tbody").empty();
+        var html = "";
+        const csrftoken = Cookies.get("csrftoken")
+        //console.log(csrftoken);
+        for (var i = 0; i < data.length; i++) {
+            html += "<tr>";
+
+            html += "<td><b> " + data[i]["Device_Asset_Tag"] + " </b></td>"; // device tag
+            html += "<td><b> <i class='fa fa-refresh popup' onclick='showDatePicker(\"my_dp_" + data[i]["id"] + "\")'><span class='popuptext' id='my_dp_" + data[i]["id"] + "'><form action='' method='POST'><input type='hidden' name='csrfmiddlewaretoken' value='" + csrftoken + "'><input type='hidden' name='form_type' value='datepick'><input type='hidden' name='deviceinfo' value='" + data[i]["id"] + "'><input type='date' id='datepick' name='datepick' required /><input type='submit' value='Renew'></form></span></i></b></td>"; // device renew
+            console.log(html);
+            html += "<td><b> <a onclick='deleteMelms("+data[i]["id"]+")'><i class='fa fa-trash'></i></a> </b></td>"; // decommission
+            html += "<td><b>" + data[i]["deviceOwner"] + "</b></td>"; // owner
+            html += "<td><b>" + data[i]["installDate"] + "</b></td>"; // installation Date
+            html += "<td><b>" + data[i]["expiryDate"] + "</b></td>"; // expiry Date
+            html += "<td><b>Contact</b></td>"; // contact details
+            if(daysLeft(data[i]["expiryDate"]) <= 0){
+                html += "<td><b>Expired</b></td>"; // days left
+            }
+            else{
+                html += "<td><b>"+daysLeft(data[i]["expiryDate"])+"</b></td>"; // days left
+            }           
+
+            html += "</tr>";
+        }
+
+        $("#" + tableID + " tbody").append(html);
+
+    }
+
+
+
+    function printLMSArchiveDevices(tableID, data) {
+        $("#" + tableID + " tbody").empty();
+        var html = "";
+        for (var i = 0; i < data.length; i++) {
+            html += "<tr>";
+
+            html += "<td> " + data[i]["Device_Asset_Tag"] + " </td>"; // device tag
+            html += "<td>" + data[i]["deviceOwner"] + "</td>"; // owner
+            html += "<td>Contact</td>"; // contact details
+            html += "<td>" + data[i]["installDate"] + "</td>"; // installation Date
+            html += "<td>" + data[i]["expiryDate"] + "</td>"; // expiry Date
+            html += "<td>  </td>"; // days left
+
+            html += "</tr>";
+        }
+
+        $("#" + tableID + " tbody").append(html);
+
+    }
+
+
+    function printDecommissioning(tableID, data) {
+        console.log(data)
+        $("#" + tableID + " tbody").empty();
+        var html = "";
+        for (var i = 0; i < data.length; i++) {
+            html += "<tr>";
+
+            html += "<td> " + data[i]["Device_Asset_Tag"] + " </td>"; // device
+            html += "<td>" + data[i]["type_of_device"] + "</td>"; // type of device
+            html += "<td>" + data[i]["data_center_rack_id"] + "</td>"; // rack
+            html += "<td>" + data[i]["date_center_row_id"] + "</td>"; // row
+            html += "<td>" + data[i]["datacenter_id"] + "</td>"; // datacenter
+            html += "<td></td>"; // action
+
+            html += "</tr>";
+        }
+
+        $("#" + tableID + " tbody").append(html);
+
+    }
+
+
+</script>

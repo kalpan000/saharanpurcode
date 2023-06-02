@@ -1,0 +1,226 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Get Capabilities {% endblock %} {% block js %}
+{% if msg %}
+<script>
+    Swal.fire('{{msg}}');
+</script>
+{% endif %}
+<script>
+$("#ipscan").click(function(e) {
+    var token = '{{csrf_token}}';
+    var ippart1 = document.getElementById("ippart1").value;
+    var ippart2 = document.getElementById("ippart2").value;
+    var ippart3 = document.getElementById("ippart3").value;
+    var ippart4 = document.getElementById("ippart4").value;
+    var ip_range = document.getElementById("enRange").value;
+    $('#IPdiv').removeClass('customBorder');
+    $('#IPdevices').hide();
+    $("#loader").html("Loading...");
+    $("#loader").show();
+    $.ajax({
+        headers: { "X-CSRFToken": token },
+        type: 'POST',
+        url: "{% url 'IPScan' %}",
+        data: {
+            'ippart1':ippart1,
+            'ippart2':ippart2,
+            'ippart3':ippart3,
+            'ippart4':ippart4,
+            'ip_range':ip_range,
+            },
+        complete: function(){
+            $('#loader').hide();
+        },
+        // data: {"port1":port1,"port2":port2,"port3":port3,"port4":port4},
+        success: function(response) {
+            res = response["IPdevices"];
+            var html = "<thead><tr><th>Device</th><th>Status</th><th>Actions</th></tr></thead><tbody>";
+            $.each(res, function(index, value) {
+                html += "<tr>";
+                html += "<td>"+value.device+"</td>";
+                html += "<td>"+value.status+"</td>";
+                if (value.action == 'required'){
+                    html += "<td><a href='/discover/ipscan/"+value.device+"/'><i class='fa fa-plus'></i></a></td>";
+                }
+                else{
+                    html += "<td><a disabled><i class='fa fa-plus' style='color:grey;'></i></a></td>";
+                }
+                html += "</tr>";
+            });
+            html += "</tbody>";
+            $('#IPdiv').addClass('customBorder');
+            $('#IPdevices').show();
+            $('#IPdevices').html(html);
+
+        },
+        error: function(xhr, status, error) {
+            var err = eval("(" + xhr.responseText + ")");
+            Swal.fire(err.Message);
+        }
+    });
+});
+</script>
+{% endblock %} {% block css %}
+<style>
+.customBorder{
+    border:1px solid black;
+}
+</style>
+{% endblock %}
+{% block title_header %}Capability{% endblock %}
+{% block content %}
+{% comment %}  AUTO DISCOVEY{% endcomment %}
+<h1>Auto Discovery</h1>
+<br>
+<center>
+    <div class="col-md-6 col-md-offset-3 boxStyle" style="border:1px solid black;">
+        <form>
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="formTwo">
+            <div class="form-group row">
+            </div>
+            <div class="form-group row">
+                <label for="host" class="control-label col-sm-4">Host</label>
+                <div class="col-sm-2">
+                    <input name="ippart1" type="number" id="ippart1" min="0" max="255" class="form-control" required />
+                </div>
+                <div class="col-sm-2">
+                    <input name="ippart2" type="number" id="ippart2" min="0" max="255" class="form-control" required />
+                </div>
+                <div class="col-sm-2">
+                    <input name="ippart3" type="number" id="ippart3" min="0" max="255" class="form-control" required />
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+            <div class="form-group row">
+                <label for="range" class="control-label col-sm-4">Range</label>
+                <div class="col-sm-2">
+                    <input name="ippart4" type="number" id="ippart4" min="0" max="255" class="form-control" required />
+                </div>
+                <div class="col-sm-2">
+                    <input name="enRange" type="number" id="enRange" min="1" max="255" class="form-control" required />
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" id="ipscan" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</center>
+<div class="row" style="height:150px;"></div>
+
+<div class="col-md-6 col-md-offset-3 boxStyle" id="IPdiv">
+    <div id="loader"></div>
+    <table id="IPdevices" class="table" style="display:none"></table>
+</div>
+<div class="row" style="height:auto;"></div>
+{% comment %} END HAOC {% endcomment %}
+<br>
+<h1>Ad HOC</h1>
+<br>
+<center>
+    <div class="col-md-6 col-md-offset-3 boxStyle" style="border:1px solid black;">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="formIP">
+            <div class="form-group row">
+            </div>
+            <div class="form-group row">
+                <label for="device" class="control-label col-sm-4">Name of Device</label>
+                <div class="col-sm-8">
+                    <datalist id="devicenamelist">
+				<option>CISCO</option>
+				<option>UBUNTU</option>
+			  </datalist>
+                    <input type="text" class="form-control" name="devicename" list="devicenamelist" required />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="host" class="control-label col-sm-4">Host</label>
+                <div class="col-sm-2">
+                    <input name="ippart1" type="number" id="ippart1" min="0" max="255" class="form-control" required />
+                </div>
+                <div class="col-sm-2">
+                    <input name="ippart2" type="number" id="ippart2" min="0" max="255" class="form-control" required />
+                </div>
+                <div class="col-sm-2">
+                    <input name="ippart3" type="number" id="ippart3" min="0" max="255" class="form-control" required />
+                </div>
+                <div class="col-sm-2">
+                    <input name="ippart4" type="number" id="ippart4" min="0" max="255" class="form-control" required />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="cString" class="control-label col-sm-4">Community String</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="cString" id="cString" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="username" class="control-label col-sm-4">Username</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="username" id="username" required />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="password" class="control-label col-sm-4">Password</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" name="password" id="password" required />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-4 pull-right">
+                    <button type="submit" class="btn btn-primary">Hawk Scan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</center>
+<div class="row" style="height:400px;">
+
+</div>
+{% comment %} SHOW ADDED DEVICES {% endcomment %}
+{% if IPdevice %}
+<center>
+    <div class="col-md-12 boxStyle" style="border:1px solid black;overflow-x:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Device</th>
+                    <th>Host</th>
+                    <th>SNMP</th>
+                    <th>NETAPI</th>
+                    <th>RESTAPI</th>
+                    <th>Alive</th>
+                    <th>Device Added</th>
+                    <th>Last Checked</th>
+                    <th>Schedule</th>
+                    <th>Actions</th>
+                    <th>Update All</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for devices in IPdevice %}
+                <tr>
+                    <td>{{devices.name}}</td>
+                    <td>{{devices.ip}}:8080</td>
+                    <td>{% if devices.is_snmp %}<a href="/device/capability/test/{{devices.id}}/snmp/"><i class="fa fa-check" style="color:blue"></i></a>{% else %}<i class="fa fa-close" style="color:red"></i>{% endif %}</td>
+                    <td>{% if devices.is_netconf %}<a href="/device/capability/test/{{devices.id}}/net/"><i class="fa fa-check" style="color:blue"></i></a>{% else %}<i class="fa fa-close" style="color:red"></i>{% endif %}</td>
+                    <td>{% if devices.is_restconf %}<a href="/device/capability/test/{{devices.id}}/rest/"><i class="fa fa-check" style="color:blue"></i></a>{% else %}<i class="fa fa-close" style="color:red"></i>{% endif %}</td>
+                    <td><i class="fa fa-circle" style="color:green"></i></td>
+                    <td>{{devices.created|date:'d/m/Y f A'}}</td>
+                    <td>{{devices.updated|date:'d/m/Y f A'}}</td>
+                    <td>{% if devices.schedule %}{{devices.schedule}}{% else %}{% endif %}</td>
+                    <td><a href="/asset/forms/?host={{devices.ip}}&name={{devices.name}}&port=80"><i class="fa fa-plus" style='color:blue'></i></a> <a href="{% url 'edit-device-capability' devices.id %}"><i class="fa fa-edit"></i></a> <a href="{% url 'del-device-capability' devices.id %}"><i class="fa fa-trash"></i></a> <a href="{% url 'schedule-device-capability' devices.id %}"><i class="fa fa-calendar"></i></a></td>
+                    <td><button><i class="fa fa-play"></i></button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</center>
+<div class="row" style="height:400px;">
+
+</div>
+{% endif %}
+{% comment %} END ADDED DEVICES {% endcomment %}
+{% endblock %}

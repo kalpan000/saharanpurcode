@@ -1,0 +1,250 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} EMS {% endblock %} {% block js %} {% endblock %} {% block css %}
+<link href="{% static 'dashboard/css/temp.css' %}" rel="stylesheet">
+<style>
+    .inner-block {
+        background-image: url("{% static 'dashboard/images/data_center.png' %}");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+    
+    .container td,
+    .container th {
+        padding: 15px;
+    }
+    
+    td:nth-child(12n+7) {
+        background: rgb(116, 204, 226);
+    }
+    
+    td:nth-child(12n+3) {
+        background: rgb(93, 93, 93);
+    }
+    
+    td:nth-child(12n+11) {
+        background: rgb(93, 93, 93);
+    }
+    
+    td:nth-child(12n+5) {
+        background: rgb(93, 93, 93);
+    }
+    
+    td:nth-child(12n+9) {
+        background: rgb(93, 93, 93);
+    }
+</style>
+{% endblock %} {% block title_header %}EMS{% endblock %} {% block content %}
+
+
+<table cellspacing="0" cellpadding="10" class="container">
+    <thead>
+        <tr>
+            <th>
+                <h1>Cold Aisle</h1>
+            </th>
+            <th>
+                <h1>Row A (Front)</h1>
+            </th>
+            <th>
+                <h1>Row A (Back)</h1>
+            </th>
+            <th>
+                <h1>Hot Aisle</h1>
+            </th>
+            <th>
+                <h1>Row B (Front)</h1>
+            </th>
+            <th>
+                <h1>Row B (Back)</h1>
+            </th>
+            <th>
+                <h1>Cold Aisle</h1>
+            </th>
+            <th>
+                <h1>Row C (Front)</h1>
+            </th>
+            <th>
+                <h1>Row C (Back)</h1>
+            </th>
+            <th>
+                <h1>Hot Aisle</h1>
+            </th>
+            <th>
+                <h1>Row D (Front)</h1>
+            </th>
+            <th>
+                <h1>Row D (Back)</h1>
+            </th>
+            <th>
+                <h1>Cold Aisle</h1>
+            </th>
+            <th>
+                <h1>Row E (Front)</h1>
+            </th>
+            <th>
+                <h1>Row E (Back)</h1>
+            </th>
+            <th>
+                <h1>Hot Aisle</h1>
+            </th>
+            <th>
+                <h1>Row F (Front)</h1>
+            </th>
+            <th>
+                <h1>Row F (Back)</h1>
+            </th>
+            <th>
+                <h1>Cold Aisle</h1</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="color: white;">15 C</td>
+            <td title="data center"><strong>RA01</strong></td>
+            <td title="datacenter22"><strong>RA01</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RB01</strong></td>
+            <td title="datacenter22"><strong>RB01</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RC01</strong></td>
+            <td title="datacenter22"><strong>RC01</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RD01</strong></td>
+            <td title="datacenter22"><strong>RD01</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RE01</strong></td>
+            <td title="datacenter22"><strong>RE01</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RF01</strong></td>
+            <td title="datacenter22"><strong>RF01</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+        </tr>
+        <tr>
+            <td style="color: white;">15 C</td>
+            <td title="data center"><strong>RA02</strong></td>
+            <td title="datacenter22"><strong>RA02</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RB02</strong></td>
+            <td title="datacenter22"><strong>RB02</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RC02</strong></td>
+            <td title="datacenter22"><strong>RC02</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RD02</strong></td>
+            <td title="datacenter22"><strong>RD02</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RE02</strong></td>
+            <td title="datacenter22"><strong>RE02</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RF02</strong></td>
+            <td title="datacenter22"><strong>RF02</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+        </tr>
+        <tr>
+            <td style="color: white;">15 C</td>
+            <td title="data center"><strong>RA03</strong></td>
+            <td title="datacenter22"><strong>RA03</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RB03</strong></td>
+            <td title="datacenter22"><strong>RB03</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RC03</strong></td>
+            <td title="datacenter22"><strong>RC03</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RD03</strong></td>
+            <td title="datacenter22"><strong>RD03</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RE03</strong></td>
+            <td title="datacenter22"><strong>RE03</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RF03</strong></td>
+            <td title="datacenter22"><strong>RF03</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+        </tr>
+        <tr>
+            <td style="color: white;">15 C</td>
+            <td title="data center"><strong>RA04</strong></td>
+            <td title="datacenter22"><strong>RA04</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RB04</strong></td>
+            <td title="datacenter22"><strong>RB04</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RC04</strong></td>
+            <td title="datacenter22"><strong>RC04</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RD04</strong></td>
+            <td title="datacenter22"><strong>RD04</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RE04</strong></td>
+            <td title="datacenter22"><strong>RE04</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RF04</strong></td>
+            <td title="datacenter22"><strong>RF04</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+        </tr>
+        <tr>
+            <td style="color: white;">15 C</td>
+            <td title="data center"><strong>RA05</strong></td>
+            <td title="datacenter22"><strong>RA05</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RB05</strong></td>
+            <td title="datacenter22"><strong>RB05</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RC05</strong></td>
+            <td title="datacenter22"><strong>RC05</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RD05</strong></td>
+            <td title="datacenter22"><strong>RD05</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RE05</strong></td>
+            <td title="datacenter22"><strong>RE05</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RF05</strong></td>
+            <td title="datacenter22"><strong>RF05</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+        </tr>
+        <tr>
+            <td style="color: white;">15 C</td>
+            <td title="data center"><strong>RA06</strong></td>
+            <td title="datacenter22"><strong>RA06</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RB06</strong></td>
+            <td title="datacenter22"><strong>RB06</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RC06</strong></td>
+            <td title="datacenter22"><strong>RC06</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RD06</strong></td>
+            <td title="datacenter22"><strong>RD06</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RE06</strong></td>
+            <td title="datacenter22"><strong>RE06</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RF06</strong></td>
+            <td title="datacenter22"><strong>RF06</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+        </tr>
+        <tr>
+            <td style="color: white;">15 C</td>
+            <td title="data center"><strong>RA07</strong></td>
+            <td title="datacenter22"><strong>RA07</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RB07</strong></td>
+            <td title="datacenter22"><strong>RB07</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RC07</strong></td>
+            <td title="datacenter22"><strong>RC07</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RD07</strong></td>
+            <td title="datacenter22"><strong>RD07</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+            <td title="data center"><strong>RE07</strong></td>
+            <td title="datacenter22"><strong>RE07</strong></td>
+            <td bgcolor=#FFA500>30 C</td>
+            <td title="data center"><strong>RF07</strong></td>
+            <td title="datacenter22"><strong>RF07</strong></td>
+            <td bgcolor=#FFA500>15 C</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,1055 @@
+ {% load static %}
+<!DOCTYPE HTML>
+<html>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
+<head>
+    <title>AKUS | {% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="AKUS Monitoring Dashboard" />
+    <script type="application/x-javascript">
+        addEventListener("load", function() {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <link rel="icon" href="{% static 'dashboard/images/akus.png' %}">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- Custom Theme files -->
+    <link href="{% static 'dashboard/css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <!--js-->
+    {% comment %}
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all" /> {% endcomment %}
+    <script src="{% static 'dashboard/js/jquery-2.1.1.min.js' %}" type="application/javascript"></script>
+    <!--<script src="{% static 'dashboard/js/dialog.js' %}" type="application/javascript"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--icons-css-->
+    <link href="{% static 'dashboard/css/font-awesome.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'dashboard/css/bs4.css' %}">
+    {% block css %} {% endblock %}
+    <style>
+        @font-face {
+            font-family: myFirstFont;
+            src: url("/static/dashboard/fonts/clock.ttf");
+        }
+    </style>
+    <style>
+
+        
+div.pageloader{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(16, 16, 16, 0.5);
+  z-index:9999;
+}
+@-webkit-keyframes uil-ring-anim {
+  0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes uil-ring-anim {
+  0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes uil-ring-anim {
+  0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-ms-keyframes uil-ring-anim {
+  0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes uil-ring-anim {
+  0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes uil-ring-anim {
+  0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes uil-ring-anim {
+  0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes uil-ring-anim {
+  0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.uil-ring-css {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+}
+.uil-ring-css > div {
+  position: absolute;
+  display: block;
+  width: 160px;
+  height: 160px;
+  top: 20px;
+  left: 20px;
+  border-radius: 80px;
+  /*box-shadow: 0 6px 0 0 #ffffff;*/
+  -ms-animation: uil-ring-anim 1s linear infinite;
+  -moz-animation: uil-ring-anim 1s linear infinite;
+  -webkit-animation: uil-ring-anim 1s linear infinite;
+  -o-animation: uil-ring-anim 1s linear infinite;
+  animation: uil-ring-anim 1s linear infinite;
+}
+.smallloader{
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            padding: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            box-shadow: 0 0 5px black;
+            margin: 20px;
+            z-index:99;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .navbar {
+            z-index: 100;
+            position: fixed;
+            background:white;
+        }
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 78px;
+            
+            /* background: #11101D; */
+            background: black;
+            padding: 6px 14px;
+            z-index: 98;
+            transition: all 0.5s ease;
+        }
+        
+        .sidebar.open {
+            width: 250px;
+        }
+        
+        .sidebar .logo-details {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .sidebar .logo-details .icon {
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .sidebar .logo-details .logo_name {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .sidebar.open .logo-details .icon,
+        .sidebar.open .logo-details .logo_name {
+            opacity: 1;
+        }
+        
+        .sidebar .logo-details #btn {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            font-size: 22px;
+            transition: all 0.4s ease;
+            font-size: 23px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+        
+        .sidebar.open .logo-details #btn {
+            text-align: right;
+        }
+        
+        .sidebar i {
+            color: #fff;
+            height: 60px;
+            min-width: 50px;
+            font-size: 28px;
+            text-align: center;
+            line-height: 60px;
+        }
+        
+        .sidebar .nav-list {
+            margin-top: 10px;
+            height: 100%;
+        }
+        
+        .sidebar li {
+            position: relative;
+            margin: 8px 0;
+            list-style: none;
+        }
+        
+        .sidebar li .tooltip {
+            position: absolute;
+            top: -20px;
+            left: calc(100% + 15px);
+            z-index: 3;
+            background: #fff;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 400;
+            opacity: 0;
+            white-space: nowrap;
+            pointer-events: none;
+            transition: 0s;
+        }
+        
+        .sidebar li:hover .tooltip {
+            opacity: 1;
+            pointer-events: auto;
+            transition: all 0.4s ease;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .sidebar.open li .tooltip {
+            display: none;
+        }
+        
+        .sidebar input {
+            font-size: 15px;
+            color: #FFF;
+            font-weight: 400;
+            outline: none;
+            height: 50px;
+            width: 100%;
+            width: 50px;
+            border: none;
+            border-radius: 12px;
+            transition: all 0.5s ease;
+            /* background: #1d1b31; */
+            background: black;
+        }
+        
+        .sidebar.open input {
+            padding: 0 20px 0 50px;
+            width: 100%;
+        }
+        
+        .sidebar li a {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            border-radius: 12px;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            /* background: #11101D; */
+            background: black;
+        }
+        
+        .sidebar li a:hover {
+            background: #F2B33F;
+        }
+        
+        .sidebar li a .links_name {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 400;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s;
+        }
+        
+        .sidebar.open li a .links_name {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .sidebar li a:hover .links_name,
+        .sidebar li a:hover i {
+            transition: all 0.5s ease;
+            /* color: #11101D; */
+        }
+        
+        .sidebar li i {
+            height: 50px;
+            line-height: 50px;
+            font-size: 18px;
+            border-radius: 12px;
+        }
+        
+        .sidebar li.profile {
+            position: fixed;
+            height: 60px;
+            width: 78px;
+            left: 0;
+            bottom: -8px;
+            padding: 10px 14px;
+            background: #1d1b31;
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .sidebar.open li.profile {
+            width: 250px;
+        }
+        
+        .sidebar li .profile-details {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        
+        .sidebar li img {
+            height: 45px;
+            width: 45px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 10px;
+        }
+        
+        .sidebar li.profile .name,
+        .sidebar li.profile .job {
+            font-size: 15px;
+            font-weight: 400;
+            color: #fff;
+            white-space: nowrap;
+        }
+        
+        .sidebar li.profile .job {
+            font-size: 12px;
+        }
+        
+        .sidebar .profile #log_out {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            background: #1d1b31;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 0px;
+            transition: all 0.5s ease;
+        }
+        
+        .sidebar.open .profile #log_out {
+            width: 50px;
+            background: none;
+        }
+        
+        @media (max-width: 420px) {
+            .sidebar li .tooltip {
+                display: none;
+            }
+        }
+
+        .navbar i , .navbar a{
+            color: black;
+            transition: 0.5s;
+        }
+
+        li.active a i, .act a i {
+            color: black;
+            transition: 0.5s;
+        }
+        .navbar i:hover{
+            color: #F2B33F;
+        }
+
+        .navbar a:hover {
+            color: #F2B33F;
+        }
+
+        .addMargin {
+           
+        }
+        .markRead{
+            cursor: pointer; 
+        }
+
+.ring
+{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:150px;
+  height:150px;
+  background: url('/static/dashboard/images/akus.png');
+    background-size: 135% 124%;
+    background-position-x: -27px;
+    background-position-y: -18px;
+  border:3px solid #3c3c3c;
+  border-radius:50%;
+  text-align:center;
+  line-height:150px;
+  font-family:sans-serif;
+  font-size:20px;
+  color:#fff000;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  text-shadow:0 0 10px #fff000;
+  box-shadow:0 0 20px rgba(0,0,0,.5);
+}
+.ring:before
+{
+  content:'';
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:100%;
+  height:100%;
+  border:3px solid transparent;
+  border-top:3px solid #fff000;
+  border-right:3px solid #fff000;
+  border-radius:50%;
+  animation:animateC 2s linear infinite;
+}
+span.loaderspan
+{
+  display:block;
+  position:absolute;
+  top:calc(50% - 2px);
+  left:50%;
+  width:50%;
+  height:4px;
+  background:transparent;
+  transform-origin:left;
+  animation:animate 2s linear infinite;
+}
+span.loaderspan:before
+{
+  content:'';
+  position:absolute;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#fff000;
+  top:-6px;
+  right:-8px;
+  box-shadow:0 0 20px #fff000;
+}
+@keyframes animateC
+{
+  0%
+  {
+    transform:rotate(0deg);
+  }
+  100%
+  {
+    transform:rotate(360deg);
+  }
+}
+@keyframes animate
+{
+  0%
+  {
+    transform:rotate(45deg);
+  }
+  100%
+  {
+    transform:rotate(405deg);
+  }
+}
+    </style>
+    <meta name="robots" content="noindex">
+</head>
+
+<body onload="startTime()">
+ <div class="pageloader">
+ <!--<div class='uil-ring-css' style='transform:scale(0.79);'><div style="background: url('');background-size: 112% 100%;"></div></div>-->
+ <div class="ring">
+  <span class="loaderspan"></span>
+</div>
+</div>
+
+
+<div class="smallloader"></div> <script>
+        $(document).ready(function() {
+          $('.pageloader').hide();
+        });
+        function showloader(title = "Loading..."){
+            $(".smallloader").html(title);
+            $(".smallloader").show();
+        }
+
+        function hideloader(){
+            $(".smallloader").hide();
+        }
+      </script>
+    <!-- TOP NAV -->
+
+
+    <nav class="navbar mynav col-md-12" style="width: 100%; color: black; box-shadow: 0 0 5px; padding: 10px; transition: 0.4s; z-index: 999; ">
+        <div class="container-fluid">
+            
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span  class="icon-bar"><i class="fa fa-bars"></i></span>
+                </button>
+                
+                <i style="cursor: pointer; font-weight: bolder; font-size: 30px; margin-top: 10px;" class='fa fa-bars' id="btn"></i>
+                <a href="{% url 'appliance' %}" style="position: absolute; top: 25px; margin-left: 30px; height: auto; width: auto; "><img alt="Akus" src="{% static 'dashboard/images/akus.png' %}" width="80" height="70"></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav" style="letter-spacing: 44px;">
+                <li class="active" style="letter-spacing: 0px;">
+                    <a href="#" style="margin-left: 95px; font-size: 20px; cursor: default; text-decoration: none; "> <b>{% block title_header %}{% endblock %} </b></a>
+                </li>
+                <li class="active addMargin" style="text-indent: 24px;">
+                    <a href="{% url 'about-us' %}"><i class="fa fa-question-circle" style="font-size: 19px;"></i></a>
+                </li>
+                <li class="active addMargin">
+                    <a href="{% url 'contact-us' %}"><i class="fa fa-envelope" style="font-size: 19px;"></i></a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="active addMargin">
+                    <a href="{% url 'data-review' %}"><i class="fa fa-search" style="font-size: 19px;"></i></a>
+                </li>
+
+                
+                 <li class="addMargin">
+                    <a href="/tables/"><i  class="fa fa-table" style="font-size: 19px;"></i></a>
+                </li>
+
+                <li class="dropdown addMargin" style="letter-spacing: 0px;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Notification">
+                        <i class="fa fa-bell" style="font-size: 19px;color:black"></i>
+                        <span class="badge blue"></span><span id="notification_count_head">{{count}}</span>
+                    </a>
+
+                    <ul class="dropdown-menu" style="width:400px">
+                        <li>
+                            <div class="notification_header" style="margin: 0;">
+                                <h3 id="notification_count"><a href="{% url 'all_notifications' %}">See All Notification</a></h3>
+                            </div>
+                        </li>
+                        
+                        <div id="notification_desc">
+                        {% for notif in notifications %}
+                        
+                            <li>
+                                
+                                    <div class="notification_desc col-md-12">
+                                        <p style="color: red; margin-bottom:0;" class="blink"><b>{{notif.content}}</b></p>
+                                        <!--<p id="notif_desc">{{notif.data}}</p>-->
+                                        <p>
+                                            <span> {{notif.date|date:"M d, Y"}} </span> 
+                                            <!--{% if not notif.is_read %}-->
+                                                <span>
+                                                    <a data-id="{{notif.id}}" class="markRead">Mark as Read</a>
+                                                </span>
+                                            <!--{% endif %}-->
+                                        </p>
+                                    </div>
+                            </li>
+                        {% endfor %}
+                        </div>
+                    </ul>
+                </li>
+                {% endif %}
+
+            </ul>
+
+
+            <ul class="nav navbar-nav navbar-right">
+            <li>
+                    <a {% if request.resolver_match.url_name == "home_page" or request.resolver_match.url_name == "login_page" %}style="display:none;" {% endif %} onclick="goBack()">
+                        <i class="fa fa-arrow-left" style="cursor: pointer;font-size:20px"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="curTime" style="cursor: default ; font-family: myFirstFont; font-size: 30px;"> </a>
+                </li>
+                {% if not request.user.is_authenticated %}
+                <li><a href="{% url 'register_page' %}"><span class="glyphicon glyphicon-user"></span> Registration </a></li>
+                <li><a href="{% url 'login_page' %}" class=" btnLink btn btn-primary"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                {% else %}
+
+                <li> 
+                <!--<img src="{% if request.user.userprofile.pic %}{{request.user.userprofile.pic.url}}{% else %}/static/dashboard/images/p5.png{% endif %}" alt="user" width="45px" height="45px"> </li>-->
+                <img src="/static/dashboard/images/akus.png" alt="user" width="49px" height="45px"> </li>
+                <li class="dropdown">
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Notification">  
+                        {{request.user.username}}   
+                        <span style="font-size: 10px; font-weight: bold;" id="staff_type"> ({{request.user.userprofile.staff_type|lower}})
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu" style="padding: 10px;">
+                        {% if request.user.userprofile.staff_type == "ADMIN" or request.user.userprofile.staff_type == "SUPERADMIN" %}<li><a href="{% url 'admin-setting-view' %}">Admin</a></li>{% endif %}
+                        <li><a href="{% url 'edit-profile' %}">Settings</a></li>
+                        <li><a href="{% url 'logout-view' %}">Logout</a></li>
+                    </ul>
+
+                </li>
+
+                {% endif %}
+            </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- TOP NAV END -->
+    <!--slider menu-->
+    <div class="sidebar">
+        <div class="logo-details">
+            <div class="logo_name">Akus </div>
+        </div>
+        <ul class="nav-list">
+            <li>
+              <br>
+            </li>
+            <li>
+                <a href="{% url 'home_page' %}">
+                    <i class='fa fa-tachometer'></i>
+                    <span class="links_name">Home</span>
+                </a>
+                <span class="tooltip">Home</span>
+            </li>
+            <li>
+                <a href="{% url 'assets-forms' %}">
+                    <i class='fa fa-cog'></i>
+                    <span class="links_name">Assets</span>
+                </a>
+                <span class="tooltip">Assets</span>
+            </li>
+            <li>
+                <a href="{% url 'network' %}">
+                    <i class='fa fa-wifi'></i>
+                    <span class="links_name">Networking</span>
+                </a>
+                <span class="tooltip">Networking</span>
+            </li>
+            <li>
+                <a href="{% url 'server' %}">
+                    <i class='fa fa-cogs'></i>
+                    <span class="links_name">Server</span>
+                </a>
+                <span class="tooltip">Server</span>
+            </li>
+            <li>
+                <a href="{% url 'storage' %}">
+                    <i class='fa fa-cubes'></i>
+                    <span class="links_name">Storage</span>
+                </a>
+                <span class="tooltip">Storage</span>
+            </li>
+            <li>
+                <a href="{% url 'dbms' %}">
+                    <i class='fa fa-database'></i>
+                    <span class="links_name">DBMS</span>
+                </a>
+                <span class="tooltip">DBMS</span>
+            </li>
+            <li>
+                <a href="{% url 'apm_monitoring' %}">
+                    <i class='fa fa-bar-chart'></i>
+                    <span class="links_name">APM</span>
+                </a>
+                <span class="tooltip">APM</span>
+            </li>
+            <li>
+                <a href="{% url 'hexbin_graph' %}">
+                    <i class='fa fa-globe'></i>
+                    <span class="links_name">Web Monitoring</span>
+                </a>
+                <span class="tooltip">Web Monitoring</span>
+            </li>
+            <li>
+                <a href="{% url 'cctv' %}">
+                    <i class='fa fa-camera'></i>
+                    <span class="links_name">CCTV</span>
+                </a>
+                <span class="tooltip">CCTV</span>
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+                <a href="/reports">
+                    <i class='fa fa-file-text'></i>
+                    <span class="links_name">Reports</span>
+                </a>
+                <span class="tooltip">Reports</span>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <!--END SIDE BAR NAV MENU-->
+    <!-- New toolbar-->
+    <div class="page-container">
+        <div class="right-content">
+            <!--header start here-->
+
+            <!--heder end here-->
+            <!--inner block start here-->
+            <div class="inner-block" style="min-height:95vh; padding-top: 0; ">
+                <div class="cols-grids panel-widget">
+                    <!--728x90-->
+                    <div class="chute chute-center text-center">
+                        {% if exceptionRaise %}
+                        <script>
+                            $(window).load(function() {
+                                $('.globalModal').modal('show');
+                                $('.globalModalTitle').html("{{errTitle}}");
+                                $('.globalModalBody').html("{{errOutput}}");
+                            });
+                        </script>
+                        {% else %} 
+                            
+                            <div style="margin-top: 100px; margin-bottom: 100px;"> </div>
+
+                            {% block content %} {% endblock %} 
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!--MODAL-->
+            <!-- Modal -->
+            <div class="modal globalModal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close" href="{{Curpath}}">&times;</a>
+                            <h4 class="modal-title globalModalTitle"></h4>
+                        </div>
+                        <div class="modal-body globalModalBody"></div>
+                        <div class="modal-footer">
+                            <a class="btn btn-primary" href="{% url 'home_page' %}">Home</a> {% if request.user.is_authenticated %}
+                            <a class="btn btn-default" href="{{Curpath}}">Ok</a> {% else %}
+                            <a class="btn btn-default" href="{% url 'login_page' %}">Login</a> {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!--END MODAL-->
+            <!--inner block end here-->
+            <footer class="copyrights col-md-12" style="background-color: rgb(253, 253, 253);padding:10px;margin-top:0px">
+                <div class="col-md-7" style="text-align:right;color: black;"><b>{{footer|safe}}</b></div>
+                <div class="col-md-5" style="text-align:right;color: black;">Copyright &copy; {% now "Y" %} <strong>āKüs®</strong>. All rights reserved.</div>
+            </footer>
+            <!--footer end-->
+            <script>
+
+                $(document).ajaxComplete(function(e , xhr , settings){
+                    data = xhr.responseJSON
+                if (data){ 
+                    if ("redirectError" in data){
+                        window.location.href = "/noperm/"
+                    }
+                }
+                })
+
+                let sidebar = document.querySelector(".sidebar");
+                let closeBtn = document.querySelector("#btn");
+
+                closeBtn.addEventListener("click", () => {
+                    sidebar.classList.toggle("open");
+                    menuBtnChange(); //calling the function(optional)
+                });
+            </script>
+            <!--slide bar menu end here-->
+            <!--scrolling js-->
+            <script src="{% static 'dashboard/js/jquery.nicescroll.js' %}"></script>
+            <script src="{% static 'dashboard/js/scripts.js' %}"></script>
+            <!--//scrolling js-->
+            <script src="{% static 'dashboard/js/bootstrap.js' %}"></script>
+
+
+            <script>
+                function show() {
+                    $(".mynav").css("background", "white");
+                }
+                // blink "off" state
+                function hide() {
+                    //console.log("dsfsdaf");
+                    $(".mynav").css("background", "red");
+                }
+                // toggle "on" and "off" states every 450 ms to achieve a blink effect
+                // end after 4500 ms (less than five seconds)
+                //for (var i = 900; i < 5000; i = i + 900) {
+                    //setTimeout("hide()", i);
+                    //setTimeout("show()", i + 450);
+                //}
+            </script>
+
+            <script>
+            
+                function goBack() {
+                    window.history.back();
+                }
+
+
+                                    
+                    function checkStatus(){
+                        if(window.location.pathname == "/license/") return;
+                        console.log("license check");
+                        $.get("/license/check/" , function(data , status){
+                            
+                            console.log(data);
+                            
+                            if(!data["error"]){
+                                
+                                if(data["data"] == 1){
+                                   window.location.href = data["redirect"];
+                                }
+
+                                else if(data["data"] > 0){
+                                    opacity = 1 - data["data"];
+                                    $("body").css("opacity" , opacity ); 
+                                }
+
+
+                            }
+                        });
+
+                    }
+                    checkStatus();
+                    //window.setInterval(checkStatus , 300000) // 1000 * 60 * 60 * 24
+            </script>
+            <script>
+                function startTime() {
+                    const today = new Date();
+                    let h = today.getHours();
+                    let m = today.getMinutes();
+                    let s = today.getSeconds();
+                    m = checkTime(m);
+                    s = checkTime(s);
+                    document.getElementById('curTime').innerHTML = h + ":" + m + ":" + s;
+                    setTimeout(startTime, 1000);
+                }
+
+                function checkTime(i) {
+                    if (i < 10) {
+                        i = "0" + i
+                    }; // add zero in front of numbers < 10
+                    return i;
+                }
+            </script>
+            <script>
+                function fetchAlert(){
+                    $.ajax({
+                        url: "{% url 'fetch_notifications' %}",
+                        success: function(response) {
+                            if (!response["err"]){
+                                $("#notification_count_head").html(response["count"])
+                                if (response["is_blink"]){
+                                    console.log(response["is_blink"])
+                                var highVAL = 0;
+                                $.each(response["data"], function(index, value) {
+                                    if (value.severity == 'high'){
+                                        highVAL += 1;
+                                    }
+                                });
+                                //console.log(highVAL);
+                                if (response["data"].length > 0){
+                                    if (highVAL <= 10 && highVAL > 0){
+                                        console.log("Ruuning less than 10 high")
+                                        for (var i = 900; i < 5000; i = i + 900) {
+                                            setTimeout("hide()", i);
+                                            setTimeout("show()", i + 450);
+                                        }
+                                    }
+                                    //console.log(response["data"].length);
+                                    if (highVAL>10){
+                                        console.log("Ruuning more than 10 high")
+                                        for (var i = 900; i < 5000; i = i + 900) {
+                                            setTimeout("hide()", i);
+                                            //setTimeout("show()", i + 450);
+                                        }
+                                    }
+                                }                                
+                                else{
+                                    show();
+                                }
+                            }
+                            }
+                            else{
+                                console.log(response["data"]);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var err = eval("(" + xhr.responseText + ")");
+                            console.log(err);
+                        }
+                    });
+                }
+            </script>
+            
+            <script>
+                fetchAlert();
+                window.setInterval(fetchAlert, 10000);
+                $("body").on("click", ".markRead", function(){
+                    var id = $(this).data("id");
+                    console.log(id);
+                    var token = '{{csrf_token}}';
+                    var html = "";
+                    $.ajax({
+                        headers: { "X-CSRFToken": token },
+                        type: "POST",
+                        url: "/notificationMarkRead/",
+                        data: {
+                            'id': id,
+                        },
+                        success: function(response) {
+                            if(!response["err"]){
+                                $("#notification_count_head").html(response["count"]);                                
+                                $.each(response["data"], function(index, value) {
+                                    html += "<li>\
+                                        <div class='notification_desc col-md-12'>\
+                                            <p style='color: red; margin-bottom:0;' class='blink'><b>"+value.content+"</b></p>\
+                                            <p>\
+                                                <span>"+value.date+"</span>\
+                                                <span>\
+                                                    <a data-id='"+value.id+"' class='markRead'>Mark as Read</a>\
+                                                </span>\
+                                            </p>\
+                                        </div>\
+                                    <li>";
+                                });
+                                $("#notification_desc").html(html);
+                            }
+                            else{
+                                console.log("Some err occured");
+                            }
+                            
+                        },
+                        error: function(xhr, status, error) {
+                            var err = eval("(" + xhr.responseText + ")");
+                            console.log(err.Message);
+                        }
+                    });
+
+                });
+            </script>
+            <!-- mother grid end here-->
+            {% block js %} {% endblock %}
+
+</html>

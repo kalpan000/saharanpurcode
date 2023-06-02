@@ -1,0 +1,203 @@
+{% extends 'dashboard/header_footer.html' %} {% block title %} Patches {% endblock title %} {% block content %}
+<style>
+    table {
+        width: 100%;
+    }
+    
+    table td,
+    table th {
+        padding: 10px;
+        text-align: center;
+    }
+    
+    select {
+        padding: 5px;
+    }
+    
+    textarea {
+        padding: 10px;
+        width: 100%;
+        min-height: 300px;
+    }
+    
+    td {
+        text-align: center;
+    }
+    .make{
+        display:none;
+    }
+</style>
+
+
+<div class="container">
+
+    <form>
+
+        <textarea placeholder="" class="col-12">Commands to Run. Each command should be in a new line.</textarea> Server Type
+        <select id="systype">
+            <!-- <option selected value="linux">Linux</option>
+            <option value="windows">Windows</option> -->
+        </select>
+    <div class="make"><br>
+        Make 
+        <select id="systypemake">
+        </select>
+    </div>
+        <br>
+        <br>
+        <table border="2">
+
+            <thead>
+                <tr>
+                    <th>Devices</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Select All</td>
+                    <td><input id="selectall" type="checkbox" value=""> </td>
+                </tr>
+                {% for record in records %}
+
+                <tr>
+                    <td>{{record.ip}}</td>
+                    <td><input data-ip="{{record.ip}}" data-username="{{record.user}}" data-password="{{record.pwd}}" class="checkbox" type="checkbox" value=""> </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <br>
+        <input class="btn btn-primary" type="button" id="submitform" value="Submit">
+    </form>
+
+</div>
+
+
+<script>
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+
+    type = getUrlParameter("type")
+
+    if (type == "network") {
+        $(".make").show();
+        $('#systype').append(`<option value="">--Select Device--</option>`);
+        $('#systype').append(`<option value="router">Router</option>`);
+        $('#systype').append(`<option value="switch">Switch</option>`);
+        $('#systype').append(`<option value="wlc">Wireless</option>`);
+        $('#systype').append(`<option value="firewall">Firewall</option>`);
+    } else {
+        $('#systype').append(`<option value="linux">Linux</option>`);
+        $('#systype').append(`<option value="windows">Windows</option>`);
+    }
+
+    $('#systype').change(function() {
+    //Use $option (with the "$") to see that the variable is a jQuery object
+    $("#systypemake").html("")
+    var option = $(this).find('option:selected');
+    //Added with the EDIT
+    var value = option.val();
+
+    if (value == "switch"){
+        $("#systypemake").append(`<option value="router">Switch 1</option>`);
+        $("#systypemake").append(`<option value="router">Switch 2</option>`);
+    }
+    else if (value == "router"){
+        $("#systypemake").append(`<option value="router">Cisco</option>`);
+        $("#systypemake").append(`<option value="router">Juniper</option>`);
+    }
+    else if (value == "wlc"){
+        $("#systypemake").append(`<option value="router">Wlc 1</option>`);
+        $("#systypemake").append(`<option value="router">Wlc 2</option>`);
+    }
+    else if  (value == "firewall"){
+        $("#systypemake").append(`<option value="router">Firewall 1</option>`);
+        $("#systypemake").append(`<option value="router">Firewall 2</option>`);
+    }
+});
+
+
+    
+
+
+    $("body").on("change", "#selectall", function() {
+
+        var isChecked = $(this).is(":checked");
+
+        $("input[type='checkbox']").each(function() {
+            $(this).prop("checked", isChecked);
+        });
+
+    })
+
+    $("body").on("change", ".checkbox", function() {
+
+        var allSelected = true;
+
+        $(".checkbox").each(function() {
+            if (!$(this).is(":checked"))
+                allSelected = false;
+        });
+
+        $("#selectall").prop("checked", allSelected);
+
+    });
+
+    $("#submitform").on("click", function() {
+
+        var ips = {};
+        var serverType = $('select').find(":selected").val();
+        var commands = $("textarea").val()
+
+        $(".checkbox").each(function() {
+            if ($(this).is(":checked")) {
+                ips[$(this).data("ip")] = {
+                    "username": $(this).data("username"),
+                    "password": $(this).data("password")
+                };
+            }
+        });
+
+        console.log(ips, serverType, commands.split("\n"))
+
+        var ajaxData = {
+            "type": serverType,
+            "commands": JSON.stringify(commands.split("\n"))
+        }
+
+        ajaxData["data"] = JSON.stringify(ips);
+
+        $.post("/patches/run/", ajaxData, function(data, status) {
+
+            if (data["error"]) {
+                Swal.fire(data["message"]);
+                return;
+            } else {
+                Swal.fire("Success")
+            }
+
+        });
+    });
+</script>
+
+
+
+{% endblock %}

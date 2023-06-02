@@ -1,0 +1,18 @@
+{% extends 'dashboard/header_footer.html' %} {% load static %} {% block title %} Provisioning {% endblock %} {% block js %} {% endblock %} {% block css %}
+<style>
+    .col-lg-4 {
+        margin-bottom: 20px;
+    }
+    
+    .custom-btn {
+        font-size: xx-large;
+    }
+</style>
+{% endblock %} {% block title_header %}Provisioning{% endblock %} {% block content %}
+<div class="row">
+    {% comment %} <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="{% url 'stacking' %}"><i class="fa fa-group"></i> | Stacking</a></div> {% endcomment %}
+    {% comment %} <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href="{% url 'replication' %}"><i class="fa fa-download"></i> | Replication</a></div> {% endcomment %}
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href=""><i class="fa fa-group"></i> | Stacking</a></div>
+    <div class="col-lg-4"><a class="btn btn-primary custom-btn" style="width: 100%;" href=""><i class="fa fa-download"></i> | Replication</a></div>
+</div>
+{% endblock %}
